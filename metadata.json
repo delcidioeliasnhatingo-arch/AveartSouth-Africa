@@ -1,0 +1,6 @@
+{
+  "name": "AVEART — Curated Objects & Haute Artisanal Storefront",
+  "description": "Artisanal luxury e-commerce platform for limited-edition architectural objects, heirloom ceramics, lighting, and bespoke furniture with real database persistence, payment sandbox, and admin operations.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
