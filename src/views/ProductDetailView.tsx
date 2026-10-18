@@ -14,6 +14,7 @@ import {
 import { Product, ProductVariant, formatZAR } from '../types/index.ts';
 import { useCart } from '../context/CartContext.tsx';
 import { ProductCard } from '../components/ProductCard.tsx';
+import { resolveImageUrl } from '../utils/imageUrl.ts';
 
 interface ProductDetailViewProps {
   slug: string;
@@ -229,7 +230,7 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
         <div className="lg:col-span-7 space-y-4">
           <div className="relative aspect-[3/4] bg-slate-100 rounded-3xl overflow-hidden border border-slate-200 shadow-sm">
             <img
-              src={galleryImages[activeImageIndex]}
+              src={resolveImageUrl(galleryImages[activeImageIndex])}
               alt={product.title}
               className="w-full h-full object-cover object-top"
             />
