@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { resolveImageUrl } from '../utils/imageUrl.ts';
 import { Search, Package, Truck, CheckCircle2, AlertCircle, Sparkles } from 'lucide-react';
 import { Order, formatZAR } from '../types/index.ts';
 
@@ -161,7 +162,7 @@ export const OrderTrackingView: React.FC<OrderTrackingViewProps> = ({ initialOrd
                 <div key={item.id} className="py-2.5 flex items-center justify-between text-xs">
                   <div className="flex items-center gap-3">
                     <img
-                      src={item.image_url || '/src/assets/images/fashion_women_linen_blazer_1792263530901.jpg'}
+                      src={resolveImageUrl(item.image_url || '/src/assets/images/fashion_women_linen_blazer_1792263530901.jpg')}
                       alt={item.product_title}
                       className="w-12 h-14 object-cover rounded-xl border border-slate-200"
                     />
