@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { ShoppingBag, Check } from 'lucide-react';
 import { Product, formatZAR } from '../types/index.ts';
 import { useCart } from '../context/CartContext.tsx';
+import { resolveImageUrl } from '../utils/imageUrl.ts';
 
 interface ProductCardProps {
   product: Product;
@@ -17,7 +18,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect }) =
   const [isAdded, setIsAdded] = useState(false);
 
   const fallbackImage = '/src/assets/images/fashion_women_linen_blazer_1792263530901.jpg';
-  const displayImage = product.primary_image || fallbackImage;
+  const displayImage = resolveImageUrl(product.primary_image || fallbackImage);
 
   const isLowStock = product.total_stock !== undefined && product.total_stock > 0 && product.total_stock <= 3;
   const isOutOfStock = product.total_stock !== undefined && product.total_stock <= 0;
