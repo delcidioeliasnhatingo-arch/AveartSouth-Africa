@@ -3,6 +3,7 @@ import { ArrowRight, Sparkles, Truck, ShieldCheck, Heart, Flame } from 'lucide-r
 import { Product, Category, formatZAR } from '../types/index.ts';
 import { ProductCard } from '../components/ProductCard.tsx';
 import { resolveImageUrl } from '../utils/imageUrl.ts';
+import { listMedusaCategories, listMedusaProducts } from '../lib/medusa.ts';
 
 interface HomeViewProps {
   onNavigate: (view: string, param?: string) => void;
@@ -14,16 +15,21 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    let cancelled = false;
     Promise.all([
-      fetch('/api/products?featured=true').then((r) => r.json()),
-      fetch('/api/categories').then((r) => r.json()),
+      listMedusaProducts({ featured: true }),
+      listMedusaCategories(),
     ])
       .then(([productsData, categoriesData]) => {
-        setFeaturedProducts(Array.isArray(productsData) ? productsData : []);
-        setCategories(Array.isArray(categoriesData) ? categoriesData : []);
+        if (cancelled) return;
+        setFeaturedProducts(productsData as Product[]);
+        setCategories(categoriesData as Category[]);
       })
-      .catch((err) => console.error('Error fetching home data:', err))
-      .finally(() => setLoading(false));
+      .catch((err) => {
+        if (!cancelled) console.error('Error fetching home data from Medusa:', err);
+      })
+      .finally(() => { if (!cancelled) setLoading(false); });
+    return () => { cancelled = true; };
   }, []);
 
   return (
