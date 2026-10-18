@@ -97,10 +97,10 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
         if (otherSlugs.length > 0) {
           Promise.all(
             otherSlugs.slice(0, 4).map((s) =>
-              fetch(`/api/products/${s}`).then((r) => (r.ok ? r.json() : null))
+              getMedusaProduct(s).catch(() => null)
             )
           ).then((items) => {
-            setRecentProducts(items.filter(Boolean));
+            setRecentProducts(items.filter(Boolean) as Product[]);
           });
         } else {
           setRecentProducts([]);
