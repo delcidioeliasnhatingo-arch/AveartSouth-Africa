@@ -1,4 +1,5 @@
 import React from 'react';
+import { resolveImageUrl } from '../utils/imageUrl.ts';
 import { CheckCircle, Printer, ArrowRight, Package, Truck, ShieldCheck } from 'lucide-react';
 import { Order, formatZAR } from '../types/index.ts';
 
@@ -167,7 +168,7 @@ export const OrderConfirmationView: React.FC<OrderConfirmationViewProps> = ({
             <div key={item.id} className="py-3 first:pt-0 last:pb-0 flex items-center gap-4 text-xs">
               <div className="w-16 h-20 bg-slate-100 rounded-xl overflow-hidden shrink-0 border border-slate-200">
                 <img
-                  src={item.image_url || '/src/assets/images/fashion_women_linen_blazer_1792263530901.jpg'}
+                  src={resolveImageUrl(item.image_url || '/src/assets/images/fashion_women_linen_blazer_1792263530901.jpg')}
                   alt={item.product_title}
                   className="w-full h-full object-cover object-top"
                 />
