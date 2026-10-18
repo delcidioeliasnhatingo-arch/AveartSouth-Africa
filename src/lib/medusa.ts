@@ -65,7 +65,7 @@ export async function getMedusaRegion(): Promise<MedusaRegion> {
 
 function amount(value: unknown): number {
   const number = typeof value === 'number' ? value : Number(value || 0);
-  return Number.isFinite(number) ? number / 100 : 0;
+  return Number.isFinite(number) ? number : 0;
 }
 
 function optionValue(variant: MedusaVariant, optionTitle: string): string | undefined {
@@ -147,8 +147,8 @@ export async function listMedusaProducts(filters: {
   const region = await getMedusaRegion();
   const params = new URLSearchParams({ limit: '100', region_id: region.id, fields: PRODUCT_FIELDS });
   if (filters.search) params.set('q', filters.search);
-  if (filters.minPrice) params.set('price[gte]', String(Math.round(Number(filters.minPrice) * 100)));
-  if (filters.maxPrice) params.set('price[lte]', String(Math.round(Number(filters.maxPrice) * 100)));
+  if (filters.minPrice) params.set('price[gte]', String(Math.round(Number(filters.minPrice))));
+  if (filters.maxPrice) params.set('price[lte]', String(Math.round(Number(filters.maxPrice))));
   if (filters.sort === 'price_asc') params.set('order', 'variants.calculated_price.calculated_amount');
   else if (filters.sort === 'price_desc') params.set('order', '-variants.calculated_price.calculated_amount');
   else if (filters.sort === 'newest') params.set('order', '-created_at');
