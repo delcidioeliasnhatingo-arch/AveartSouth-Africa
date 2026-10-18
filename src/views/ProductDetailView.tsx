@@ -15,6 +15,7 @@ import { Product, ProductVariant, formatZAR } from '../types/index.ts';
 import { useCart } from '../context/CartContext.tsx';
 import { ProductCard } from '../components/ProductCard.tsx';
 import { resolveImageUrl } from '../utils/imageUrl.ts';
+import { getMedusaProduct, getMedusaRecommendations } from '../lib/medusa.ts';
 
 interface ProductDetailViewProps {
   slug: string;
@@ -51,35 +52,36 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
 
   // 1. Fetch Product Details
   useEffect(() => {
+    let cancelled = false;
     setLoading(true);
-    fetch(`/api/products/${slug}`)
-      .then((res) => {
-        if (!res.ok) throw new Error('Product not found in fashion catalog.');
-        return res.json();
-      })
+    setError(null);
+    setProduct(null);
+    getMedusaProduct(slug)
       .then((data) => {
-        setProduct(data);
+        if (cancelled) return;
+        setProduct(data as Product);
         if (data.variants && data.variants.length > 0) {
           const first = data.variants[0];
-          setSelectedVariant(first);
+          setSelectedVariant(first as ProductVariant);
           setSelectedSize(first.size || (data.sizes && data.sizes[0]) || '');
           setSelectedColor(first.color || (data.colors && data.colors[0]?.name) || '');
+        } else {
+          setSelectedVariant(null);
+          setSelectedSize('');
+          setSelectedColor('');
         }
-
-        // Add to Recently Viewed in localStorage
         try {
           const stored = localStorage.getItem(RECENTLY_VIEWED_KEY);
           const slugs: string[] = stored ? JSON.parse(stored) : [];
           const updated = [slug, ...slugs.filter((s) => s !== slug)].slice(0, 8);
           localStorage.setItem(RECENTLY_VIEWED_KEY, JSON.stringify(updated));
         } catch {
-          // ignore
+          // Ignore unavailable local storage.
         }
       })
-      .catch((err) => {
-        setError(err.message);
-      })
-      .finally(() => setLoading(false));
+      .catch((err) => { if (!cancelled) setError(err.message || 'Unable to load this product from Medusa.'); })
+      .finally(() => { if (!cancelled) setLoading(false); });
+    return () => { cancelled = true; };
   }, [slug]);
 
   // 2. Fetch Recommendations based on current product and active recommendation type
@@ -109,14 +111,13 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
       return;
     }
 
+    let cancelled = false;
     setRecommendationsLoading(true);
-    fetch(`/api/products/${slug}/recommendations?type=${recommendationType}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setRecommendations(Array.isArray(data) ? data : []);
-      })
-      .catch((err) => console.error('Failed to fetch recommendations:', err))
-      .finally(() => setRecommendationsLoading(false));
+    getMedusaRecommendations(slug)
+      .then((data) => { if (!cancelled) setRecommendations(data as Product[]); })
+      .catch((err) => { if (!cancelled) console.error('Failed to fetch Medusa recommendations:', err); })
+      .finally(() => { if (!cancelled) setRecommendationsLoading(false); });
+    return () => { cancelled = true; };
   }, [slug, product, recommendationType]);
 
   // Update selected variant when size or color changes
