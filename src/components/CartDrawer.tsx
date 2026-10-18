@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { resolveImageUrl } from '../utils/imageUrl.ts';
 import { X, Trash2, ArrowRight, ShieldCheck, Truck } from 'lucide-react';
 import { useCart } from '../context/CartContext.tsx';
 import { formatZAR } from '../types/index.ts';
@@ -108,7 +107,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onNavigateToCheckout }) 
                   {/* Thumbnail (3:4 ratio) */}
                   <div className="w-20 h-24 bg-slate-200 rounded-lg overflow-hidden shrink-0 border border-slate-200">
                     <img
-                      src={resolveImageUrl(item.imageUrl || '/src/assets/images/fashion_women_linen_blazer_1792263530901.jpg')}
+                      src={item.imageUrl || '/src/assets/images/fashion_women_linen_blazer_1792263530901.jpg'}
                       alt={item.productTitle}
                       className="w-full h-full object-cover object-top"
                     />
