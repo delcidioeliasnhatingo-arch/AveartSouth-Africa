@@ -44,13 +44,13 @@ export default function App() {
   return (
     <AuthProvider>
       <CartProvider>
-        <div className="min-h-screen flex flex-col bg-[#F8FAFC] text-[#0F172A]">
+        <div className="min-h-screen w-full flex flex-col bg-[#F8FAFC] text-[#0F172A] overflow-x-hidden">
           
           {/* Top Bar Navigation */}
           <Navbar currentView={currentView} onNavigate={handleNavigate} />
 
           {/* Main Content Area */}
-          <main className="flex-1">
+          <main className="flex-1 w-full">
             {currentView === 'home' && (
               <HomeView onNavigate={handleNavigate} />
             )}
@@ -58,6 +58,26 @@ export default function App() {
             {currentView === 'catalog' && (
               <CatalogView
                 initialSearch={viewParam}
+                onSelectProduct={handleSelectProduct}
+              />
+            )}
+
+            {currentView === 'catalog_new' && (
+              <CatalogView
+                onSelectProduct={handleSelectProduct}
+              />
+            )}
+
+            {currentView === 'catalog_gender' && (
+              <CatalogView
+                initialGender={viewParam as any}
+                onSelectProduct={handleSelectProduct}
+              />
+            )}
+
+            {currentView === 'catalog_sale' && (
+              <CatalogView
+                initialSale={true}
                 onSelectProduct={handleSelectProduct}
               />
             )}

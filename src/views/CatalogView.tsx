@@ -88,7 +88,7 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
     priceRange !== 'all';
 
   return (
-    <div className="max-w-7xl mx-auto px-6 py-8 space-y-8">
+    <div className="w-full max-w-[1920px] mx-auto px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20 py-8 space-y-8">
       
       {/* Header & Market Indicator */}
       <div className="border-b border-slate-200 pb-6 flex flex-col md:flex-row md:items-end justify-between gap-4">

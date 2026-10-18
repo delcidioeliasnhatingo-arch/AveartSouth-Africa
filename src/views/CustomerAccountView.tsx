@@ -8,7 +8,7 @@ interface CustomerAccountViewProps {
 }
 
 export const CustomerAccountView: React.FC<CustomerAccountViewProps> = ({ onTrackOrder }) => {
-  const { user, login, register, logout, addresses, reloadAddresses } = useAuth();
+  const { user, token, login, register, logout, addresses, refreshProfile } = useAuth();
 
   // Auth form states
   const [authMode, setAuthMode] = useState<'login' | 'register'>('login');
@@ -88,7 +88,7 @@ export const CustomerAccountView: React.FC<CustomerAccountViewProps> = ({ onTrac
 
       if (res.ok) {
         setIsAddingAddress(false);
-        reloadAddresses();
+        refreshProfile();
       }
     } catch (err) {
       console.error('Failed to save address:', err);

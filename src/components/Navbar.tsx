@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Search, ShoppingBag, User as UserIcon, Shield, X, Sparkles } from 'lucide-react';
 import { useAuth } from '../context/AuthContext.tsx';
 import { useCart } from '../context/CartContext.tsx';
+import { Logo } from './Logo.tsx';
 
 interface NavbarProps {
   currentView: string;
@@ -36,16 +37,18 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate }) => {
       </div>
 
       {/* Top Bar: Clean, modern, accessible retail header */}
-      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 transition-all shadow-xs">
-        <div className="max-w-7xl mx-auto px-6 h-18 flex items-center justify-between gap-8">
+      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 transition-all shadow-xs w-full">
+        <div className="w-full max-w-[1920px] mx-auto px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20 h-18 flex items-center justify-between gap-8">
           
-          {/* Zone 1: Brand wordmark with vibrant friendly accent */}
+          {/* Zone 1: Brand wordmark with Geometric Flight Logo */}
           <button
             onClick={() => onNavigate('home')}
-            className="flex items-center gap-1.5 text-2xl font-black tracking-tight text-slate-900 hover:text-rose-600 transition-colors whitespace-nowrap shrink-0 text-left cursor-pointer group"
+            className="flex items-center gap-2.5 text-2xl font-black tracking-tight text-slate-900 hover:text-rose-600 transition-colors whitespace-nowrap shrink-0 text-left cursor-pointer group"
           >
-            <span>AVEART</span>
-            <span className="w-2.5 h-2.5 rounded-full bg-rose-500 group-hover:scale-125 transition-transform inline-block mb-1 shadow-xs" />
+            <div className="w-8 h-8 rounded-xl bg-slate-900 group-hover:bg-rose-500 text-white flex items-center justify-center p-1.5 transition-all shadow-xs group-hover:scale-105">
+              <Logo className="w-full h-full text-white" />
+            </div>
+            <span className="tracking-tight">AVEART</span>
           </button>
 
           {/* Zone 2: Main Categories */}

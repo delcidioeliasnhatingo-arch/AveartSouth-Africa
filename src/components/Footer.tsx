@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Mail, Check, ShieldCheck, Truck, RotateCcw, Heart } from 'lucide-react';
+import { Logo } from './Logo.tsx';
 
 interface FooterProps {
   onNavigate: (view: string, param?: string) => void;
@@ -18,8 +19,8 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
   };
 
   return (
-    <footer className="bg-slate-900 text-slate-200 pt-16 pb-12 border-t border-slate-800 mt-20">
-      <div className="max-w-7xl mx-auto px-6">
+    <footer className="bg-slate-900 text-slate-200 pt-16 pb-12 border-t border-slate-800 mt-20 w-full">
+      <div className="w-full max-w-[1920px] mx-auto px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20">
         
         {/* Value Props Row - Fresh, colorful, accessible */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 pb-12 mb-12 border-b border-slate-800">
@@ -56,9 +57,11 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
           
           {/* Brand & Market */}
           <div className="md:col-span-4 space-y-4">
-            <div className="flex items-center gap-1.5">
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-xl bg-slate-800 border border-slate-700 text-white flex items-center justify-center p-1.5 shadow-sm">
+                <Logo className="w-full h-full text-white" />
+              </div>
               <span className="text-2xl font-black tracking-tight text-white">AVEART</span>
-              <span className="w-2.5 h-2.5 rounded-full bg-rose-500 shadow-sm" />
             </div>
             <p className="text-sm text-slate-400 leading-relaxed max-w-sm">
               Fresh, accessible women's and men's fashion e-commerce store in South Africa. Thoughtful silhouettes, comfortable fabrics, and everyday style for all.
