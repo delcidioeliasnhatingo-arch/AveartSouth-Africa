@@ -17,7 +17,10 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate }) => {
   useEffect(() => {
     let cancelled = false;
     Promise.all([
-      listMedusaProducts({ featured: true }),
+      listMedusaProducts({ featured: true }).then(async (featured) => {
+        if (featured.length) return featured;
+        return listMedusaProducts();
+      }),
       listMedusaCategories(),
     ])
       .then(([productsData, categoriesData]) => {
