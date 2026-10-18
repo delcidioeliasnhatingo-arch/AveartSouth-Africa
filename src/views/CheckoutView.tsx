@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { resolveImageUrl } from '../utils/imageUrl.ts';
 import { ShieldCheck, Lock, CreditCard, AlertCircle, ArrowLeft, CheckCircle2, Building2, Truck } from 'lucide-react';
 import { useAuth } from '../context/AuthContext.tsx';
 import { useCart } from '../context/CartContext.tsx';
@@ -540,7 +541,7 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({ onBackToBag, onOrder
               <div key={item.variantId} className="pt-3 first:pt-0 flex gap-3">
                 <div className="w-16 h-20 bg-slate-100 rounded-xl overflow-hidden shrink-0 border border-slate-200">
                   <img
-                    src={item.imageUrl || '/src/assets/images/fashion_women_linen_blazer_1792263530901.jpg'}
+                    src={resolveImageUrl(item.imageUrl || '/src/assets/images/fashion_women_linen_blazer_1792263530901.jpg')}
                     alt={item.productTitle}
                     className="w-full h-full object-cover object-top"
                   />
