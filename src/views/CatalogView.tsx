@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Filter, SlidersHorizontal, RotateCcw, Search, Sparkles } from 'lucide-react';
 import { Product, Category, formatZAR } from '../types/index.ts';
 import { ProductCard } from '../components/ProductCard.tsx';
+import { listMedusaCategories, listMedusaProducts } from '../lib/medusa.ts';
 
 interface CatalogViewProps {
   initialCategory?: string;
@@ -32,10 +33,9 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
   const [priceRange, setPriceRange] = useState<string>('all');
 
   useEffect(() => {
-    fetch('/api/categories')
-      .then((r) => r.json())
+    listMedusaCategories()
       .then((data) => setCategories(data))
-      .catch((err) => console.error('Error fetching categories:', err));
+      .catch((err) => console.error('Error fetching Medusa categories:', err));
   }, []);
 
   useEffect(() => {
@@ -46,48 +46,27 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
   }, [initialGender, initialCategory, initialSearch, initialSale]);
 
   useEffect(() => {
+    let cancelled = false;
     setLoading(true);
 
-    const params = new URLSearchParams();
-    if (selectedGender && selectedGender !== 'all') {
-      if (selectedGender === 'accessories') {
-        params.append('category', 'accessories');
-      } else {
-        params.append('gender', selectedGender);
-      }
-    }
-    if (selectedCategory && selectedCategory !== 'all') {
-      params.append('category', selectedCategory);
-    }
-    if (searchQuery.trim()) {
-      params.append('search', searchQuery.trim());
-    }
-    if (inStockOnly) {
-      params.append('inStockOnly', 'true');
-    }
-    if (onlySale) {
-      params.append('onSale', 'true');
-    }
-    if (sortOption) {
-      params.append('sort', sortOption);
-    }
+    const minPrice = priceRange === '1000to2500' ? '1000' : priceRange === 'above2500' ? '2500' : undefined;
+    const maxPrice = priceRange === 'under1000' ? '1000' : priceRange === '1000to2500' ? '2500' : undefined;
 
-    if (priceRange === 'under1000') {
-      params.append('maxPrice', '1000');
-    } else if (priceRange === '1000to2500') {
-      params.append('minPrice', '1000');
-      params.append('maxPrice', '2500');
-    } else if (priceRange === 'above2500') {
-      params.append('minPrice', '2500');
-    }
+    listMedusaProducts({
+      gender: selectedGender === 'accessories' ? 'all' : selectedGender,
+      category: selectedCategory !== 'all' ? selectedCategory : selectedGender === 'accessories' ? 'accessories' : undefined,
+      search: searchQuery.trim() || undefined,
+      inStockOnly,
+      onSale: onlySale,
+      sort: sortOption,
+      minPrice,
+      maxPrice,
+    })
+      .then((data) => { if (!cancelled) setProducts(data as Product[]); })
+      .catch((err) => { if (!cancelled) { console.error('Failed to load Medusa products:', err); setProducts([]); } })
+      .finally(() => { if (!cancelled) setLoading(false); });
 
-    fetch(`/api/products?${params.toString()}`)
-      .then((r) => r.json())
-      .then((data) => {
-        setProducts(data);
-      })
-      .catch((err) => console.error('Failed to load products:', err))
-      .finally(() => setLoading(false));
+    return () => { cancelled = true; };
   }, [selectedGender, selectedCategory, searchQuery, inStockOnly, onlySale, sortOption, priceRange]);
 
   const resetFilters = () => {
