@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { ArrowRight, Sparkles, Truck, ShieldCheck, Heart, Flame } from 'lucide-react';
 import { Product, Category, formatZAR } from '../types/index.ts';
 import { ProductCard } from '../components/ProductCard.tsx';
+import { resolveImageUrl } from '../utils/imageUrl.ts';
 
 interface HomeViewProps {
   onNavigate: (view: string, param?: string) => void;
@@ -86,7 +87,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate }) => {
           <div className="lg:col-span-7">
             <div className="relative aspect-[3/4] max-h-[580px] bg-slate-100 rounded-3xl overflow-hidden shadow-2xl border border-slate-200 mx-auto">
               <img
-                src="/src/assets/images/fashion_women_linen_blazer_1792263530901.jpg"
+                src={resolveImageUrl("/src/assets/images/fashion_women_linen_blazer_1792263530901.jpg")}
                 alt="Women's Tailored Double-Breasted Linen Blazer"
                 className="w-full h-full object-cover object-top"
               />
@@ -161,7 +162,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate }) => {
             className="group relative aspect-[4/3] bg-slate-100 rounded-3xl overflow-hidden cursor-pointer border border-slate-200 shadow-md hover:shadow-2xl transition-all"
           >
             <img
-              src="/src/assets/images/fashion_women_silk_midi_dress_1792263530827.jpg"
+              src={resolveImageUrl("/src/assets/images/fashion_women_silk_midi_dress_1792263530827.jpg")}
               alt="AVEART Womenswear Collection"
               className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
             />
@@ -182,7 +183,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate }) => {
             className="group relative aspect-[4/3] bg-slate-100 rounded-3xl overflow-hidden cursor-pointer border border-slate-200 shadow-md hover:shadow-2xl transition-all"
           >
             <img
-              src="/src/assets/images/fashion_men_wool_overshirt_1792263531608.jpg"
+              src={resolveImageUrl("/src/assets/images/fashion_men_wool_overshirt_1792263531608.jpg")}
               alt="AVEART Menswear Collection"
               className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
             />
@@ -224,7 +225,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate }) => {
             <div className="lg:col-span-7">
               <div className="aspect-[16/10] rounded-2xl overflow-hidden border border-rose-100 shadow-md">
                 <img
-                  src="/src/assets/images/fashion_men_selvedge_jeans_1792263532797.jpg"
+                  src={resolveImageUrl("/src/assets/images/fashion_men_selvedge_jeans_1792263532797.jpg")}
                   alt="Selvedge denim detailing and craftsmanship"
                   className="w-full h-full object-cover"
                 />
