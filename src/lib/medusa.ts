@@ -150,13 +150,19 @@ export async function listMedusaProducts(filters: {
   if (filters.search) params.set('q', filters.search);
   if (filters.minPrice) params.set('price[gte]', String(Math.round(Number(filters.minPrice) * 100)));
   if (filters.maxPrice) params.set('price[lte]', String(Math.round(Number(filters.maxPrice) * 100)));
-  if (filters.gender && filters.gender !== 'all') params.set('metadata[gender]', filters.gender);
-  if (filters.featured) params.set('metadata[featured]', 'true');
-  if (filters.onSale) params.set('metadata[on_sale]', 'true');
   if (filters.sort === 'price_asc') params.set('order', 'variants.calculated_price.calculated_amount');
+  else if (filters.sort === 'price_desc') params.set('order', '-variants.calculated_price.calculated_amount');
   else if (filters.sort === 'newest') params.set('order', '-created_at');
   const { products = [] } = await request<{ products?: MedusaProduct[] }>(`/store/products?${params.toString()}`);
-  return products.map(toThemeProduct).filter((product) => !filters.inStockOnly || (product.total_stock || 0) > 0);
+  let mapped = products.map(toThemeProduct);
+  if (filters.gender && filters.gender !== 'all') mapped = mapped.filter((product) => product.gender === filters.gender || product.gender === 'unisex');
+  if (filters.featured) mapped = mapped.filter((product) => product.is_featured === 1);
+  if (filters.onSale) mapped = mapped.filter((product) => product.is_on_sale === 1);
+  if (filters.minPrice) mapped = mapped.filter((product) => (product.min_price || product.base_price) >= Number(filters.minPrice));
+  if (filters.maxPrice) mapped = mapped.filter((product) => (product.max_price || product.base_price) <= Number(filters.maxPrice));
+  if (filters.sort === 'price_asc') mapped.sort((a, b) => (a.min_price || a.base_price) - (b.min_price || b.base_price));
+  if (filters.sort === 'price_desc') mapped.sort((a, b) => (b.max_price || b.base_price) - (a.max_price || a.base_price));
+  return mapped.filter((product) => !filters.inStockOnly || (product.total_stock || 0) > 0);
 }
 
 export async function listMedusaCategories() {
