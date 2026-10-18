@@ -100,7 +100,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate }) => {
             </div>
 
             <h1 className="text-3xl sm:text-5xl lg:text-6xl text-white font-black leading-[1.08] tracking-tight [text-wrap:balance] drop-shadow-md">
-              Authentic fashion crafted for everyday elegance.
+              AUTHENTIC FASHION CRAFTED FOR EVERYDAY ELEGANCE
             </h1>
 
             <p className="text-sm sm:text-base md:text-lg text-slate-200 leading-relaxed font-medium max-w-xl">
