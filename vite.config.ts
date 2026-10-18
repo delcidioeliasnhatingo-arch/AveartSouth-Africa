@@ -14,6 +14,13 @@ export default defineConfig({
     },
   },
   server: {
+    proxy: {
+      '/medusa-api': {
+        target: 'https://aveart-medusa-api.onrender.com',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\\/medusa-api/, ''),
+      },
+    },
     // AI Studio can disable HMR to avoid excessive file watching.
     hmr: process.env.DISABLE_HMR !== 'true',
     watch: process.env.DISABLE_HMR === 'true' ? null : {},
