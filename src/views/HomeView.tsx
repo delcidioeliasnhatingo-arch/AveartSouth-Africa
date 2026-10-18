@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { Product, Category, formatZAR } from '../types/index.ts';
 import { ProductCard } from '../components/ProductCard.tsx';
+import heroImage from '../assets/images/fashion_women_linen_blazer_1792263530901.jpg';
 import { Logo } from '../components/Logo.tsx';
 
 interface HomeViewProps {
@@ -79,7 +80,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate }) => {
         {/* Full-Bleed Model Photo: Occupies the entire hero background from edge to edge */}
         <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none">
           <img
-            src="/src/assets/images/fashion_women_linen_blazer_1792263530901.jpg"
+            src={heroImage}
             alt="AVEART Model wearing Sand Tailored Linen Double-Breasted Blazer"
             className="w-full h-full object-cover object-[center_top] sm:object-[center_15%] md:object-[68%_18%] lg:object-[68%_18%] xl:object-[65%_15%] scale-100 transition-transform duration-1000 ease-out"
           />
