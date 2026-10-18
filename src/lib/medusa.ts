@@ -1,4 +1,4 @@
-const MEDUSA_URL = (import.meta.env.VITE_MEDUSA_BACKEND_URL || 'https://aveart-medusa-api.onrender.com').replace(/\/$/, '');
+const MEDUSA_URL = (import.meta.env.VITE_MEDUSA_BACKEND_URL || '/medusa-api').replace(/\/$/, '');
 const PUBLISHABLE_KEY = import.meta.env.VITE_MEDUSA_PUBLISHABLE_KEY || '';
 
 type MedusaRegion = { id: string; currency_code: string; name?: string };
