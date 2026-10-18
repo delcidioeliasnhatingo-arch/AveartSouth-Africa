@@ -146,7 +146,6 @@ export async function listMedusaProducts(filters: {
 } = {}) {
   const region = await getMedusaRegion();
   const params = new URLSearchParams({ limit: '100', region_id: region.id, fields: PRODUCT_FIELDS });
-  if (filters.category) params.set('category_handle', filters.category);
   if (filters.search) params.set('q', filters.search);
   if (filters.minPrice) params.set('price[gte]', String(Math.round(Number(filters.minPrice) * 100)));
   if (filters.maxPrice) params.set('price[lte]', String(Math.round(Number(filters.maxPrice) * 100)));
@@ -155,6 +154,7 @@ export async function listMedusaProducts(filters: {
   else if (filters.sort === 'newest') params.set('order', '-created_at');
   const { products = [] } = await request<{ products?: MedusaProduct[] }>(`/store/products?${params.toString()}`);
   let mapped = products.map(toThemeProduct);
+  if (filters.category) mapped = mapped.filter((product) => product.category_slug === filters.category || product.category_id === filters.category);
   if (filters.gender && filters.gender !== 'all') mapped = mapped.filter((product) => product.gender === filters.gender || product.gender === 'unisex');
   if (filters.featured) mapped = mapped.filter((product) => product.is_featured === 1);
   if (filters.onSale) mapped = mapped.filter((product) => product.is_on_sale === 1);
