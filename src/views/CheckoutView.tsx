@@ -116,7 +116,6 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({ onBackToBag, onOrder
   const handleSubmitOrder = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage(null);
-    setErrorMessage(null);
     if (!selectedShippingRate) {
       setErrorMessage('Enter your delivery address and calculate a live shipping quote before placing the order.');
       return;
