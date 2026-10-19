@@ -25,9 +25,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onNavigateToCheckout }) 
   if (!isDrawerOpen) return null;
 
   const subtotal = calculation ? calculation.subtotal : items.reduce((acc, i) => acc + (i.unitPrice || 0) * i.quantity, 0);
-  const freeShippingThreshold = 1000;
-  const amountToFreeShipping = Math.max(0, freeShippingThreshold - subtotal);
-  const freeShippingProgress = Math.min(100, (subtotal / freeShippingThreshold) * 100);
+  
 
   const handleApplyDiscount = (e: React.FormEvent) => {
     e.preventDefault();
@@ -64,25 +62,11 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onNavigateToCheckout }) 
             </button>
           </div>
 
-          {/* Complimentary Shipping Progress Banner */}
+          {/* Shipping is quoted after the delivery address is entered */}
           <div className="px-6 py-3.5 bg-rose-50/70 border-b border-rose-100 text-xs">
-            <div className="flex items-center gap-2 text-slate-800 font-bold mb-1.5">
+            <div className="flex items-center gap-2 text-slate-800 font-bold">
               <Truck className="w-4 h-4 text-rose-500 shrink-0" />
-              {amountToFreeShipping === 0 ? (
-                <span className="text-emerald-700 font-extrabold flex items-center gap-1">
-                  🎉 Free Express Delivery Unlocked!
-                </span>
-              ) : (
-                <span>
-                  Add <span className="font-mono tabular-nums font-extrabold text-rose-600">{formatZAR(amountToFreeShipping)}</span> for free delivery
-                </span>
-              )}
-            </div>
-            <div className="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
-              <div
-                className="bg-gradient-to-r from-rose-500 to-amber-500 h-full transition-all duration-300 rounded-full"
-                style={{ width: `${freeShippingProgress}%` }}
-              />
+              <span>Live delivery prices are calculated at checkout using your address and order contents.</span>
             </div>
           </div>
 
@@ -218,7 +202,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onNavigateToCheckout }) 
                 <div className="flex justify-between">
                   <span>Shipping (South Africa)</span>
                   <span className="font-mono tabular-nums font-semibold">
-                    {calculation ? (calculation.shippingAmount === 0 ? 'Free Delivery' : formatZAR(calculation.shippingAmount)) : 'Calculated at checkout'}
+                    Calculated at checkout
                   </span>
                 </div>
 
@@ -230,9 +214,9 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onNavigateToCheckout }) 
                 </div>
 
                 <div className="flex justify-between text-base font-extrabold text-slate-900 pt-2 border-t border-slate-100">
-                  <span>Total</span>
+                  <span>Subtotal + VAT</span>
                   <span className="font-mono tabular-nums text-lg text-rose-600 font-extrabold">
-                    {formatZAR(calculation ? calculation.totalAmount : subtotal)}
+                    {formatZAR(calculation ? calculation.subtotal - calculation.discountAmount + calculation.taxAmount : subtotal)}
                   </span>
                 </div>
               </div>
