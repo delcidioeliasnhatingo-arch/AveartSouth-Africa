@@ -640,6 +640,118 @@ app.post('/api/auth/addresses', requireAuth as any, (req: AuthenticatedRequest, 
   }
 });
 
+
+// ==========================================
+// Live ShipLogic quotes for multi-supplier AVEART orders.
+// Required env: SHIPLOGIC_API_TOKEN and AVEART_SHIPPING_PROFILES_JSON.
+// Profiles are keyed by product slug and contain real collection_address + parcel dimensions/weight.
+// ==========================================
+function signShippingQuote(payload: Record<string, unknown>) {
+  const secret = process.env.SHIPPING_QUOTE_SECRET || process.env.SHIPLOGIC_API_TOKEN;
+  if (!secret) throw new Error('Shipping quote signing is not configured.');
+  const encoded = Buffer.from(JSON.stringify(payload)).toString('base64url');
+  const signature = crypto.createHmac('sha256', secret).update(encoded).digest('base64url');
+  return encoded + '.' + signature;
+}
+function verifyShippingQuote(token: string) {
+  const secret = process.env.SHIPPING_QUOTE_SECRET || process.env.SHIPLOGIC_API_TOKEN;
+  if (!secret) return null;
+  const parts = token.split('.');
+  if (parts.length !== 2) return null;
+  const expected = crypto.createHmac('sha256', secret).update(parts[0]).digest();
+  const supplied = Buffer.from(parts[1], 'base64url');
+  if (supplied.length !== expected.length || !crypto.timingSafeEqual(supplied, expected)) return null;
+  try {
+    const payload = JSON.parse(Buffer.from(parts[0], 'base64url').toString('utf8'));
+    return payload.expiresAt && payload.expiresAt > Date.now() ? payload : null;
+  } catch { return null; }
+}
+app.post('/api/shipping/quote', async (req: Request, res: Response) => {
+  try {
+    const token = process.env.SHIPLOGIC_API_TOKEN;
+    if (!token) return res.status(503).json({ error: 'Live shipping quotes are not configured. Please contact the store.' });
+    let profiles: Record<string, any>;
+    try { profiles = JSON.parse(process.env.AVEART_SHIPPING_PROFILES_JSON || '{}'); }
+    catch { return res.status(503).json({ error: 'Shipping profiles configuration is invalid.' }); }
+    const body = req.body || {};
+    const items = body.items;
+    const delivery = body.delivery;
+    if (!Array.isArray(items) || !items.length || !delivery || !delivery.street_address || !delivery.city || !delivery.zone || !delivery.code) {
+      return res.status(400).json({ error: 'Provide cart items and a complete South African delivery address.' });
+    }
+    const cleanItems = items.map((i: any) => ({ variantId: String(i.variantId || ''), quantity: Number(i.quantity) }));
+    if (cleanItems.some((i: any) => !i.variantId || !Number.isInteger(i.quantity) || i.quantity < 1 || i.quantity > 50)) {
+      return res.status(400).json({ error: 'Cart quantities or variant IDs are invalid.' });
+    }
+    const shipments = new Map<string, { origin: any; parcels: any[] }>();
+    for (const item of cleanItems) {
+      const product = db.prepare('SELECT p.id, p.slug, p.title FROM product_variants v JOIN products p ON p.id = v.product_id WHERE v.id = ? AND p.is_published = 1').get(item.variantId) as any;
+      if (!product) return res.status(400).json({ error: 'One or more cart products could not be found.' });
+      const profile = profiles[product.slug] || profiles[product.id];
+      if (!profile || !profile.collection_address || !profile.parcel) {
+        return res.status(409).json({ code: 'shipping_profile_missing', productSlug: product.slug, error: 'Shipping origin, weight and package dimensions are not configured for "' + product.title + '". Add a real supplier shipping profile before quoting.' });
+      }
+      const origin = profile.collection_address;
+      const parcel = profile.parcel;
+      if (['street_address','city','zone','code'].some((k) => typeof origin[k] !== 'string' || !origin[k].trim()) || origin.country !== 'ZA' ||
+        ['submitted_length_cm','submitted_width_cm','submitted_height_cm','submitted_weight_kg'].some((k) => !Number.isFinite(Number(parcel[k])) || Number(parcel[k]) <= 0)) {
+        return res.status(503).json({ error: 'The shipping profile for "' + product.title + '" is incomplete or invalid.' });
+      }
+      const originKey = JSON.stringify(origin);
+      if (!shipments.has(originKey)) shipments.set(originKey, { origin, parcels: [] });
+      const shipment = shipments.get(originKey)!;
+      for (let n = 0; n < item.quantity; n++) shipment.parcels.push({
+        submitted_length_cm: Number(parcel.submitted_length_cm), submitted_width_cm: Number(parcel.submitted_width_cm),
+        submitted_height_cm: Number(parcel.submitted_height_cm), submitted_weight_kg: Number(parcel.submitted_weight_kg),
+        parcel_description: product.title, packaging: parcel.packaging || 'parcel'
+      });
+    }
+    const destination = {
+      street_address: String(delivery.street_address).trim(), city: String(delivery.city).trim(),
+      zone: String(delivery.zone).trim(), country: 'ZA', code: String(delivery.code).trim(),
+      ...(delivery.suburb ? { suburb: String(delivery.suburb).trim(), local_area: String(delivery.suburb).trim() } : {}),
+      type: delivery.type === 'business' ? 'business' : 'residential'
+    };
+    const totals = new Map<string, any>();
+    for (const shipment of shipments.values()) {
+      const response = await fetch('https://api.shiplogic.com/rates', {
+        method: 'POST',
+        headers: { Authorization: 'Bearer ' + token, Accept: 'application/json', 'Content-Type': 'application/json' },
+        body: JSON.stringify({ collection_address: shipment.origin, delivery_address: destination, parcels: shipment.parcels }),
+        signal: AbortSignal.timeout(15000)
+      });
+      const result: any = await response.json().catch(() => null);
+      if (!response.ok || !Array.isArray(result?.rates)) return res.status(502).json({ error: 'The carrier could not quote one of the supplier routes. No shipping price was added.' });
+      for (const rate of result.rates) {
+        const amount = Number(rate.rate);
+        const code = String(rate.service_level?.code ?? rate.service_level_code ?? '');
+        const name = String(rate.service_level?.name ?? rate.service_level_name ?? 'Courier service');
+        if (!code || !Number.isFinite(amount) || amount < 0) continue;
+        const key = code + '|' + name;
+        const from = rate.service_level?.delivery_date_from ?? rate.estimated_delivery_from ?? null;
+        const to = rate.service_level?.delivery_date_to ?? rate.estimated_delivery_to ?? null;
+        if (totals.has(key)) {
+          const item = totals.get(key);
+          item.amount_zar += amount;
+          item.estimated_delivery_from = [item.estimated_delivery_from, from].filter(Boolean).sort().at(-1) || null;
+          item.estimated_delivery_to = [item.estimated_delivery_to, to].filter(Boolean).sort().at(-1) || null;
+        } else totals.set(key, { service_code: code, service_name: name, amount_zar: amount, estimated_delivery_from: from, estimated_delivery_to: to });
+      }
+    }
+    const destinationFingerprint = crypto.createHash('sha256').update(JSON.stringify(destination)).digest('hex');
+    const cartFingerprint = crypto.createHash('sha256').update(JSON.stringify(cleanItems.slice().sort((a: any,b: any) => a.variantId.localeCompare(b.variantId)))).digest('hex');
+    const rates = [...totals.values()].sort((a,b) => a.amount_zar - b.amount_zar).slice(0,3).map((rate) => {
+      const signed = { ...rate, destinationFingerprint, cartFingerprint, expiresAt: Date.now() + 15 * 60 * 1000 };
+      return { ...rate, quoteToken: signShippingQuote(signed) };
+    });
+    if (!rates.length) return res.status(502).json({ error: 'The carrier returned no valid shipping services for this order.' });
+    return res.json({ provider: 'ShipLogic', currency_code: 'ZAR', rates, valid_for_minutes: 15 });
+  } catch (error: any) {
+    console.error('Shipping quote failed:', error?.message || error);
+    return res.status(502).json({ error: 'Unable to calculate live shipping right now. Please try again later.' });
+  }
+});
+
 // ==========================================
 // 4. CHECKOUT & ORDERS (DEBITO PAY & SANDBOX)
 // ==========================================
@@ -672,6 +784,20 @@ app.post('/api/orders', (req: AuthenticatedRequest, res: Response) => {
     }
 
     const calc = calculateCartAuthoritative(items, discountCode, shippingMethod);
+    const signedQuote = typeof req.body.shippingQuoteToken === 'string' ? verifyShippingQuote(req.body.shippingQuoteToken) : null;
+    const cleanItemsForQuote = items.map((i: any) => ({ variantId: String(i.variantId || ''), quantity: Number(i.quantity) }))
+      .sort((a: any, b: any) => a.variantId.localeCompare(b.variantId));
+    const destinationForQuote = {
+      street_address: String(shippingStreet || '').trim(), city: String(shippingCity || '').trim(),
+      zone: String(shippingState || '').trim(), country: 'ZA', code: String(shippingPostalCode || '').trim(),
+      ...(shippingApartment ? { suburb: String(shippingApartment).trim() } : {}), type: 'residential'
+    };
+    const destinationFingerprint = crypto.createHash('sha256').update(JSON.stringify(destinationForQuote)).digest('hex');
+    const cartFingerprint = crypto.createHash('sha256').update(JSON.stringify(cleanItemsForQuote)).digest('hex');
+    if (!signedQuote || signedQuote.destinationFingerprint !== destinationFingerprint || signedQuote.cartFingerprint !== cartFingerprint ||
+      signedQuote.service_code !== req.body.shippingServiceCode || !Number.isFinite(Number(signedQuote.amount_zar))) {
+      return res.status(400).json({ error: 'Shipping quote is missing, expired, or no longer matches your address/cart. Recalculate shipping before placing the order.' });
+    }
     if (!calc.isValid) {
       return res.status(400).json({
         error: 'Cart validation failed',
@@ -679,6 +805,9 @@ app.post('/api/orders', (req: AuthenticatedRequest, res: Response) => {
       });
     }
 
+    const quotedShippingAmount = Math.round(Number(signedQuote.amount_zar) * 100) / 100;
+    const quotedTaxAmount = Math.round(Math.max(0, calc.subtotal - calc.discountAmount) * 0.15 * 100) / 100;
+    const quotedTotalAmount = Math.round((Math.max(0, calc.subtotal - calc.discountAmount) + quotedShippingAmount + quotedTaxAmount) * 100) / 100;
     const now = new Date().toISOString();
     const orderId = crypto.randomUUID();
     const orderNumber = 'AVE-ZA-' + Math.floor(1000 + Math.random() * 9000);
@@ -735,9 +864,9 @@ app.post('/api/orders', (req: AuthenticatedRequest, res: Response) => {
         calc.subtotal,
         calc.discountAmount,
         discountCode || null,
-        calc.shippingAmount,
-        calc.taxAmount,
-        calc.totalAmount,
+        quotedShippingAmount,
+        quotedTaxAmount,
+        quotedTotalAmount,
         notes || null,
         now,
         now
@@ -772,7 +901,7 @@ app.post('/api/orders', (req: AuthenticatedRequest, res: Response) => {
       return res.status(409).json({ error: 'Order placement failed', details: err.message });
     }
 
-    const paymentIntent = createPaymentIntent(orderId, orderNumber, calc.totalAmount);
+    const paymentIntent = createPaymentIntent(orderId, orderNumber, quotedTotalAmount);
     db.prepare('UPDATE orders SET payment_intent_id = ? WHERE id = ?').run(paymentIntent.id, orderId);
 
     const order = db.prepare('SELECT * FROM orders WHERE id = ?').get(orderId);
