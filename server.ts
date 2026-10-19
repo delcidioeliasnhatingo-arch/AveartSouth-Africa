@@ -457,15 +457,16 @@ export function calculateCartAuthoritative(
     }
   }
 
-  // Shipping rules in ZAR (South African Rand):
-  // Free delivery across South Africa on orders exceeding R 1,000 (otherwise R 95)
-  // White-Glove Curated Delivery: R 350 flat
-  let shippingAmount = 0;
-  if (shippingMethod === 'white_glove_freight') {
-    shippingAmount = 350.0;
-  } else {
-    shippingAmount = subtotal >= 1000.0 ? 0.0 : 95.0;
-  }
+  // AVEART initial flat-rate shipping prices in ZAR.
+  // These are store prices, not live carrier quotes.
+  const shippingRates: Record<string, number> = {
+    aveart_economy: 120.0,
+    aveart_standard: 180.0,
+    aveart_express: 300.0,
+    standard_curated: 180.0,
+    white_glove_freight: 300.0,
+  };
+  const shippingAmount = shippingRates[shippingMethod] ?? shippingRates.aveart_standard;
 
   const taxableAmount = Math.max(0, subtotal - discountAmount);
   // South African standard VAT (15%)
