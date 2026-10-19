@@ -457,16 +457,9 @@ export function calculateCartAuthoritative(
     }
   }
 
-  // AVEART initial flat-rate shipping prices in ZAR.
-  // These are store prices, not live carrier quotes.
-  const shippingRates: Record<string, number> = {
-    aveart_economy: 120.0,
-    aveart_standard: 180.0,
-    aveart_express: 300.0,
-    standard_curated: 180.0,
-    white_glove_freight: 300.0,
-  };
-  const shippingAmount = shippingRates[shippingMethod] ?? shippingRates.aveart_standard;
+  // Never invent a shipping price before a carrier quote exists.
+  // Live shipping is calculated at checkout after address/cart validation.
+  const shippingAmount = 0;
 
   const taxableAmount = Math.max(0, subtotal - discountAmount);
   // South African standard VAT (15%)
