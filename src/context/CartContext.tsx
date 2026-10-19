@@ -36,7 +36,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
   const [discountCode, setDiscountCode] = useState<string>('');
-  const [shippingMethod, setShippingMethod] = useState<string>('aveart_standard');
+  const [shippingMethod, setShippingMethod] = useState<string>('');
   const [calculation, setCalculation] = useState<ServerCartCalculation | null>(null);
   const [isCalculating, setIsCalculating] = useState<boolean>(false);
 
