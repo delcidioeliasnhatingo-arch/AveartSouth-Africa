@@ -790,7 +790,7 @@ app.post('/api/orders', (req: AuthenticatedRequest, res: Response) => {
     const destinationForQuote = {
       street_address: String(shippingStreet || '').trim(), city: String(shippingCity || '').trim(),
       zone: String(shippingState || '').trim(), country: 'ZA', code: String(shippingPostalCode || '').trim(),
-      ...(shippingApartment ? { suburb: String(shippingApartment).trim() } : {}), type: 'residential'
+      ...(shippingApartment ? { suburb: String(shippingApartment).trim(), local_area: String(shippingApartment).trim() } : {}), type: 'residential'
     };
     const destinationFingerprint = crypto.createHash('sha256').update(JSON.stringify(destinationForQuote)).digest('hex');
     const cartFingerprint = crypto.createHash('sha256').update(JSON.stringify(cleanItemsForQuote)).digest('hex');
