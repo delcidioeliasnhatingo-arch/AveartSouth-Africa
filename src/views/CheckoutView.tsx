@@ -295,64 +295,41 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({ onBackToBag, onOrder
             <span className="text-xs uppercase tracking-wider font-extrabold text-slate-900 block pb-3 border-b border-slate-100">
               03. Shipping Logistics
             </span>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-              <label
-                className={`p-4 border rounded-2xl cursor-pointer transition-all flex flex-col justify-between ${
-                  shippingMethod === 'standard_curated'
-                    ? 'border-rose-500 bg-rose-50/60 ring-2 ring-rose-500 shadow-sm'
-                    : 'border-slate-200 bg-white hover:border-slate-300'
-                }`}
-              >
-                <div className="flex items-start justify-between">
-                  <div>
-                    <input
-                      type="radio"
-                      name="shippingMethod"
-                      value="standard_curated"
-                      checked={shippingMethod === 'standard_curated'}
-                      onChange={() => setShippingMethod('standard_curated')}
-                      className="accent-rose-500 mr-2"
-                    />
-                    <strong className="text-slate-900 font-bold">Express Door-to-Door Courier</strong>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+              {[
+                { id: 'aveart_economy', name: 'AVEART Economy', price: 120, detail: 'Economical nationwide delivery for standard parcels.' },
+                { id: 'aveart_standard', name: 'AVEART Standard', price: 180, detail: 'Balanced delivery option for everyday orders.' },
+                { id: 'aveart_express', name: 'AVEART Express', price: 300, detail: 'Priority delivery option for urgent orders.' },
+              ].map((option) => (
+                <label
+                  key={option.id}
+                  className={`p-4 border rounded-2xl cursor-pointer transition-all flex flex-col justify-between ${
+                    shippingMethod === option.id
+                      ? 'border-rose-500 bg-rose-50/60 ring-2 ring-rose-500 shadow-sm'
+                      : 'border-slate-200 bg-white hover:border-slate-300'
+                  }`}
+                >
+                  <div className="flex items-start justify-between gap-2">
+                    <div>
+                      <input
+                        type="radio"
+                        name="shippingMethod"
+                        value={option.id}
+                        checked={shippingMethod === option.id}
+                        onChange={() => setShippingMethod(option.id)}
+                        className="accent-rose-500 mr-2"
+                      />
+                      <strong className="text-slate-900 font-bold">{option.name}</strong>
+                    </div>
+                    <span className="font-mono tabular-nums font-extrabold text-rose-600">R {option.price.toFixed(2)}</span>
                   </div>
-                  <span className="font-mono tabular-nums font-extrabold text-rose-600">
-                    {(calculation?.subtotal || 0) >= 1000 ? 'FREE' : 'R 95.00'}
-                  </span>
-                </div>
-                <p className="text-slate-500 mt-2 text-[11px] leading-relaxed">
-                  The Courier Guy / RAM Hand-to-Hand across all SA metros (2–4 business days).
-                </p>
-              </label>
-
-              <label
-                className={`p-4 border rounded-2xl cursor-pointer transition-all flex flex-col justify-between ${
-                  shippingMethod === 'white_glove_freight'
-                    ? 'border-rose-500 bg-rose-50/60 ring-2 ring-rose-500 shadow-sm'
-                    : 'border-slate-200 bg-white hover:border-slate-300'
-                }`}
-              >
-                <div className="flex items-start justify-between">
-                  <div>
-                    <input
-                      type="radio"
-                      name="shippingMethod"
-                      value="white_glove_freight"
-                      checked={shippingMethod === 'white_glove_freight'}
-                      onChange={() => setShippingMethod('white_glove_freight')}
-                      className="accent-rose-500 mr-2"
-                    />
-                    <strong className="text-slate-900 font-bold">Priority Same-Day Dispatch</strong>
-                  </div>
-                  <span className="font-mono tabular-nums font-extrabold text-slate-900">
-                    R 350.00
-                  </span>
-                </div>
-                <p className="text-slate-500 mt-2 text-[11px] leading-relaxed">
-                  Express direct delivery in Cape Town & Johannesburg metropolitan zones.
-                </p>
-              </label>
+                  <p className="text-slate-500 mt-2 text-[11px] leading-relaxed">{option.detail}</p>
+                </label>
+              ))}
             </div>
+            <p className="text-[11px] leading-relaxed text-slate-500">
+              These are AVEART’s initial flat-rate prices, not live carrier quotes. Remote areas, oversized parcels and special deliveries may require confirmation before dispatch.
+            </p>
           </div>
 
           {/* Step 4: Payment Method Selection */}
