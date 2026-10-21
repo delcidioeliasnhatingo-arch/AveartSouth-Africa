@@ -220,3 +220,100 @@ export async function completeMedusaCart(cartId: string): Promise<Record<string,
     { method: 'POST', body: JSON.stringify({}) },
   );
 }
+
+
+/** True when public storefront settings are present; lets the UI retain its legacy
+ * data source until a real Medusa staging backend has been configured. */
+export function isMedusaConfigured(): boolean {
+  const env = import.meta.env;
+  return Boolean(
+    String(env.VITE_MEDUSA_BACKEND_URL || '').trim() &&
+    String(env.VITE_MEDUSA_PUBLISHABLE_KEY || '').trim(),
+  );
+}
+
+function amountToZar(amount: unknown): number {
+  const value = Number(amount);
+  // Medusa monetary amounts are represented in the currency's minor unit.
+  return Number.isFinite(value) ? value / 100 : 0;
+}
+
+/** Maps public Medusa Store API data to the existing AVEART card/detail view model. */
+export function mapMedusaProduct(product: MedusaProduct): import('../types/index.ts').Product {
+  const categories = Array.isArray(product.categories) ? product.categories : [];
+  const category = categories[0];
+  const categoryLabel = category?.name || 'Fashion';
+  const categorySlug = category?.handle || 'fashion';
+  const categoryText = `${categoryLabel} ${categorySlug}`.toLowerCase();
+  const gender: import('../types/index.ts').GenderCategory =
+    categoryText.includes('women') || categoryText.includes('woman') ? 'women' :
+    categoryText.includes('men') || categoryText.includes('man') ? 'men' : 'unisex';
+
+  const variants = (product.variants || []).map((variant) => {
+    const options = variant.options || [];
+    const size = options.find((option) => /size/i.test(option.option?.title || ''))?.value;
+    const color = options.find((option) => /colou?r/i.test(option.option?.title || ''))?.value;
+    const rawAmount = variant.calculated_price?.calculated_amount ??
+      variant.prices?.find((price) => price.currency_code?.toLowerCase() === 'zar')?.amount ?? 0;
+    const image = product.images?.[0]?.url || product.thumbnail || '';
+    const inventory = Number((variant as typeof variant & { inventory_quantity?: number }).inventory_quantity);
+    return {
+      id: variant.id,
+      product_id: product.id,
+      sku: variant.sku || variant.id,
+      name: variant.title || [size, color].filter(Boolean).join(' / ') || 'Default',
+      size,
+      color,
+      price_offset: 0,
+      // Never invent stock. If Medusa does not expose an inventory quantity,
+      // the variant remains unavailable until inventory is configured/verified.
+      stock_quantity: Number.isFinite(inventory) ? inventory : 0,
+      low_stock_threshold: 3,
+      image_url: image,
+      created_at: '',
+      _mappedPrice: amountToZar(rawAmount),
+    };
+  });
+
+  const variantPrices = variants.map((variant) => variant._mappedPrice);
+  const basePrice = variantPrices.length ? Math.min(...variantPrices) : 0;
+  const cleanVariants: import('../types/index.ts').ProductVariant[] = variants.map(({ _mappedPrice, ...variant }) => variant);
+  const sizes = Array.from(new Set(cleanVariants.map((variant) => variant.size).filter((value): value is string => Boolean(value))));
+  const colors = Array.from(new Set(cleanVariants.map((variant) => variant.color).filter((value): value is string => Boolean(value))))
+    .map((name) => ({ name, hex: '#D1D5DB' }));
+
+  return {
+    id: product.id,
+    category_id: category?.id || '',
+    category_name: categoryLabel,
+    category_slug: categorySlug,
+    gender,
+    title: product.title || 'Untitled product',
+    slug: product.handle || product.id,
+    subtitle: product.subtitle || '',
+    description: product.description || '',
+    material: '',
+    artisan: '',
+    provenance: '',
+    base_price: basePrice,
+    sizes,
+    colors,
+    is_published: 1,
+    is_featured: 0,
+    created_at: '',
+    variants: cleanVariants,
+    total_stock: cleanVariants.reduce((sum, variant) => sum + variant.stock_quantity, 0),
+    primary_image: product.thumbnail || product.images?.[0]?.url || '',
+  };
+}
+
+export function mapMedusaCategory(category: { id: string; name: string; handle: string; description?: string | null }): import('../types/index.ts').Category {
+  return {
+    id: category.id,
+    name: category.name,
+    slug: category.handle,
+    description: category.description || '',
+    image_url: '',
+    sort_order: 0,
+  };
+}
