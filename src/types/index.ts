@@ -74,6 +74,7 @@ export interface CartItem {
   imageUrl?: string;
   stockAvailable?: number;
   lineTotal?: number;
+  medusaLineItemId?: string;
 }
 
 export interface ServerCartCalculation {
