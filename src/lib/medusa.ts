@@ -139,7 +139,7 @@ export async function listMedusaProducts(options: {
   const params = new URLSearchParams({
     limit: String(options.limit ?? 24),
     offset: String(options.offset ?? 0),
-    fields: '+variants,+variants.calculated_price,+variants.prices,+variants.options,+categories',
+    fields: '*variants.calculated_price,+variants.inventory_quantity,*variants.prices,*variants.options,*categories',
   });
   if (options.handle) params.set('handle', options.handle);
   if (options.categoryId) params.set('category_id[]', options.categoryId);
@@ -274,7 +274,7 @@ export function mapMedusaProduct(product: MedusaProduct): import('../types/index
       price_offset: 0,
       // Never invent stock. If Medusa does not expose an inventory quantity,
       // the variant remains unavailable until inventory is configured/verified.
-      stock_quantity: Number.isFinite(inventory) ? inventory : 0,
+      stock_quantity: variant.manage_inventory === false ? 999 : (Number.isFinite(inventory) ? inventory : 0),
       low_stock_threshold: 3,
       image_url: image,
       created_at: '',
