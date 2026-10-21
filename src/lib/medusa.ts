@@ -255,7 +255,7 @@ export function mapMedusaProduct(product: MedusaProduct): import('../types/index
 
   const variants = (product.variants || []).map((variant) => {
     const options = variant.options || [];
-    const titleParts = (variant.title || '').split(/\\s*\\/\\s*/);
+    const titleParts = (variant.title || '').split(/\s*\/\s*/);
     const size = options.find((option) => /size/i.test(option.option?.title || ''))?.value ||
       titleParts.find((part) => /^(xxs|xs|s|m|l|xl|xxl|xxxl|[0-9]{2})$/i.test(part));
     const color = options.find((option) => /colou?r/i.test(option.option?.title || ''))?.value ||
