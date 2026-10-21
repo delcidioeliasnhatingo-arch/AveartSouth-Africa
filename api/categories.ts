@@ -1,4 +1,4 @@
-import { medusa, mapCategory, sendError } from "./_medusa";
+import { medusa, mapCategory, sendError } from "./_medusa.ts";
 
 export default async function handler(_req: any, res: any) {
   try {
