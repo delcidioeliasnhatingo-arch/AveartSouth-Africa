@@ -1,5 +1,6 @@
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
 import { CartItem, ServerCartCalculation } from '../types/index.ts';
+import { addMedusaLineItem, createMedusaCart, getMedusaConfig, isMedusaConfigured, removeMedusaLineItem, updateMedusaLineItem } from '../lib/medusa.ts';
 
 interface CartContextType {
   items: CartItem[];
@@ -18,11 +19,13 @@ interface CartContextType {
   isCalculating: boolean;
   totalItemCount: number;
   recalculate: () => Promise<void>;
+  medusaSyncError: string | null;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 const CART_STORAGE_KEY = 'aveart_bag_items';
+const MEDUSA_CART_STORAGE_KEY = 'aveart_medusa_cart_id';
 
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [items, setItems] = useState<CartItem[]>(() => {
@@ -33,6 +36,12 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return [];
     }
   });
+
+  const [medusaCartId, setMedusaCartId] = useState<string | null>(() => {
+    try { return localStorage.getItem(MEDUSA_CART_STORAGE_KEY); } catch { return null; }
+  });
+  const [medusaSyncError, setMedusaSyncError] = useState<string | null>(null);
+  const medusaCartCreation = useRef<Promise<string> | null>(null);
 
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
   const [discountCode, setDiscountCode] = useState<string>('');
@@ -51,6 +60,12 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // Server-authoritative calculation
   const recalculate = useCallback(async () => {
+    if (isMedusaConfigured()) {
+      // Medusa cart mutations are synced directly below; until the staging region
+      // and inventory are configured, do not trust the legacy SQLite calculator.
+      setCalculation(null);
+      return;
+    }
     if (items.length === 0) {
       setCalculation(null);
       return;
@@ -83,6 +98,21 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     recalculate();
   }, [recalculate]);
 
+  const ensureMedusaCart = async (): Promise<string> => {
+    const stored = medusaCartId || (() => {
+      try { return localStorage.getItem(MEDUSA_CART_STORAGE_KEY); } catch { return null; }
+    })();
+    if (stored) return stored;
+    if (!medusaCartCreation.current) {
+      medusaCartCreation.current = createMedusaCart().then((cart) => {
+        try { localStorage.setItem(MEDUSA_CART_STORAGE_KEY, cart.id); } catch { /* storage optional */ }
+        setMedusaCartId(cart.id);
+        return cart.id;
+      }).finally(() => { medusaCartCreation.current = null; });
+    }
+    return medusaCartCreation.current;
+  };
+
   const addItem = (variantId: string, quantity: number = 1, meta?: Partial<CartItem>) => {
     setItems((prev) => {
       const existing = prev.find((i) => i.variantId === variantId);
@@ -94,10 +124,34 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return [...prev, { variantId, quantity, ...meta }];
     });
     setIsDrawerOpen(true);
+
+    if (isMedusaConfigured()) {
+      setMedusaSyncError(null);
+      void (async () => {
+        try {
+          const cartId = await ensureMedusaCart();
+          const cart = await addMedusaLineItem(cartId, variantId, quantity);
+          const line = cart.items?.find((item) => item.variant_id === variantId);
+          if (line) {
+            setItems((prev) => prev.map((item) =>
+              item.variantId === variantId ? { ...item, medusaLineItemId: line.id } : item
+            ));
+          }
+        } catch (error) {
+          setMedusaSyncError(error instanceof Error ? error.message : 'Could not sync the bag with Medusa.');
+        }
+      })();
+    }
   };
 
   const removeItem = (variantId: string) => {
-    setItems((prev) => prev.filter((i) => i.variantId !== variantId));
+    const item = items.find((entry) => entry.variantId === variantId);
+    setItems((prev) => prev.filter((entry) => entry.variantId !== variantId));
+    if (isMedusaConfigured() && medusaCartId && item?.medusaLineItemId) {
+      void removeMedusaLineItem(medusaCartId, item.medusaLineItemId).catch((error) => {
+        setMedusaSyncError(error instanceof Error ? error.message : 'Could not remove the item from Medusa.');
+      });
+    }
   };
 
   const updateQuantity = (variantId: string, quantity: number) => {
@@ -105,15 +159,23 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       removeItem(variantId);
       return;
     }
-    setItems((prev) =>
-      prev.map((i) => (i.variantId === variantId ? { ...i, quantity } : i))
-    );
+    const item = items.find((entry) => entry.variantId === variantId);
+    setItems((prev) => prev.map((entry) => (entry.variantId === variantId ? { ...entry, quantity } : entry)));
+    if (isMedusaConfigured() && medusaCartId && item?.medusaLineItemId) {
+      void updateMedusaLineItem(medusaCartId, item.medusaLineItemId, quantity).catch((error) => {
+        setMedusaSyncError(error instanceof Error ? error.message : 'Could not update the Medusa bag.');
+      });
+    }
   };
 
   const clearCart = () => {
     setItems([]);
     setDiscountCode('');
     setCalculation(null);
+    if (isMedusaConfigured() && medusaCartId) {
+      try { localStorage.removeItem(MEDUSA_CART_STORAGE_KEY); } catch { /* storage optional */ }
+      setMedusaCartId(null);
+    }
   };
 
   const totalItemCount = items.reduce((acc, curr) => acc + curr.quantity, 0);
@@ -137,6 +199,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         isCalculating,
         totalItemCount,
         recalculate,
+        medusaSyncError,
       }}
     >
       {children}
