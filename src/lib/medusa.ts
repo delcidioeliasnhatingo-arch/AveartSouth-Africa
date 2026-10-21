@@ -133,6 +133,9 @@ export async function listMedusaProducts(options: {
   categoryId?: string;
 } = {}): Promise<MedusaList<MedusaProduct>> {
   const config = getMedusaConfig();
+  if (!config.regionId) {
+    throw new Error('Medusa catalogue requires VITE_MEDUSA_REGION_ID for correct South Africa/ZAR prices.');
+  }
   const params = new URLSearchParams({
     limit: String(options.limit ?? 24),
     offset: String(options.offset ?? 0),
@@ -253,7 +256,10 @@ export function mapMedusaProduct(product: MedusaProduct): import('../types/index
     const options = variant.options || [];
     const size = options.find((option) => /size/i.test(option.option?.title || ''))?.value;
     const color = options.find((option) => /colou?r/i.test(option.option?.title || ''))?.value;
-    const rawAmount = variant.calculated_price?.calculated_amount ??
+    const calculatedPrice = variant.calculated_price?.currency_code?.toLowerCase() === 'zar'
+      ? variant.calculated_price.calculated_amount
+      : undefined;
+    const rawAmount = calculatedPrice ??
       variant.prices?.find((price) => price.currency_code?.toLowerCase() === 'zar')?.amount ?? 0;
     const image = product.images?.[0]?.url || product.thumbnail || '';
     const inventory = Number((variant as typeof variant & { inventory_quantity?: number }).inventory_quantity);
@@ -277,7 +283,10 @@ export function mapMedusaProduct(product: MedusaProduct): import('../types/index
 
   const variantPrices = variants.map((variant) => variant._mappedPrice);
   const basePrice = variantPrices.length ? Math.min(...variantPrices) : 0;
-  const cleanVariants: import('../types/index.ts').ProductVariant[] = variants.map(({ _mappedPrice, ...variant }) => variant);
+  const cleanVariants: import('../types/index.ts').ProductVariant[] = variants.map(({ _mappedPrice, ...variant }) => ({
+    ...variant,
+    price_offset: _mappedPrice - basePrice,
+  }));
   const sizes = Array.from(new Set(cleanVariants.map((variant) => variant.size).filter((value): value is string => Boolean(value))));
   const colors = Array.from(new Set(cleanVariants.map((variant) => variant.color).filter((value): value is string => Boolean(value))))
     .map((name) => ({ name, hex: '#D1D5DB' }));
