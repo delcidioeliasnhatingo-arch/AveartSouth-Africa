@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Filter, SlidersHorizontal, RotateCcw, Search, Sparkles } from 'lucide-react';
 import { Product, Category, formatZAR } from '../types/index.ts';
 import { ProductCard } from '../components/ProductCard.tsx';
+import { isMedusaConfigured, listMedusaCategories, listMedusaProducts, mapMedusaCategory, mapMedusaProduct } from '../lib/medusa.ts';
 
 interface CatalogViewProps {
   initialCategory?: string;
@@ -21,6 +22,7 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
 
   // Filters state
   const [selectedGender, setSelectedGender] = useState<string>(initialGender || 'all');
@@ -32,10 +34,21 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
   const [priceRange, setPriceRange] = useState<string>('all');
 
   useEffect(() => {
-    fetch('/api/categories')
-      .then((r) => r.json())
-      .then((data) => setCategories(data))
-      .catch((err) => console.error('Error fetching categories:', err));
+    const loadCategories = async () => {
+      try {
+        if (isMedusaConfigured()) {
+          const result = await listMedusaCategories();
+          setCategories((result.product_categories || []).map(mapMedusaCategory));
+          return;
+        }
+        const response = await fetch('/api/categories');
+        if (!response.ok) throw new Error(`Categories request failed (HTTP ${response.status}).`);
+        setCategories(await response.json());
+      } catch (err) {
+        console.error('Error fetching categories:', err);
+      }
+    };
+    void loadCategories();
   }, []);
 
   useEffect(() => {
@@ -46,48 +59,77 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
   }, [initialGender, initialCategory, initialSearch, initialSale]);
 
   useEffect(() => {
-    setLoading(true);
+    let cancelled = false;
+    const loadProducts = async () => {
+      setLoading(true);
+      setLoadError(null);
+      try {
+        if (isMedusaConfigured()) {
+          const result = await listMedusaProducts({ limit: 100 });
+          let data = (result.products || []).map(mapMedusaProduct);
+          const query = searchQuery.trim().toLowerCase();
+          if (selectedGender && selectedGender !== 'all') {
+            data = data.filter((product) =>
+              selectedGender === 'accessories'
+                ? /accessor|bag|jewel|shoe|belt|hat/i.test(`${product.category_name} ${product.category_slug}`)
+                : product.gender === selectedGender,
+            );
+          }
+          if (selectedCategory && selectedCategory !== 'all') {
+            data = data.filter((product) =>
+              product.category_slug === selectedCategory ||
+              product.category_name.toLowerCase() === selectedCategory.toLowerCase(),
+            );
+          }
+          if (query) {
+            data = data.filter((product) =>
+              `${product.title} ${product.subtitle} ${product.description} ${product.category_name}`.toLowerCase().includes(query),
+            );
+          }
+          if (inStockOnly) data = data.filter((product) => (product.total_stock || 0) > 0);
+          if (onlySale) data = data.filter((product) => Boolean(product.original_price && product.original_price > product.base_price));
+          if (priceRange === 'under1000') data = data.filter((product) => product.base_price < 1000);
+          else if (priceRange === '1000to2500') data = data.filter((product) => product.base_price >= 1000 && product.base_price <= 2500);
+          else if (priceRange === 'above2500') data = data.filter((product) => product.base_price > 2500);
+          if (sortOption === 'price_asc') data.sort((a, b) => a.base_price - b.base_price);
+          else if (sortOption === 'price_desc') data.sort((a, b) => b.base_price - a.base_price);
+          else if (sortOption === 'newest') data.sort((a, b) => b.created_at.localeCompare(a.created_at));
+          if (!cancelled) setProducts(data);
+          return;
+        }
 
-    const params = new URLSearchParams();
-    if (selectedGender && selectedGender !== 'all') {
-      if (selectedGender === 'accessories') {
-        params.append('category', 'accessories');
-      } else {
-        params.append('gender', selectedGender);
+        const params = new URLSearchParams();
+        if (selectedGender && selectedGender !== 'all') {
+          if (selectedGender === 'accessories') params.append('category', 'accessories');
+          else params.append('gender', selectedGender);
+        }
+        if (selectedCategory && selectedCategory !== 'all') params.append('category', selectedCategory);
+        if (searchQuery.trim()) params.append('search', searchQuery.trim());
+        if (inStockOnly) params.append('inStockOnly', 'true');
+        if (onlySale) params.append('onSale', 'true');
+        if (sortOption) params.append('sort', sortOption);
+        if (priceRange === 'under1000') params.append('maxPrice', '1000');
+        else if (priceRange === '1000to2500') {
+          params.append('minPrice', '1000');
+          params.append('maxPrice', '2500');
+        } else if (priceRange === 'above2500') params.append('minPrice', '2500');
+
+        const response = await fetch(`/api/products?${params.toString()}`);
+        if (!response.ok) throw new Error(`Products request failed (HTTP ${response.status}).`);
+        const data = await response.json();
+        if (!cancelled) setProducts(Array.isArray(data) ? data : []);
+      } catch (err) {
+        console.error('Failed to load products:', err);
+        if (!cancelled) {
+          setProducts([]);
+          setLoadError(err instanceof Error ? err.message : 'Unable to load the catalogue.');
+        }
+      } finally {
+        if (!cancelled) setLoading(false);
       }
-    }
-    if (selectedCategory && selectedCategory !== 'all') {
-      params.append('category', selectedCategory);
-    }
-    if (searchQuery.trim()) {
-      params.append('search', searchQuery.trim());
-    }
-    if (inStockOnly) {
-      params.append('inStockOnly', 'true');
-    }
-    if (onlySale) {
-      params.append('onSale', 'true');
-    }
-    if (sortOption) {
-      params.append('sort', sortOption);
-    }
-
-    if (priceRange === 'under1000') {
-      params.append('maxPrice', '1000');
-    } else if (priceRange === '1000to2500') {
-      params.append('minPrice', '1000');
-      params.append('maxPrice', '2500');
-    } else if (priceRange === 'above2500') {
-      params.append('minPrice', '2500');
-    }
-
-    fetch(`/api/products?${params.toString()}`)
-      .then((r) => r.json())
-      .then((data) => {
-        setProducts(data);
-      })
-      .catch((err) => console.error('Failed to load products:', err))
-      .finally(() => setLoading(false));
+    };
+    void loadProducts();
+    return () => { cancelled = true; };
   }, [selectedGender, selectedCategory, searchQuery, inStockOnly, onlySale, sortOption, priceRange]);
 
   const resetFilters = () => {
@@ -295,6 +337,12 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
           {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
             <div key={i} className="aspect-[3/4] bg-white border border-slate-200 rounded-2xl animate-pulse" />
           ))}
+        </div>
+      ) : loadError ? (
+        <div role="alert" className="bg-amber-50 border border-amber-200 rounded-3xl p-10 text-center space-y-3">
+          <h3 className="text-lg font-bold text-amber-950">Catalogue temporarily unavailable</h3>
+          <p className="text-sm text-amber-900 max-w-xl mx-auto">{loadError}</p>
+          <p className="text-xs text-amber-800">If Medusa is being configured, verify the backend URL, publishable key, South Africa/ZAR region and Store API CORS settings.</p>
         </div>
       ) : products.length === 0 ? (
         <div className="bg-white border border-slate-200 rounded-3xl p-12 text-center space-y-4 shadow-sm">

@@ -1,0 +1,332 @@
+/**
+ * Public AVEART storefront client for the Medusa Store API.
+ *
+ * Only expose VITE_ variables that are safe to ship to the browser:
+ * - VITE_MEDUSA_BACKEND_URL
+ * - VITE_MEDUSA_PUBLISHABLE_KEY
+ * - VITE_MEDUSA_REGION_ID (optional until the South Africa region is configured)
+ * - VITE_MEDUSA_SALES_CHANNEL_ID (optional)
+ *
+ * Never place DATABASE_URL, DebitoPay keys, webhook secrets, JWT_SECRET or
+ * COOKIE_SECRET in VITE_ variables.
+ */
+
+export type MedusaList<T> = {
+  [key: string]: unknown;
+  count?: number;
+  limit?: number;
+  offset?: number;
+  products?: T[];
+  product_categories?: T[];
+  cart?: MedusaCart;
+  payment_collection?: unknown;
+  type?: string;
+};
+
+export type MedusaProduct = {
+  id: string;
+  title: string;
+  handle: string;
+  description?: string | null;
+  subtitle?: string | null;
+  status?: string;
+  thumbnail?: string | null;
+  images?: Array<{ id?: string; url: string }>;
+  categories?: Array<{ id: string; name: string; handle: string }>;
+  variants?: Array<{
+    id: string;
+    title?: string;
+    sku?: string | null;
+    manage_inventory?: boolean;
+    calculated_price?: {
+      calculated_amount?: number;
+      currency_code?: string;
+    } | null;
+    prices?: Array<{ amount: number; currency_code: string }>;
+    options?: Array<{ id?: string; value: string; option?: { title?: string } }>;
+  }>;
+  [key: string]: unknown;
+};
+
+export type MedusaCart = {
+  id: string;
+  region_id?: string;
+  currency_code?: string;
+  items?: Array<{
+    id: string;
+    quantity: number;
+    variant_id?: string;
+    title?: string;
+    unit_price?: number;
+    subtotal?: number;
+    total?: number;
+  }>;
+  total?: number;
+  subtotal?: number;
+  [key: string]: unknown;
+};
+
+type MedusaConfig = {
+  backendUrl: string;
+  publishableKey: string;
+  regionId?: string;
+  salesChannelId?: string;
+};
+
+export function getMedusaConfig(): MedusaConfig {
+  const env = import.meta.env;
+  const backendUrl = String(env.VITE_MEDUSA_BACKEND_URL || '').trim().replace(/\/+$/, '');
+  const publishableKey = String(env.VITE_MEDUSA_PUBLISHABLE_KEY || '').trim();
+
+  if (!backendUrl) {
+    throw new Error('Medusa is not configured: set VITE_MEDUSA_BACKEND_URL in the storefront hosting settings.');
+  }
+  if (!/^https?:\/\//i.test(backendUrl)) {
+    throw new Error('VITE_MEDUSA_BACKEND_URL must be an absolute HTTP(S) URL.');
+  }
+  if (!publishableKey) {
+    throw new Error('Medusa is not configured: create a publishable API key in Medusa Admin and set VITE_MEDUSA_PUBLISHABLE_KEY.');
+  }
+
+  return {
+    backendUrl,
+    publishableKey,
+    regionId: String(env.VITE_MEDUSA_REGION_ID || '').trim() || undefined,
+    salesChannelId: String(env.VITE_MEDUSA_SALES_CHANNEL_ID || '').trim() || undefined,
+  };
+}
+
+export async function medusaFetch<T>(
+  path: string,
+  init: RequestInit = {},
+): Promise<T> {
+  const config = getMedusaConfig();
+  const url = `${config.backendUrl}${path.startsWith('/') ? path : `/${path}`}`;
+  const headers = new Headers(init.headers);
+  headers.set('accept', 'application/json');
+  headers.set('x-publishable-api-key', config.publishableKey);
+  if (init.body && !headers.has('content-type')) {
+    headers.set('content-type', 'application/json');
+  }
+
+  const response = await fetch(url, { ...init, headers });
+  const text = await response.text();
+  let payload: unknown = null;
+  try {
+    payload = text ? JSON.parse(text) : null;
+  } catch {
+    payload = null;
+  }
+
+  if (!response.ok) {
+    const errorPayload = payload as { message?: string; type?: string } | null;
+    const message = errorPayload?.message || `Medusa Store API request failed (HTTP ${response.status}).`;
+    throw new Error(message);
+  }
+  return payload as T;
+}
+
+export async function listMedusaProducts(options: {
+  limit?: number;
+  offset?: number;
+  handle?: string;
+  categoryId?: string;
+} = {}): Promise<MedusaList<MedusaProduct>> {
+  const config = getMedusaConfig();
+  if (!config.regionId) {
+    throw new Error('Medusa catalogue requires VITE_MEDUSA_REGION_ID for correct South Africa/ZAR prices.');
+  }
+  const params = new URLSearchParams({
+    limit: String(options.limit ?? 24),
+    offset: String(options.offset ?? 0),
+    fields: '*variants.calculated_price,+variants.inventory_quantity,*variants.prices,*variants.options,*variants.options.option,*categories',
+  });
+  if (options.handle) params.set('handle', options.handle);
+  if (options.categoryId) params.set('category_id[]', options.categoryId);
+  if (config.regionId) params.set('region_id', config.regionId);
+  if (config.salesChannelId) params.set('sales_channel_id[]', config.salesChannelId);
+  return medusaFetch<MedusaList<MedusaProduct>>(`/store/products?${params.toString()}`);
+}
+
+export async function listMedusaCategories(): Promise<MedusaList<{ id: string; name: string; handle: string; description?: string | null }>> {
+  return medusaFetch('/store/product-categories?limit=100&include_descendants_tree=true');
+}
+
+export async function createMedusaCart(): Promise<MedusaCart> {
+  const config = getMedusaConfig();
+  if (!config.regionId) {
+    throw new Error('Medusa checkout needs VITE_MEDUSA_REGION_ID for the configured South Africa/ZAR region.');
+  }
+  const body: Record<string, string> = { region_id: config.regionId };
+  if (config.salesChannelId) body.sales_channel_id = config.salesChannelId;
+  const response = await medusaFetch<{ cart: MedusaCart }>('/store/carts', {
+    method: 'POST',
+    body: JSON.stringify(body),
+  });
+  if (!response?.cart?.id) throw new Error('Medusa did not return a cart ID.');
+  return response.cart;
+}
+
+export async function addMedusaLineItem(cartId: string, variantId: string, quantity = 1): Promise<MedusaCart> {
+  if (!cartId || !variantId || !Number.isInteger(quantity) || quantity < 1) {
+    throw new Error('A valid cart, variant and positive integer quantity are required.');
+  }
+  const response = await medusaFetch<{ cart: MedusaCart }>(`/store/carts/${encodeURIComponent(cartId)}/line-items`, {
+    method: 'POST',
+    body: JSON.stringify({ variant_id: variantId, quantity }),
+  });
+  return response.cart;
+}
+
+export async function updateMedusaLineItem(cartId: string, lineItemId: string, quantity: number): Promise<MedusaCart> {
+  if (!cartId || !lineItemId || !Number.isInteger(quantity) || quantity < 1) {
+    throw new Error('A valid cart, line item and positive integer quantity are required.');
+  }
+  const response = await medusaFetch<{ cart: MedusaCart }>(
+    `/store/carts/${encodeURIComponent(cartId)}/line-items/${encodeURIComponent(lineItemId)}`,
+    { method: 'POST', body: JSON.stringify({ quantity }) },
+  );
+  return response.cart;
+}
+
+export async function removeMedusaLineItem(cartId: string, lineItemId: string): Promise<MedusaCart> {
+  await medusaFetch<unknown>(
+    `/store/carts/${encodeURIComponent(cartId)}/line-items/${encodeURIComponent(lineItemId)}`,
+    { method: 'DELETE' },
+  );
+  // Medusa's DELETE response is a deletion result, not necessarily a cart.
+  // Read the canonical cart after the mutation to keep UI totals authoritative.
+  const response = await medusaFetch<{ cart: MedusaCart }>(
+    `/store/carts/${encodeURIComponent(cartId)}?fields=*items,+items.variant,+items.product`,
+  );
+  if (!response?.cart) throw new Error('Medusa did not return the updated cart after removing the item.');
+  return response.cart;
+}
+
+export async function initiateMedusaPaymentSession(
+  cartId: string,
+  providerId: string,
+  data: Record<string, unknown> = {},
+): Promise<MedusaCart> {
+  if (!cartId || !providerId) throw new Error('Cart ID and configured Medusa payment provider ID are required.');
+  const response = await medusaFetch<{ cart: MedusaCart }>(
+    `/store/carts/${encodeURIComponent(cartId)}/payment-sessions`,
+    { method: 'POST', body: JSON.stringify({ provider_id: providerId, data }) },
+  );
+  return response.cart;
+}
+
+export async function completeMedusaCart(cartId: string): Promise<Record<string, unknown>> {
+  if (!cartId) throw new Error('Cart ID is required to complete checkout.');
+  return medusaFetch<Record<string, unknown>>(
+    `/store/carts/${encodeURIComponent(cartId)}/complete`,
+    { method: 'POST', body: JSON.stringify({}) },
+  );
+}
+
+
+/** True when public storefront settings are present; lets the UI retain its legacy
+ * data source until a real Medusa staging backend has been configured. */
+export function isMedusaConfigured(): boolean {
+  const env = import.meta.env;
+  return Boolean(
+    String(env.VITE_MEDUSA_BACKEND_URL || '').trim() &&
+    String(env.VITE_MEDUSA_PUBLISHABLE_KEY || '').trim(),
+  );
+}
+
+function amountToZar(amount: unknown): number {
+  const value = Number(amount);
+  // Medusa v2 price amounts use the configured currency amount (for example,
+  // 499.00 represents R499.00). Do not divide by 100.
+  return Number.isFinite(value) ? value : 0;
+}
+
+/** Maps public Medusa Store API data to the existing AVEART card/detail view model. */
+export function mapMedusaProduct(product: MedusaProduct): import('../types/index.ts').Product {
+  const categories = Array.isArray(product.categories) ? product.categories : [];
+  const category = categories[0];
+  const categoryLabel = category?.name || 'Fashion';
+  const categorySlug = category?.handle || 'fashion';
+  const categoryText = `${categoryLabel} ${categorySlug}`.toLowerCase();
+  const gender: import('../types/index.ts').GenderCategory =
+    categoryText.includes('women') || categoryText.includes('woman') ? 'women' :
+    categoryText.includes('men') || categoryText.includes('man') ? 'men' : 'unisex';
+
+  const variants = (product.variants || []).map((variant) => {
+    const options = variant.options || [];
+    const titleParts = (variant.title || '').split(/\s*\/\s*/);
+    const size = options.find((option) => /size/i.test(option.option?.title || ''))?.value ||
+      titleParts.find((part) => /^(xxs|xs|s|m|l|xl|xxl|xxxl|[0-9]{2})$/i.test(part));
+    const color = options.find((option) => /colou?r/i.test(option.option?.title || ''))?.value ||
+      (titleParts.length > 1 ? titleParts.slice(1).join(' / ') : undefined);
+    const calculatedPrice = variant.calculated_price?.currency_code?.toLowerCase() === 'zar'
+      ? variant.calculated_price.calculated_amount
+      : undefined;
+    const rawAmount = calculatedPrice ??
+      variant.prices?.find((price) => price.currency_code?.toLowerCase() === 'zar')?.amount ?? 0;
+    const image = product.images?.[0]?.url || product.thumbnail || '';
+    const inventory = Number((variant as typeof variant & { inventory_quantity?: number }).inventory_quantity);
+    return {
+      id: variant.id,
+      product_id: product.id,
+      sku: variant.sku || variant.id,
+      name: variant.title || [size, color].filter(Boolean).join(' / ') || 'Default',
+      size,
+      color,
+      price_offset: 0,
+      // Never invent stock. If Medusa does not expose an inventory quantity,
+      // the variant remains unavailable until inventory is configured/verified.
+      stock_quantity: variant.manage_inventory === false ? 999 : (Number.isFinite(inventory) ? inventory : 0),
+      low_stock_threshold: 3,
+      image_url: image,
+      created_at: '',
+      _mappedPrice: amountToZar(rawAmount),
+    };
+  });
+
+  const variantPrices = variants.map((variant) => variant._mappedPrice);
+  const basePrice = variantPrices.length ? Math.min(...variantPrices) : 0;
+  const cleanVariants: import('../types/index.ts').ProductVariant[] = variants.map(({ _mappedPrice, ...variant }) => ({
+    ...variant,
+    price_offset: _mappedPrice - basePrice,
+  }));
+  const sizes = Array.from(new Set(cleanVariants.map((variant) => variant.size).filter((value): value is string => Boolean(value))));
+  const colors = Array.from(new Set(cleanVariants.map((variant) => variant.color).filter((value): value is string => Boolean(value))))
+    .map((name) => ({ name, hex: '#D1D5DB' }));
+
+  return {
+    id: product.id,
+    category_id: category?.id || '',
+    category_name: categoryLabel,
+    category_slug: categorySlug,
+    gender,
+    title: product.title || 'Untitled product',
+    slug: product.handle || product.id,
+    subtitle: product.subtitle || '',
+    description: product.description || '',
+    material: '',
+    artisan: '',
+    provenance: '',
+    base_price: basePrice,
+    sizes,
+    colors,
+    is_published: 1,
+    is_featured: 0,
+    created_at: '',
+    variants: cleanVariants,
+    total_stock: cleanVariants.reduce((sum, variant) => sum + variant.stock_quantity, 0),
+    primary_image: product.thumbnail || product.images?.[0]?.url || '',
+  };
+}
+
+export function mapMedusaCategory(category: { id: string; name: string; handle: string; description?: string | null }): import('../types/index.ts').Category {
+  return {
+    id: category.id,
+    name: category.name,
+    slug: category.handle,
+    description: category.description || '',
+    image_url: '',
+    sort_order: 0,
+  };
+}
