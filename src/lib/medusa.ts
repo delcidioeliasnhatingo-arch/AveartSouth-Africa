@@ -187,13 +187,17 @@ export async function updateMedusaLineItem(cartId: string, lineItemId: string, q
 }
 
 export async function removeMedusaLineItem(cartId: string, lineItemId: string): Promise<MedusaCart> {
-  const response = await medusaFetch<{ parent?: MedusaCart; cart?: MedusaCart }>(
+  await medusaFetch<unknown>(
     `/store/carts/${encodeURIComponent(cartId)}/line-items/${encodeURIComponent(lineItemId)}`,
     { method: 'DELETE' },
   );
-  const cart = response.cart || response.parent;
-  if (!cart) throw new Error('Medusa did not return the updated cart after removing the item.');
-  return cart;
+  // Medusa's DELETE response is a deletion result, not necessarily a cart.
+  // Read the canonical cart after the mutation to keep UI totals authoritative.
+  const response = await medusaFetch<{ cart: MedusaCart }>(
+    `/store/carts/${encodeURIComponent(cartId)}?fields=*items,+items.variant,+items.product`,
+  );
+  if (!response?.cart) throw new Error('Medusa did not return the updated cart after removing the item.');
+  return response.cart;
 }
 
 export async function initiateMedusaPaymentSession(
