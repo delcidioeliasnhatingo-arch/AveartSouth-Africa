@@ -15,6 +15,7 @@ import { PolicyView } from './views/PolicyView.tsx';
 import { AtelierView } from './views/AtelierView.tsx';
 import { AdminHubView } from './views/AdminHubView.tsx';
 import { Order } from './types/index.ts';
+import { CookieConsent } from './components/CookieConsent.tsx';
 
 export default function App() {
   const [currentView, setCurrentView] = useState<string>('home');
@@ -145,6 +146,9 @@ export default function App() {
 
           {/* Persistent Slide-Over Cart Drawer */}
           <CartDrawer onNavigateToCheckout={() => setCurrentView('checkout')} />
+
+          {/* Cookie consent controls */}
+          <CookieConsent onNavigate={handleNavigate} />
 
           {/* Editorial Footer */}
           <Footer onNavigate={handleNavigate} />
