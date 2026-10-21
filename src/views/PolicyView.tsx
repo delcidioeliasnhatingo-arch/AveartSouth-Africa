@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Truck, RotateCcw, FileText, Shield, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { Truck, RotateCcw, FileText, Shield, ArrowRight, CheckCircle2, Cookie } from 'lucide-react';
 
 interface PolicyViewProps {
   initialTab?: string;
@@ -61,6 +61,18 @@ export const PolicyView: React.FC<PolicyViewProps> = ({ initialTab = 'shipping',
         >
           <FileText className="w-4 h-4" />
           <span>Terms of Service</span>
+        </button>
+
+        <button
+          onClick={() => setActiveTab('cookies')}
+          className={`flex items-center gap-2 px-6 py-3.5 transition-colors cursor-pointer whitespace-nowrap ${
+            activeTab === 'cookies'
+              ? 'border-b-2 border-rose-500 text-rose-600 font-extrabold'
+              : 'text-slate-500 hover:text-slate-800'
+          }`}
+        >
+          <Cookie className="w-4 h-4" />
+          <span>Cookies</span>
         </button>
 
         <button
@@ -160,6 +172,23 @@ export const PolicyView: React.FC<PolicyViewProps> = ({ initialTab = 'shipping',
               <p>
                 <strong className="text-slate-900">Pricing Transparency:</strong> The price shown at checkout is the complete amount you will pay. No surprise import duties or hidden handling charges.
               </p>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'cookies' && (
+          <div className="space-y-6">
+            <h2 className="text-2xl font-black text-slate-900">Cookie Policy</h2>
+            <p className="font-medium text-slate-600">
+              AVEART uses cookies and similar technologies to operate this online store, remember essential shopping settings, and—only where permitted and enabled—measure store performance or personalise marketing.
+            </p>
+            <div className="space-y-3">
+              <p><strong className="text-slate-900">Strictly necessary cookies:</strong> Support core functions such as navigation, cart and checkout security. These cannot be switched off through the cookie preference tool.</p>
+              <p><strong className="text-slate-900">Analytics cookies:</strong> Help us understand how visitors use the store. They remain disabled unless you choose to allow them and the relevant analytics tools are configured.</p>
+              <p><strong className="text-slate-900">Marketing cookies:</strong> May be used to measure campaigns or show relevant advertising. They remain disabled unless you choose to allow them and the relevant tools are configured.</p>
+              <p><strong className="text-slate-900">Your choices:</strong> Use “Cookie Preferences” at the bottom of the store to change or withdraw your optional-cookie consent. Blocking necessary cookies in your browser may affect cart or checkout functions.</p>
+              <p><strong className="text-slate-900">Personal information:</strong> Where cookie data identifies or can be linked to an individual, we handle it in accordance with our Privacy Policy and applicable South African data-protection law, including POPIA.</p>
+              <p><strong className="text-slate-900">Contact:</strong> For privacy questions, contact hello@aveart.co.za. This policy should be reviewed against the actual technologies enabled on the store before launch.</p>
             </div>
           </div>
         )}
