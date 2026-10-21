@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
 import { CartItem, ServerCartCalculation } from '../types/index.ts';
-import { addMedusaLineItem, createMedusaCart, getMedusaConfig, isMedusaConfigured, removeMedusaLineItem, updateMedusaLineItem } from '../lib/medusa.ts';
+import { addMedusaLineItem, createMedusaCart, isMedusaConfigured, removeMedusaLineItem, updateMedusaLineItem } from '../lib/medusa.ts';
 
 interface CartContextType {
   items: CartItem[];
