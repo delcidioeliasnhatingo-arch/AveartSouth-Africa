@@ -2,13 +2,12 @@ import { medusa, mapProduct, sendError } from "./_medusa";
 
 export default async function handler(req: any, res: any) {
   try {
-    const params = new URLSearchParams({ limit: "100", fields: "*variants,*variants.calculated_price,*variants.options,*categories,*images,*tags" });
+    const data = await medusa("/storefront/products");
     const q = req.query || {};
-    if (q.search) params.set("q", String(q.search));
-    if (q.category) params.set("category_handle", String(q.category));
-    if (q.gender && q.gender !== "all") params.set("metadata[gender]", String(q.gender));
-    const data = await medusa(`/store/products?${params.toString()}`);
     let products = (data.products || []).map(mapProduct).filter((p: any) => p.is_published === 1);
+    if (q.search) { const s = String(q.search).toLowerCase(); products = products.filter((p: any) => `${p.title} ${p.description} ${p.tags.join(" ")}`.toLowerCase().includes(s)); }
+    if (q.category) products = products.filter((p: any) => p.category_slug === String(q.category) || p.category_id === String(q.category));
+    if (q.gender && q.gender !== "all") products = products.filter((p: any) => p.gender === String(q.gender));
     if (q.inStockOnly === "true") products = products.filter((p: any) => p.total_stock > 0);
     if (q.onSale === "true") products = products.filter((p: any) => p.is_on_sale === 1);
     if (q.minPrice) products = products.filter((p: any) => p.base_price >= Number(q.minPrice));
