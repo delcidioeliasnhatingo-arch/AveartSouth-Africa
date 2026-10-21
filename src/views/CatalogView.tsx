@@ -22,6 +22,7 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
 
   // Filters state
   const [selectedGender, setSelectedGender] = useState<string>(initialGender || 'all');
@@ -61,6 +62,7 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
     let cancelled = false;
     const loadProducts = async () => {
       setLoading(true);
+      setLoadError(null);
       try {
         if (isMedusaConfigured()) {
           const result = await listMedusaProducts({ limit: 100 });
@@ -118,7 +120,10 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
         if (!cancelled) setProducts(Array.isArray(data) ? data : []);
       } catch (err) {
         console.error('Failed to load products:', err);
-        if (!cancelled) setProducts([]);
+        if (!cancelled) {
+          setProducts([]);
+          setLoadError(err instanceof Error ? err.message : 'Unable to load the catalogue.');
+        }
       } finally {
         if (!cancelled) setLoading(false);
       }
@@ -332,6 +337,12 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
           {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
             <div key={i} className="aspect-[3/4] bg-white border border-slate-200 rounded-2xl animate-pulse" />
           ))}
+        </div>
+      ) : loadError ? (
+        <div role="alert" className="bg-amber-50 border border-amber-200 rounded-3xl p-10 text-center space-y-3">
+          <h3 className="text-lg font-bold text-amber-950">Catalogue temporarily unavailable</h3>
+          <p className="text-sm text-amber-900 max-w-xl mx-auto">{loadError}</p>
+          <p className="text-xs text-amber-800">If Medusa is being configured, verify the backend URL, publishable key, South Africa/ZAR region and Store API CORS settings.</p>
         </div>
       ) : products.length === 0 ? (
         <div className="bg-white border border-slate-200 rounded-3xl p-12 text-center space-y-4 shadow-sm">
