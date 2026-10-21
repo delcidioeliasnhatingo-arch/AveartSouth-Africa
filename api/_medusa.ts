@@ -1,4 +1,4 @@
-const BACKEND = (process.env.MEDUSA_BACKEND_URL || "https://medusa-v2-railway-17u9554f9-aveart.vercel.app").replace(/\/$/, "");
+const BACKEND = (process.env.MEDUSA_BACKEND_URL || "https://medusa-v2-railway.vercel.app").replace(/\/$/, "");
 
 export async function medusa(path: string) {
   const response = await fetch(`${BACKEND}${path}`, { headers: { Accept: "application/json" } });
