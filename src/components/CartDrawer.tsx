@@ -18,6 +18,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onNavigateToCheckout }) 
     isCalculating,
     discountCode,
     setDiscountCode,
+    medusaSyncError,
   } = useCart();
 
   const [inputCode, setInputCode] = useState(discountCode);
@@ -61,6 +62,13 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onNavigateToCheckout }) 
               <X className="w-5 h-5" />
             </button>
           </div>
+
+          {medusaSyncError && (
+            <div role="alert" className="px-6 py-3 bg-amber-50 border-b border-amber-200 text-xs text-amber-900">
+              <p className="font-bold">Bag sync needs attention</p>
+              <p className="mt-1">{medusaSyncError}</p>
+            </div>
+          )}
 
           {/* Shipping is quoted after the delivery address is entered */}
           <div className="px-6 py-3.5 bg-rose-50/70 border-b border-rose-100 text-xs">
