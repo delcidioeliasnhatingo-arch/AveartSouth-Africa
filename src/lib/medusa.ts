@@ -237,8 +237,9 @@ export function isMedusaConfigured(): boolean {
 
 function amountToZar(amount: unknown): number {
   const value = Number(amount);
-  // Medusa monetary amounts are represented in the currency's minor unit.
-  return Number.isFinite(value) ? value / 100 : 0;
+  // Medusa v2 price amounts use the configured currency amount (for example,
+  // 499.00 represents R499.00). Do not divide by 100.
+  return Number.isFinite(value) ? value : 0;
 }
 
 /** Maps public Medusa Store API data to the existing AVEART card/detail view model. */
