@@ -59,3 +59,11 @@ Do not start until Phase 1 is stable and explicitly requested.
 - A successful frontend build does not prove the Medusa backend, database, Redis, or checkout are working.
 - The current Vercel preview deployment confirms the frontend can be previewed; it does not mean the Medusa server/worker has been deployed there.
 - Do not assume the entire Medusa server/worker topology fits Vercel Functions or the US$5/month target without verifying runtime compatibility and actual service costs.
+
+
+## Admin panel (Medusa Admin)
+
+- Use Medusa's built-in authenticated dashboard at `/app` on the Medusa API host; do not add a second admin login to the public Vite storefront.
+- The backend preparation PR adds an AVEART product-readiness widget and `AVEART_ADMIN_SETUP.md` with setup steps for the first admin account, secure secrets, CORS, roles and the staging workflow.
+- Admin access is not live yet: a persistent Medusa API runtime, PostgreSQL/Redis connectivity and staging migrations must be completed first. Never share admin credentials or commit secrets.
+- Payments, live orders, suppliers, shipping and fulfilment remain out of scope until Phase 1 passes end-to-end tests.
