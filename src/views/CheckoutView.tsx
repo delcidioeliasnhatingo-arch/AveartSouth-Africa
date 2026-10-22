@@ -185,7 +185,14 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({ onBackToBag, onOrder
         throw new Error(paymentData.error || 'Payment authorization was declined. Please verify details.');
       }
 
-      // Success
+      // Debito Pay uses a hosted checkout; do not mark the order complete here.
+      // The signed webhook is the source of truth for payment status.
+      if (paymentData.checkout_url && paymentProvider === 'debito_pay') {
+        window.location.assign(paymentData.checkout_url);
+        return;
+      }
+
+      // Legacy providers may return a completed order directly.
       clearCart();
       onOrderComplete(paymentData.order || createdOrder);
     } catch (err: any) {
