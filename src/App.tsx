@@ -8,6 +8,7 @@ import { HomeView } from './views/HomeView.tsx';
 import { CatalogView } from './views/CatalogView.tsx';
 import { ProductDetailView } from './views/ProductDetailView.tsx';
 import { CheckoutView } from './views/CheckoutView.tsx';
+import { PaymentReturnView } from './views/PaymentReturnView.tsx';
 import { OrderConfirmationView } from './views/OrderConfirmationView.tsx';
 import { CustomerAccountView } from './views/CustomerAccountView.tsx';
 import { OrderTrackingView } from './views/OrderTrackingView.tsx';
@@ -18,7 +19,7 @@ import { Order } from './types/index.ts';
 import { CookieConsent } from './components/CookieConsent.tsx';
 
 export default function App() {
-  const [currentView, setCurrentView] = useState<string>('home');
+  const [currentView, setCurrentView] = useState<string>(() => window.location.pathname.replace(/\\/+$/, '') === '/payment-return' ? 'payment-return' : 'home');
   const [viewParam, setViewParam] = useState<string | undefined>(undefined);
   const [confirmedOrder, setConfirmedOrder] = useState<Order | null>(null);
 
@@ -52,6 +53,8 @@ export default function App() {
 
           {/* Main Content Area */}
           <main className="flex-1 w-full">
+            {currentView === 'payment-return' && <PaymentReturnView onNavigateHome={() => setCurrentView('home')} />}
+
             {currentView === 'home' && (
               <HomeView onNavigate={handleNavigate} />
             )}
