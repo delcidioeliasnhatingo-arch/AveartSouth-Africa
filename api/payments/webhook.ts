@@ -67,7 +67,7 @@ export default async function handler(req: any, res: any) {
     };
     const patch = await fetch(
       supabaseUrl + "/rest/v1/orders?id=eq." + encodeURIComponent(rows[0].id),
-      { method: "PATCH", headers, body: JSON.stringify({ payment_status: statusByEvent[eventName] }) },
+      { method: "PATCH", headers, body: JSON.stringify({ payment_status: statusByEvent[eventName], ...(eventName === "payment.completed" ? { fulfillment_status: "processing" } : {}) }) },
     );
     if (!patch.ok) return res.status(502).json({ error: "Could not update order payment status." });
     return res.status(200).json({ received: true, matched: true });
