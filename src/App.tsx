@@ -9,6 +9,7 @@ import { CatalogView } from './views/CatalogView.tsx';
 import { ProductDetailView } from './views/ProductDetailView.tsx';
 import { CheckoutView } from './views/CheckoutView.tsx';
 import { OrderConfirmationView } from './views/OrderConfirmationView.tsx';
+import { PaymentReturnView } from './views/PaymentReturnView.tsx';
 import { CustomerAccountView } from './views/CustomerAccountView.tsx';
 import { OrderTrackingView } from './views/OrderTrackingView.tsx';
 import { PolicyView } from './views/PolicyView.tsx';
@@ -18,7 +19,9 @@ import { Order } from './types/index.ts';
 import { CookieConsent } from './components/CookieConsent.tsx';
 
 export default function App() {
-  const [currentView, setCurrentView] = useState<string>('home');
+  const [currentView, setCurrentView] = useState<string>(() =>
+    window.location.pathname.replace(/\/+$/, '') === '/payment-return' ? 'payment-return' : 'home'
+  );
   const [viewParam, setViewParam] = useState<string | undefined>(undefined);
   const [confirmedOrder, setConfirmedOrder] = useState<Order | null>(null);
 
@@ -46,48 +49,35 @@ export default function App() {
     <AuthProvider>
       <CartProvider>
         <div className="min-h-screen w-full flex flex-col bg-[#F8FAFC] text-[#0F172A] overflow-x-hidden">
-          
-          {/* Top Bar Navigation */}
           <Navbar currentView={currentView} onNavigate={handleNavigate} />
 
-          {/* Main Content Area */}
           <main className="flex-1 w-full">
+            {currentView === 'payment-return' && (
+              <PaymentReturnView onNavigateHome={() => setCurrentView('home')} />
+            )}
+
             {currentView === 'home' && (
               <HomeView onNavigate={handleNavigate} />
             )}
 
             {currentView === 'catalog' && (
-              <CatalogView
-                initialSearch={viewParam}
-                onSelectProduct={handleSelectProduct}
-              />
+              <CatalogView initialSearch={viewParam} onSelectProduct={handleSelectProduct} />
             )}
 
             {currentView === 'catalog_new' && (
-              <CatalogView
-                onSelectProduct={handleSelectProduct}
-              />
+              <CatalogView onSelectProduct={handleSelectProduct} />
             )}
 
             {currentView === 'catalog_gender' && (
-              <CatalogView
-                initialGender={viewParam as any}
-                onSelectProduct={handleSelectProduct}
-              />
+              <CatalogView initialGender={viewParam as any} onSelectProduct={handleSelectProduct} />
             )}
 
             {currentView === 'catalog_sale' && (
-              <CatalogView
-                initialSale={true}
-                onSelectProduct={handleSelectProduct}
-              />
+              <CatalogView initialSale={true} onSelectProduct={handleSelectProduct} />
             )}
 
             {currentView === 'catalog_category' && (
-              <CatalogView
-                initialCategory={viewParam}
-                onSelectProduct={handleSelectProduct}
-              />
+              <CatalogView initialCategory={viewParam} onSelectProduct={handleSelectProduct} />
             )}
 
             {currentView === 'product' && viewParam && (
@@ -100,10 +90,7 @@ export default function App() {
             )}
 
             {currentView === 'checkout' && (
-              <CheckoutView
-                onBackToBag={() => setCurrentView('catalog')}
-                onOrderComplete={handleOrderComplete}
-              />
+              <CheckoutView onBackToBag={() => setCurrentView('catalog')} onOrderComplete={handleOrderComplete} />
             )}
 
             {currentView === 'confirmation' && confirmedOrder && (
@@ -115,9 +102,7 @@ export default function App() {
             )}
 
             {currentView === 'account' && (
-              <CustomerAccountView
-                onTrackOrder={(num) => handleNavigate('track', num)}
-              />
+              <CustomerAccountView onTrackOrder={(num) => handleNavigate('track', num)} />
             )}
 
             {currentView === 'track' && (
@@ -125,34 +110,21 @@ export default function App() {
             )}
 
             {currentView === 'policy' && (
-              <PolicyView
-                initialTab={viewParam || 'shipping'}
-                onNavigateCatalog={() => setCurrentView('catalog')}
-              />
+              <PolicyView initialTab={viewParam || 'shipping'} onNavigateCatalog={() => setCurrentView('catalog')} />
             )}
 
             {currentView === 'atelier' && (
-              <AtelierView
-                onNavigateCatalog={() => setCurrentView('catalog')}
-              />
+              <AtelierView onNavigateCatalog={() => setCurrentView('catalog')} />
             )}
 
             {currentView === 'admin' && (
-              <AdminHubView
-                onNavigateHome={() => setCurrentView('home')}
-              />
+              <AdminHubView onNavigateHome={() => setCurrentView('home')} />
             )}
           </main>
 
-          {/* Persistent Slide-Over Cart Drawer */}
           <CartDrawer onNavigateToCheckout={() => setCurrentView('checkout')} />
-
-          {/* Cookie consent controls */}
           <CookieConsent onNavigate={handleNavigate} />
-
-          {/* Editorial Footer */}
           <Footer onNavigate={handleNavigate} />
-
         </div>
       </CartProvider>
     </AuthProvider>
