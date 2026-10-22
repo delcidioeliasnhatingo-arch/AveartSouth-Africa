@@ -6,7 +6,7 @@ export default async function handler(_req: any, res: any) {
     if (!response.ok) throw new Error(`Cloudflare product API returned ${response.status}`);
     const products = await response.json() as any[];
     const map = new Map<string, any>();
-    for (const product of (Array.isArray(products) ? products : []).filter((p) => p.is_published === 1)) {
+    for (const product of (Array.isArray(products) ? products : []).filter((p) => p.status === "active" || p.is_published === 1 || p.is_published === true)) {
       const slug = product.category_slug || "clothing";
       if (!map.has(slug)) map.set(slug, { id: product.category_id || slug, name: product.category_name || "Clothing", slug, description: "", image_url: product.primary_image || "", gender: "women", sort_order: map.size, product_count: 0 });
       map.get(slug).product_count += 1;
