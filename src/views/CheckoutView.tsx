@@ -27,14 +27,7 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({ onBackToBag, onOrder
   const [notes, setNotes] = useState('');
 
   // Payment Selection: Debito Pay (Primary SA rail) or Sandbox Card
-  const [paymentProvider, setPaymentProvider] = useState<'debito_pay' | 'stripe_sandbox'>('debito_pay');
-  const [selectedBank, setSelectedBank] = useState('Capitec Pay');
-
-  // Sandbox Card Inputs
-  const [cardNumber, setCardNumber] = useState('4242 4242 4242 4242');
-  const [cardExpiry, setCardExpiry] = useState('12/28');
-  const [cardCvc, setCardCvc] = useState('888');
-  const [cardPostal, setCardPostal] = useState('8001');
+  const paymentProvider = 'debito_pay' as const;
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -107,11 +100,6 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({ onBackToBag, onOrder
       </div>
     );
   }
-
-  const handleTestCardSelect = (card: string) => {
-    setCardNumber(card);
-    setErrorMessage(null);
-  };
 
   const handleSubmitOrder = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -415,59 +403,8 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({ onBackToBag, onOrder
             <Lock className="w-4 h-4" />
             <span>
               {isSubmitting
-                ? 'Processing Authorization...'
-                : paymentProvider === 'debito_pay'
-                ? `Pay with Debito Pay · ${formatZAR(Math.max(0, (calculation?.subtotal || 0) - (calculation?.discountAmount || 0) + (selectedShippingRate?.amount_zar || 0) + (calculation?.taxAmount || 0)))}`
-                : `Authorize Card · ${formatZAR(calculation?.totalAmount || 0)}`}
-            </span>
-          </button>
-
-          <div className="text-center text-xs text-slate-500 font-medium flex items-center justify-center gap-2">
-            <ShieldCheck className="w-4 h-4 text-emerald-600" />
-            <span>Protected by Debito Pay & Instant EFT South Africa</span>
-          </div>
-        </form>
-
-        {/* Right Column: Order Summary (Recalculated in ZAR) */}
-        <div className="lg:col-span-5 bg-white border border-slate-200 p-6 rounded-3xl shadow-sm space-y-6">
-          <h3 className="text-lg font-black text-slate-900 pb-3 border-b border-slate-100">
-            Order Summary (ZAR)
-          </h3>
-
-          <div className="space-y-4 max-h-96 overflow-y-auto divide-y divide-slate-100">
-            {(calculation?.lineItems || items).map((item: any) => (
-              <div key={item.variantId} className="pt-3 first:pt-0 flex gap-3">
-                <div className="w-16 h-20 bg-slate-100 rounded-xl overflow-hidden shrink-0 border border-slate-200">
-                  <img
-                    src={item.imageUrl || '/src/assets/images/fashion_women_linen_blazer_1792263530901.jpg'}
-                    alt={item.productTitle}
-                    className="w-full h-full object-cover object-top"
-                  />
-                </div>
-
-                <div className="flex-1 flex flex-col justify-between text-xs">
-                  <div>
-                    <h4 className="text-sm font-bold text-slate-900 leading-tight">
-                      {item.productTitle}
-                    </h4>
-                    <p className="text-slate-500 text-xs mt-0.5 font-medium">
-                      {item.size ? `Size: ${item.size}` : ''} {item.color ? `· ${item.color}` : ''}
-                    </p>
-                    <span className="text-slate-500 font-medium">Qty: {item.quantity}</span>
-                  </div>
-                  <div className="font-mono tabular-nums font-black text-slate-900 text-right">
-                    {formatZAR(item.unitPrice * item.quantity)}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div className="space-y-2 text-xs text-slate-600 pt-4 border-t border-slate-100">
-            <div className="flex justify-between">
-              <span>Subtotal</span>
-              <span className="font-mono tabular-nums font-bold text-slate-900">
-                {formatZAR(calculation?.subtotal || 0)}
+                ? 'Redirecting to Debitopay...'
+                : `Checkout with Debitopay · ${formatZAR(Math.max(0, (calculation?.subtotal || 0) - (calculation?.discountAmount || 0) + (selectedShippingRate?.amount_zar || 0) + (calculation?.taxAmount || 0)))}`}
               </span>
             </div>
 
