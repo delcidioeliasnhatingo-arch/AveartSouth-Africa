@@ -51,10 +51,12 @@ export default async function handler(req: any, res: any) {
         body: JSON.stringify({ action: "check-status", payment_id: order.payment_reference }),
       });
       const gateway = await gatewayResponse.json().catch(() => ({})) as any;
-      const gatewayStatus = String(gateway?.payment?.status || "").toLowerCase();
-      const mapped = gatewayStatus === "success" ? "paid"
-        : (gatewayStatus === "failed" || gatewayStatus === "expired") ? "failed"
-        : gatewayStatus === "refunded" ? "refunded" : "pending";
+      const rawGatewayStatus = gateway?.payment?.status ?? gateway?.data?.status ?? gateway?.status ?? "";
+      const gatewayStatus = String(rawGatewayStatus).trim().toLowerCase().replace(/[ _]+/g, "-");
+      // Treat the common final success values as paid; never trust the browser redirect alone.
+      const mapped = ["success", "successful", "completed", "complete", "paid", "approved", "settled"].includes(gatewayStatus) ? "paid"
+        : ["failed", "failure", "declined", "expired", "cancelled", "canceled", "rejected"].includes(gatewayStatus) ? "failed"
+        : ["refunded", "refund-completed"].includes(gatewayStatus) ? "refunded" : "pending";
       if (mapped !== "pending") {
         const patchBody: any = { payment_status: mapped };
         if (mapped === "paid") patchBody.fulfillment_status = "processing";
