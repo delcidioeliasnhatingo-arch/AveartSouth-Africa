@@ -23,8 +23,12 @@ export const PaymentReturnView: React.FC<PaymentReturnViewProps> = ({ onNavigate
         const data = await response.json();
         if (!active) return;
         setOrderNumber(data.order_number || orderNumber);
-        const next = String(data.payment_status || 'pending').toLowerCase() as PaymentStatus;
-        setStatus(['paid', 'failed', 'refunded', 'pending'].includes(next) ? next : 'unknown');
+        const rawStatus = String(data.payment_status || 'pending').toLowerCase().trim().replace(/[ _]+/g, '-');
+        const next: PaymentStatus = ['paid', 'success', 'successful', 'completed', 'complete', 'approved', 'settled'].includes(rawStatus) ? 'paid'
+          : ['failed', 'failure', 'declined', 'expired', 'cancelled', 'canceled', 'rejected'].includes(rawStatus) ? 'failed'
+          : ['refunded', 'refund-completed'].includes(rawStatus) ? 'refunded'
+          : rawStatus === 'pending' || rawStatus === 'processing' ? 'pending' : 'unknown';
+        setStatus(next);
         setCheckError(false);
         if (['paid', 'failed', 'refunded'].includes(next) && timer) clearInterval(timer);
       } catch {
@@ -43,9 +47,9 @@ export const PaymentReturnView: React.FC<PaymentReturnViewProps> = ({ onNavigate
   const paid = status === 'paid';
   const failed = status === 'failed';
   const refunded = status === 'refunded';
-  const heading = paid ? 'Payment confirmed' : failed ? 'Payment not completed' : refunded ? 'Payment refunded' : status === 'unknown' ? 'Check your order' : 'We’re checking your payment';
+  const heading = paid ? 'Payment successful — completed' : failed ? 'Payment not completed' : refunded ? 'Payment refunded' : status === 'unknown' ? 'Check your order' : 'We’re checking your payment';
   const message = paid
-    ? 'Thank you. Debitopay has confirmed your payment and AVEART has updated your order.'
+    ? 'Thank you! Your payment was successful and is complete. Debitopay confirmed the payment, and AVEART has updated your order.'
     : failed
     ? 'Debitopay reports that this payment did not complete. You can return to AVEART and try again.'
     : refunded
