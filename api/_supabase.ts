@@ -1,3 +1,15 @@
+type SupabaseVariant = {
+  id?: string;
+  name?: string;
+  sku?: string;
+  size?: string | null;
+  color?: string | null;
+  color_hex?: string | null;
+  price?: number | string | null;
+  stock?: number | string | null;
+  image_url?: string | null;
+};
+
 type SupabaseProductRow = {
   id: string;
   name: string;
@@ -8,6 +20,7 @@ type SupabaseProductRow = {
   image_url: string | null;
   sizes: string[] | null;
   colors: string[] | null;
+  variants?: SupabaseVariant[] | null;
   stock: number;
   status: string;
   created_at: string;
@@ -22,32 +35,59 @@ function config() {
 
 export async function getSupabaseProducts(): Promise<SupabaseProductRow[]> {
   const { url, key } = config();
-  const response = await fetch(`${url}/rest/v1/products?select=id,name,slug,description,category,price,image_url,sizes,colors,stock,status,created_at&status=eq.active&order=created_at.desc`, {
+  const response = await fetch(`${url}/rest/v1/products?select=id,name,slug,description,category,price,image_url,sizes,colors,variants,stock,status,created_at&status=eq.active&order=created_at.desc`, {
     headers: { apikey: key, Authorization: `Bearer ${key}`, Accept: "application/json" },
   });
-  if (!response.ok) throw new Error(`Supabase products query failed (${response.status}). Check the products table permissions and RLS policy.`);
+  if (!response.ok) throw new Error(`Supabase products query failed (${response.status}). Check migration 003_product_variants.sql and the products table permissions.`);
   return await response.json() as SupabaseProductRow[];
 }
 
 export function mapSupabaseProduct(p: SupabaseProductRow) {
   const sizes = Array.isArray(p.sizes) && p.sizes.length ? p.sizes : ["One Size"];
   const colors = Array.isArray(p.colors) && p.colors.length ? p.colors : ["Default"];
-  const variants = sizes.flatMap((size) => colors.map((color) => ({
-    id: `${p.id}::${encodeURIComponent(size)}::${encodeURIComponent(color)}`,
-    product_id: p.id,
-    sku: "",
-    name: [size, color].filter((v) => v !== "One Size" && v !== "Default").join(" / ") || "Default",
-    size: size === "One Size" ? undefined : size,
-    color: color === "Default" ? undefined : color,
-    price_offset: 0,
-    stock_quantity: Math.max(0, Number(p.stock || 0)),
-    low_stock_threshold: 3,
-    image_url: p.image_url || "",
-    created_at: p.created_at,
-    calculated_price: Number(p.price || 0),
-  })));
+  const savedVariants = Array.isArray(p.variants) ? p.variants : [];
+  const variants = savedVariants.length
+    ? savedVariants.map((v, index) => {
+        const size = v.size || undefined;
+        const color = v.color || undefined;
+        const price = Number(v.price ?? p.price ?? 0);
+        return {
+          id: `${p.id}::variant::${encodeURIComponent(String(v.sku || v.id || index))}`,
+          product_id: p.id,
+          sku: String(v.sku || ""),
+          name: String(v.name || [size, color].filter(Boolean).join(" / ") || "Default"),
+          size,
+          color,
+          color_hex: v.color_hex || undefined,
+          price_offset: price - Number(p.price || 0),
+          stock_quantity: Math.max(0, Number(v.stock || 0)),
+          stock_tracking: "variant",
+          low_stock_threshold: 3,
+          image_url: v.image_url || p.image_url || "",
+          created_at: p.created_at,
+          calculated_price: Math.max(0, price),
+        };
+      })
+    : sizes.flatMap((size) => colors.map((color) => ({
+        id: `${p.id}::${encodeURIComponent(size)}::${encodeURIComponent(color)}`,
+        product_id: p.id,
+        sku: "",
+        name: [size, color].filter((v) => v !== "One Size" && v !== "Default").join(" / ") || "Default",
+        size: size === "One Size" ? undefined : size,
+        color: color === "Default" ? undefined : color,
+        price_offset: 0,
+        stock_quantity: Math.max(0, Number(p.stock || 0)),
+        stock_tracking: "product",
+        low_stock_threshold: 3,
+        image_url: p.image_url || "",
+        created_at: p.created_at,
+        calculated_price: Number(p.price || 0),
+      })));
   const price = Number(p.price || 0);
   const slug = p.slug || p.id;
+  const totalStock = savedVariants.length
+    ? savedVariants.reduce((sum, v) => sum + Math.max(0, Number(v.stock || 0)), 0)
+    : Math.max(0, Number(p.stock || 0));
   return {
     id: p.id,
     category_id: p.category || "clothing",
@@ -73,9 +113,9 @@ export function mapSupabaseProduct(p: SupabaseProductRow) {
     is_on_sale: 0,
     created_at: p.created_at,
     variants,
-    min_price: price,
-    max_price: price,
-    total_stock: Math.max(0, Number(p.stock || 0)),
+    min_price: variants.length ? Math.min(...variants.map((v) => v.calculated_price)) : price,
+    max_price: variants.length ? Math.max(...variants.map((v) => v.calculated_price)) : price,
+    total_stock: totalStock,
     primary_image: p.image_url || "",
     images: p.image_url ? [p.image_url] : [],
   };
