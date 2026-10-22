@@ -165,18 +165,7 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({ onBackToBag, onOrder
       const paymentRes = await fetch('/api/payments/charge', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          orderId: createdOrder.id,
-          provider: paymentProvider,
-          details: {
-            bankName: selectedBank,
-            cardNumber,
-            cardExpiry,
-            cardCvc,
-            amount: createdOrder.total_amount,
-            currency: 'ZAR',
-          },
-        }),
+        body: JSON.stringify({ orderId: createdOrder.id, provider: 'debito_pay' }),
       });
 
       const paymentData = await paymentRes.json();
@@ -185,16 +174,13 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({ onBackToBag, onOrder
         throw new Error(paymentData.error || 'Payment authorization was declined. Please verify details.');
       }
 
-      // Debito Pay uses a hosted checkout; do not mark the order complete here.
-      // The signed webhook is the source of truth for payment status.
-      if (paymentData.checkout_url && paymentProvider === 'debito_pay') {
-        window.location.assign(paymentData.checkout_url);
-        return;
+      // Always redirect to Debitopay's hosted checkout. Never treat this response as proof of payment.
+      if (!paymentData.checkout_url || typeof paymentData.checkout_url !== 'string') {
+        throw new Error('Debitopay did not return a checkout URL. The order has not been confirmed as paid.');
       }
-
-      // Legacy providers may return a completed order directly.
       clearCart();
-      onOrderComplete(paymentData.order || createdOrder);
+      window.location.assign(paymentData.checkout_url);
+      return;
     } catch (err: any) {
       setErrorMessage(err.message || 'An error occurred during payment processing.');
     } finally {
