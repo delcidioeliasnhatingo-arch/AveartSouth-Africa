@@ -12,41 +12,42 @@ export default async function handler(req: any, res: any) {
     const products = (await getSupabaseProducts()).map(mapSupabaseProduct);
     const byVariant = new Map<string, any>();
     for (const product of products) for (const variant of product.variants || []) byVariant.set(variant.id, { product, variant });
-
-    // The current schema tracks stock per product, not per size/color variant.
-    // Count all requested variants together so the same stock is not sold repeatedly.
-    const quantityByProduct = new Map<string, number>();
+    const variantQty = new Map<string, number>();
+    const productQty = new Map<string, number>();
     for (const raw of requested) {
-      const variantId = String(raw?.variantId || "");
-      const quantity = Math.floor(Number(raw?.quantity || 0));
-      const match = byVariant.get(variantId);
-      if (match && Number.isFinite(quantity) && quantity > 0) {
-        quantityByProduct.set(match.product.id, (quantityByProduct.get(match.product.id) || 0) + quantity);
+      const id = String(raw?.variantId || "");
+      const qty = Number(raw?.quantity);
+      const match = byVariant.get(id);
+      if (match && Number.isInteger(qty) && qty > 0) {
+        variantQty.set(id, (variantQty.get(id) || 0) + qty);
+        if (match.variant.stock_tracking !== "variant") productQty.set(match.product.id, (productQty.get(match.product.id) || 0) + qty);
       }
     }
-
     const errors: string[] = [];
     const lineItems: any[] = [];
     const stockErrors = new Set<string>();
     let subtotal = 0;
     for (const raw of requested) {
       const variantId = String(raw?.variantId || "");
-      const quantity = Math.floor(Number(raw?.quantity || 0));
-      if (!variantId || !Number.isFinite(quantity) || quantity < 1) { errors.push("A cart item has an invalid variant or quantity."); continue; }
+      const quantity = Number(raw?.quantity);
+      if (!variantId || !Number.isInteger(quantity) || quantity < 1) { errors.push("A cart item has an invalid variant or quantity."); continue; }
       const match = byVariant.get(variantId);
       if (!match) { errors.push("A product in your bag is no longer available. Remove it and try again."); continue; }
       const { product, variant } = match;
-      const stockAvailable = Number(variant.stock_quantity || 0);
-      const requestedForProduct = quantityByProduct.get(product.id) || quantity;
-      if (requestedForProduct > stockAvailable && !stockErrors.has(product.id)) {
-        errors.push(`${product.title}: only ${stockAvailable} item(s) currently available across all sizes and colours.`);
-        stockErrors.add(product.id);
+      const available = Math.max(0, Number(variant.stock_quantity || 0));
+      const requestedQty = variant.stock_tracking === "variant" ? (variantQty.get(variantId) || quantity) : (productQty.get(product.id) || quantity);
+      const stockKey = variant.stock_tracking === "variant" ? variantId : product.id;
+      if (requestedQty > available && !stockErrors.has(stockKey)) {
+        errors.push(variant.stock_tracking === "variant"
+          ? product.title + " (" + variant.name + "): only " + available + " item(s) available for this size/colour."
+          : product.title + ": only " + available + " item(s) available across all sizes and colours.");
+        stockErrors.add(stockKey);
       }
       const unitPrice = Number(variant.calculated_price || 0);
-      if (!Number.isFinite(unitPrice) || unitPrice <= 0) errors.push(`${product.title}: price is not configured.`);
+      if (!Number.isFinite(unitPrice) || unitPrice <= 0) errors.push(product.title + ": price is not configured.");
       const lineTotal = Math.max(0, unitPrice) * quantity;
       subtotal += lineTotal;
-      lineItems.push({ productId: product.id, variantId: variant.id, sku: variant.sku || "", productTitle: product.title, variantName: variant.name || "Default", size: variant.size, color: variant.color, productSlug: product.slug, unitPrice, quantity, lineTotal, imageUrl: variant.image_url || product.primary_image || "", stockAvailable });
+      lineItems.push({ productId: product.id, variantId: variant.id, sku: variant.sku || "", productTitle: product.title, variantName: variant.name || "Default", size: variant.size, color: variant.color, productSlug: product.slug, unitPrice, quantity, lineTotal, imageUrl: variant.image_url || product.primary_image || "", stockAvailable: available });
     }
     const discountCode = String(body.discountCode || "").trim();
     if (discountCode) errors.push("Discount validation is not configured; remove the code to continue.");
