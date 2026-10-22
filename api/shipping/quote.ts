@@ -3,11 +3,11 @@ import crypto from "node:crypto";
 function requiredEnv() {
   const url = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL;
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  const rate = process.env.AVEART_SHIPPING_ZAR;
-  if (!url || !key || rate === undefined || rate === "" || !Number.isFinite(Number(rate)) || Number(rate) < 0) {
-    throw new Error("Shipping is not configured. Set AVEART_SHIPPING_ZAR to the standard delivery fee in ZAR.");
+  if (!url || !key || key.startsWith("REPLACE_WITH_")) {
+    throw new Error("Free shipping is not configured. Check the server-side Supabase service key.");
   }
-  return { secret: key, amount: Number(rate) };
+  // Temporary promotion: standard delivery is free for all eligible South African addresses.
+  return { secret: key, amount: 0 };
 }
 
 function normalize(value: unknown) { return String(value || "").trim().toLowerCase(); }
@@ -39,7 +39,7 @@ export default async function handler(req: any, res: any) {
     return res.status(200).json({
       rates: [{
         service_code: "aveart-standard",
-        service_name: "Standard delivery",
+        service_name: "Free standard delivery",
         amount_zar: amount,
         estimated_delivery_from: null,
         estimated_delivery_to: null,
