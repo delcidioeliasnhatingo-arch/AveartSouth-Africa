@@ -18,6 +18,7 @@ type SupabaseProductRow = {
   category: string;
   price: number | string;
   image_url: string | null;
+  images?: string[] | null;
   sizes: string[] | null;
   colors: string[] | null;
   variants?: SupabaseVariant[] | null;
@@ -35,7 +36,7 @@ function config() {
 
 export async function getSupabaseProducts(): Promise<SupabaseProductRow[]> {
   const { url, key } = config();
-  const response = await fetch(`${url}/rest/v1/products?select=id,name,slug,description,category,price,image_url,sizes,colors,variants,stock,status,created_at&status=eq.active&order=created_at.desc`, {
+  const response = await fetch(`${url}/rest/v1/products?select=id,name,slug,description,category,price,image_url,images,sizes,colors,variants,stock,status,created_at&status=eq.active&order=created_at.desc`, {
     headers: { apikey: key, Authorization: `Bearer ${key}`, Accept: "application/json" },
   });
   if (!response.ok) throw new Error(`Supabase products query failed (${response.status}). Check migration 003_product_variants.sql and the products table permissions.`);
@@ -117,7 +118,7 @@ export function mapSupabaseProduct(p: SupabaseProductRow) {
     max_price: variants.length ? Math.max(...variants.map((v) => v.calculated_price)) : price,
     total_stock: totalStock,
     primary_image: p.image_url || "",
-    images: p.image_url ? [p.image_url] : [],
+    images: Array.isArray(p.images) && p.images.length ? p.images : (p.image_url ? [p.image_url] : []),
   };
 }
 
