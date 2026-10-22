@@ -19,7 +19,7 @@ import { Order } from './types/index.ts';
 import { CookieConsent } from './components/CookieConsent.tsx';
 
 export default function App() {
-  const [currentView, setCurrentView] = useState<string>(() => window.location.pathname.replace(/\\/+$/, '') === '/payment-return' ? 'payment-return' : 'home');
+  const [currentView, setCurrentView] = useState<string>(() => window.location.pathname.replace(/\/+$/, '') === '/payment-return' ? 'payment-return' : 'home');
   const [viewParam, setViewParam] = useState<string | undefined>(undefined);
   const [confirmedOrder, setConfirmedOrder] = useState<Order | null>(null);
 
