@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/payment-return",
+      "destination": "/index.html"
+    }
+  ]
+}
