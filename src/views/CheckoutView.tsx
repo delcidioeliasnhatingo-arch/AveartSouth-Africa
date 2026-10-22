@@ -27,8 +27,8 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({ onBackToBag, onOrder
   const [notes, setNotes] = useState('');
 
   // Payment Selection: Debito Pay (Primary SA rail) or Sandbox Card
-  const [paymentProvider, setPaymentProvider] = useState<'debito_pay' | 'stripe_sandbox'>('debito_pay');
-  const [selectedBank, setSelectedBank] = useState('Capitec Pay');
+  const paymentProvider: 'debito_pay' = 'debito_pay';
+  const selectedBank = 'Capitec Pay';
 
   // Sandbox Card Inputs
   const [cardNumber, setCardNumber] = useState('4242 4242 4242 4242');
@@ -93,6 +93,13 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({ onBackToBag, onOrder
     }
   }, [user, customerEmail]);
 
+  // Automatically fetch the configured standard delivery fee once the address is complete.
+  useEffect(() => {
+    if (shippingStreet.trim() && shippingCity.trim() && shippingState && shippingPostalCode.trim()) {
+      void calculateShipping();
+    }
+  }, [shippingStreet, shippingCity, shippingState, shippingPostalCode]);
+
   if (items.length === 0) {
     return (
       <div className="max-w-3xl mx-auto px-6 py-20 text-center space-y-4">
@@ -117,7 +124,7 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({ onBackToBag, onOrder
     e.preventDefault();
     setErrorMessage(null);
     if (!selectedShippingRate) {
-      setErrorMessage('Enter your delivery address and calculate a live shipping quote before placing the order.');
+      setErrorMessage('Complete your South African delivery address. Shipping will be calculated automatically.');
       return;
     }
     setIsSubmitting(true);
@@ -344,193 +351,8 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({ onBackToBag, onOrder
             </div>
           </div>
 
-          {/* Step 3: Live South African Shipping Quotes */}
-          <div className="bg-white border border-slate-200 p-6 rounded-2xl shadow-sm space-y-4">
-            <span className="text-xs uppercase tracking-wider font-extrabold text-slate-900 block pb-3 border-b border-slate-100">
-              03. Live Shipping Options
-            </span>
-            <p className="text-xs text-slate-600 leading-relaxed">
-              Shipping is calculated for your delivery address and the products, quantities, weights and package dimensions. Options and prices come from the carrier, not fixed AVEART tariffs.
-            </p>
-            <button
-              type="button"
-              disabled={isQuotingShipping || !shippingStreet.trim() || !shippingCity.trim() || !shippingState || !shippingPostalCode.trim()}
-              onClick={calculateShipping}
-              className="w-full sm:w-auto px-5 py-3 rounded-xl bg-slate-900 text-white text-xs font-extrabold uppercase tracking-wide disabled:opacity-50 disabled:cursor-not-allowed hover:bg-slate-700"
-            >
-              {isQuotingShipping ? 'Calculating live rates…' : 'Calculate shipping'}
-            </button>
-            {shippingQuoteError && (
-              <div role="alert" className="p-3 rounded-xl border border-amber-200 bg-amber-50 text-amber-800 text-xs leading-relaxed">
-                {shippingQuoteError}
-              </div>
-            )}
-            {shippingOptions.length > 0 && (
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
-                {shippingOptions.map((option) => (
-                  <label key={option.service_code + option.service_name} className={`p-4 border rounded-2xl cursor-pointer transition-all flex flex-col justify-between ${selectedShippingRate?.quoteToken === option.quoteToken ? 'border-rose-500 bg-rose-50/60 ring-2 ring-rose-500 shadow-sm' : 'border-slate-200 bg-white hover:border-slate-300'}`}>
-                    <div className="flex items-start justify-between gap-2">
-                      <div className="flex items-start gap-2">
-                        <input type="radio" name="shippingMethod" checked={selectedShippingRate?.quoteToken === option.quoteToken} onChange={() => { setSelectedShippingRate(option); setShippingMethod(option.service_code); }} className="accent-rose-500 mt-0.5" />
-                        <strong className="text-slate-900 font-bold">{option.service_name}</strong>
-                      </div>
-                      <span className="font-mono tabular-nums font-extrabold text-rose-600">{formatZAR(option.amount_zar)}</span>
-                    </div>
-                    {(option.estimated_delivery_from || option.estimated_delivery_to) && (
-                      <p className="text-slate-500 mt-2 text-[11px] leading-relaxed">Estimated delivery: {[option.estimated_delivery_from, option.estimated_delivery_to].filter(Boolean).join(' – ')}</p>
-                    )}
-                  </label>
-                ))}
-              </div>
-            )}
-            {!selectedShippingRate && !shippingQuoteError && (
-              <p className="text-[11px] leading-relaxed text-slate-500">Enter your destination above, then calculate shipping to see the available carrier services. Checkout remains unavailable until a valid quote is selected.</p>
-            )}
-          </div>
-
-          {/* Step 4: Payment Method Selection */}
-          <div className="bg-white border border-slate-200 p-6 rounded-2xl shadow-sm space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-              <span className="text-xs uppercase tracking-wider font-extrabold text-slate-900">
-                04. Payment Gateway Selection
-              </span>
-              <span className="text-[11px] bg-emerald-50 text-emerald-700 px-2.5 py-1 rounded-full font-bold border border-emerald-200">
-                Official Rail: Debito Pay (South Africa)
-              </span>
-            </div>
-
-            {/* Provider Switcher */}
-            <div className="grid grid-cols-2 gap-3 text-xs">
-              <label
-                className={`p-3.5 border rounded-2xl cursor-pointer flex items-center gap-2.5 transition-all ${
-                  paymentProvider === 'debito_pay'
-                    ? 'border-rose-500 bg-rose-50/60 ring-2 ring-rose-500 shadow-sm'
-                    : 'border-slate-200 bg-white hover:border-slate-300'
-                }`}
-              >
-                <input
-                  type="radio"
-                  name="paymentProvider"
-                  checked={paymentProvider === 'debito_pay'}
-                  onChange={() => setPaymentProvider('debito_pay')}
-                  className="accent-rose-500"
-                />
-                <div>
-                  <strong className="text-slate-900 block font-bold">Debito Pay (Instant EFT & Card)</strong>
-                  <span className="text-[11px] text-slate-500">Capitec Pay, Nedbank, FNB, Standard Bank</span>
-                </div>
-              </label>
-
-              <label
-                className={`p-3.5 border rounded-2xl cursor-pointer flex items-center gap-2.5 transition-all ${
-                  paymentProvider === 'stripe_sandbox'
-                    ? 'border-rose-500 bg-rose-50/60 ring-2 ring-rose-500 shadow-sm'
-                    : 'border-slate-200 bg-white hover:border-slate-300'
-                }`}
-              >
-                <input
-                  type="radio"
-                  name="paymentProvider"
-                  checked={paymentProvider === 'stripe_sandbox'}
-                  onChange={() => setPaymentProvider('stripe_sandbox')}
-                  className="accent-rose-500"
-                />
-                <div>
-                  <strong className="text-slate-900 block font-bold">International Card Sandbox</strong>
-                  <span className="text-[11px] text-slate-500">Visa, Mastercard (Test Tokens)</span>
-                </div>
-              </label>
-            </div>
-
-            {/* Debito Pay Bank Selection */}
-            {paymentProvider === 'debito_pay' && (
-              <div className="p-4 bg-slate-50 border border-slate-200 rounded-2xl space-y-3 text-xs">
-                <span className="font-bold text-slate-900 block">
-                  Select Bank / Payment Rail via Debito Pay:
-                </span>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                  {['Capitec Pay', 'FNB', 'Standard Bank', 'Nedbank', 'ABSA', 'Discovery Bank', 'TymeBank', 'Debit Card'].map((b) => (
-                    <button
-                      key={b}
-                      type="button"
-                      onClick={() => setSelectedBank(b)}
-                      className={`p-2.5 rounded-xl border text-center text-xs font-bold transition-all cursor-pointer ${
-                        selectedBank === b
-                          ? 'border-rose-500 bg-rose-500 text-white shadow-md shadow-rose-500/25'
-                          : 'border-slate-200 bg-white text-slate-700 hover:border-rose-300'
-                      }`}
-                    >
-                      {b}
-                    </button>
-                  ))}
-                </div>
-                <p className="text-[11px] text-slate-500 pt-1">
-                  You will be securely authorized via Debito Pay's instant banking confirmation rail.
-                </p>
-              </div>
-            )}
-
-            {/* Sandbox Card Inputs if Sandbox Selected */}
-            {paymentProvider === 'stripe_sandbox' && (
-              <div className="space-y-3 pt-2 text-xs">
-                <div className="flex flex-wrap gap-2 pb-2">
-                  <button
-                    type="button"
-                    onClick={() => handleTestCardSelect('4242 4242 4242 4242')}
-                    className="px-3 py-1.5 bg-emerald-50 border border-emerald-200 text-emerald-700 font-bold rounded-xl text-[11px] cursor-pointer"
-                  >
-                    ✓ Test Success Card
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleTestCardSelect('4000 0000 0000 0002')}
-                    className="px-3 py-1.5 bg-rose-50 border border-rose-200 text-rose-700 font-bold rounded-xl text-[11px] cursor-pointer"
-                  >
-                    ✕ Test Declined Card
-                  </button>
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                  <div className="sm:col-span-3">
-                    <label className="block text-slate-700 mb-1 font-bold">Card Number *</label>
-                    <input
-                      type="text"
-                      required
-                      value={cardNumber}
-                      onChange={(e) => setCardNumber(e.target.value)}
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 font-mono text-slate-900 focus:bg-white focus:ring-2 focus:ring-rose-500"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-slate-700 mb-1 font-bold">Expiry</label>
-                    <input
-                      type="text"
-                      value={cardExpiry}
-                      onChange={(e) => setCardExpiry(e.target.value)}
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 font-mono text-slate-900 focus:bg-white focus:ring-2 focus:ring-rose-500"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-slate-700 mb-1 font-bold">CVC</label>
-                    <input
-                      type="text"
-                      value={cardCvc}
-                      onChange={(e) => setCardCvc(e.target.value)}
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 font-mono text-slate-900 focus:bg-white focus:ring-2 focus:ring-rose-500"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-slate-700 mb-1 font-bold">Postal Code</label>
-                    <input
-                      type="text"
-                      value={cardPostal}
-                      onChange={(e) => setCardPostal(e.target.value)}
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 font-mono text-slate-900 focus:bg-white focus:ring-2 focus:ring-rose-500"
-                    />
-                  </div>
-                </div>
-              </div>
-            )}
-
+          {/* Shipping is quoted automatically using the configured standard South African delivery fee. */}
+          {/* Payment provider is fixed to Debito Pay; no gateway or bank selector is shown. */}
             {/* Error Message */}
             {errorMessage && (
               <div className="p-3 bg-rose-50 border border-rose-200 rounded-xl text-xs text-rose-700 flex items-start gap-2">
@@ -558,7 +380,7 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({ onBackToBag, onOrder
 
           <div className="text-center text-xs text-slate-500 font-medium flex items-center justify-center gap-2">
             <ShieldCheck className="w-4 h-4 text-emerald-600" />
-            <span>Protected by Debito Pay & Instant EFT South Africa</span>
+            <span>Secure checkout</span>
           </div>
         </form>
 
