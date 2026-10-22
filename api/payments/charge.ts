@@ -60,7 +60,7 @@ export default async function handler(req: any, res: any) {
       return res.status(400).json({ success: false, error: "PayFast payments must be at least R5.00." });
     }
 
-    const gatewayResponse = await fetch(API_BASE + "/payment-orchestrator", {
+    const returnUrl = new URL(env.returnUrl);\n    returnUrl.searchParams.set("order_id", String(order.id));\n    returnUrl.searchParams.set("order_number", String(order.order_number || ""));\n\n    const gatewayResponse = await fetch(API_BASE + "/payment-orchestrator", {
       method: "POST",
       headers: {
         Authorization: "Bearer " + env.apiKey,
@@ -78,7 +78,7 @@ export default async function handler(req: any, res: any) {
         customer_email: order.customer_email || undefined,
         customer_name: order.customer_name,
         customer_phone: order.customer_phone || undefined,
-        return_url: env.returnUrl,
+        return_url: returnUrl.toString(),
         source: "aveart",
         source_id: order.order_number,
       }),
