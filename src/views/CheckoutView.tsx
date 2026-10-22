@@ -117,7 +117,7 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({ onBackToBag, onOrder
     e.preventDefault();
     setErrorMessage(null);
     if (!selectedShippingRate) {
-      setErrorMessage('Enter your delivery address and calculate a live shipping quote before placing the order.');
+      setErrorMessage('Confirm your free delivery option before placing the order.');
       return;
     }
     setIsSubmitting(true);
@@ -340,10 +340,10 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({ onBackToBag, onOrder
           {/* Step 3: Live South African Shipping Quotes */}
           <div className="bg-white border border-slate-200 p-6 rounded-2xl shadow-sm space-y-4">
             <span className="text-xs uppercase tracking-wider font-extrabold text-slate-900 block pb-3 border-b border-slate-100">
-              03. Live Shipping Options
+              03. Free Standard Delivery
             </span>
             <p className="text-xs text-slate-600 leading-relaxed">
-              Shipping is calculated for your delivery address and the products, quantities, weights and package dimensions. Options and prices come from the carrier, not fixed AVEART tariffs.
+              AVEART currently offers free standard delivery on eligible South African orders. No shipping fee will be added to your total.
             </p>
             <button
               type="button"
@@ -351,7 +351,7 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({ onBackToBag, onOrder
               onClick={calculateShipping}
               className="w-full sm:w-auto px-5 py-3 rounded-xl bg-slate-900 text-white text-xs font-extrabold uppercase tracking-wide disabled:opacity-50 disabled:cursor-not-allowed hover:bg-slate-700"
             >
-              {isQuotingShipping ? 'Calculating live rates…' : 'Calculate shipping'}
+              {isQuotingShipping ? 'Activating free delivery…' : 'Apply free delivery'}
             </button>
             {shippingQuoteError && (
               <div role="alert" className="p-3 rounded-xl border border-amber-200 bg-amber-50 text-amber-800 text-xs leading-relaxed">
@@ -377,7 +377,7 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({ onBackToBag, onOrder
               </div>
             )}
             {!selectedShippingRate && !shippingQuoteError && (
-              <p className="text-[11px] leading-relaxed text-slate-500">Enter your destination above, then calculate shipping to see the available carrier services. Checkout remains unavailable until a valid quote is selected.</p>
+              <p className="text-[11px] leading-relaxed text-slate-500">Enter your delivery address above, then apply free delivery. Checkout remains unavailable until free delivery is confirmed.</p>
             )}
           </div>
 
