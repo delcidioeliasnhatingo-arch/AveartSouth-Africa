@@ -353,6 +353,7 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({ onBackToBag, onOrder
 
           {/* Shipping is quoted automatically using the configured standard South African delivery fee. */}
           {/* Payment provider is fixed to Debito Pay; no gateway or bank selector is shown. */}
+          <div className="bg-white border border-slate-200 p-6 rounded-2xl shadow-sm space-y-4">
             {/* Error Message */}
             {errorMessage && (
               <div className="p-3 bg-rose-50 border border-rose-200 rounded-xl text-xs text-rose-700 flex items-start gap-2">
