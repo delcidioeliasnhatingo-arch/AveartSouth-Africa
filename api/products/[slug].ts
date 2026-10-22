@@ -1,13 +1,13 @@
-import { medusa, mapProduct, sendError } from "../_medusa.ts";
+import { getSupabaseProducts, mapSupabaseProduct, sendSupabaseError } from "../_supabase.ts";
 
 export default async function handler(req: any, res: any) {
   try {
     const slug = String(req.query?.slug || "");
     if (!slug) return res.status(400).json({ error: "Product handle is required." });
-    const data = await medusa("/storefront/products");
-    const product = (data.products || []).find((p: any) => p.handle === slug || p.id === slug);
-    if (!product) return res.status(404).json({ error: "Product not found in Medusa." });
-    res.setHeader("Cache-Control", "s-maxage=60, stale-while-revalidate=300");
-    res.status(200).json(mapProduct(product));
-  } catch (error) { sendError(res, error); }
+    const rows = await getSupabaseProducts();
+    const row = rows.find((p) => (p.slug || p.id) === slug || p.id === slug);
+    if (!row) return res.status(404).json({ error: "Product not found in Supabase." });
+    res.setHeader("Cache-Control", "s-maxage=30, stale-while-revalidate=60");
+    res.status(200).json(mapSupabaseProduct(row));
+  } catch (error) { sendSupabaseError(res, error); }
 }
