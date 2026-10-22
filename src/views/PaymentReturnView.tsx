@@ -1,5 +1,5 @@
 import React from 'react';
-import { CheckCircle2, Clock3, ArrowLeft, ShieldCheck } from 'lucide-react';
+import { Clock3, ArrowLeft, ShieldCheck } from 'lucide-react';
 
 interface PaymentReturnViewProps {
   onNavigateHome: () => void;
