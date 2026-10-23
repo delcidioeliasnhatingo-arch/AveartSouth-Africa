@@ -30,7 +30,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             </div>
             <div>
               <h5 className="text-sm font-bold text-white">Free SA Delivery</h5>
-              <p className="text-xs text-slate-400">On all orders over R 1,000</p>
+              <p className="text-xs text-slate-400">Free delivery on all orders</p>
             </div>
           </div>
           <div className="flex items-center gap-3.5 p-4 rounded-2xl bg-slate-800/60 border border-slate-700/50">
