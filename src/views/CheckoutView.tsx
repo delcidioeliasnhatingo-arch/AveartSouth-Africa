@@ -124,7 +124,7 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({ onBackToBag, onOrder
     e.preventDefault();
     setErrorMessage(null);
     if (!selectedShippingRate) {
-      setErrorMessage('Complete your South African delivery address. Shipping will be calculated automatically.');
+      setErrorMessage('Please complete all required South African delivery address fields. Delivery is free for now.');
       return;
     }
     setIsSubmitting(true);
