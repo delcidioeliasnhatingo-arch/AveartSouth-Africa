@@ -39,51 +39,7 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({ onBackToBag, onOrder
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   type ShippingRate = { service_code: string; service_name: string; amount_zar: number; estimated_delivery_from?: string | null; estimated_delivery_to?: string | null; quoteToken: string };
-  const [shippingOptions, setShippingOptions] = useState<ShippingRate[]>([]);
-  const [selectedShippingRate, setSelectedShippingRate] = useState<ShippingRate | null>(null);
-  const [isQuotingShipping, setIsQuotingShipping] = useState(false);
-  const [shippingQuoteError, setShippingQuoteError] = useState<string | null>(null);
-  const invalidateShippingQuote = () => {
-    setShippingOptions([]);
-    setSelectedShippingRate(null);
-    setShippingQuoteError(null);
-    setShippingMethod('');
-  };
-  const calculateShipping = async () => {
-    setIsQuotingShipping(true);
-    setShippingQuoteError(null);
-    setShippingOptions([]);
-    setSelectedShippingRate(null);
-    try {
-      const response = await fetch('/api/shipping/quote', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          items: items.map((item) => ({ variantId: item.variantId, quantity: item.quantity })),
-          delivery: {
-            street_address: shippingStreet.trim(),
-            city: shippingCity.trim(),
-            zone: shippingState,
-            code: shippingPostalCode.trim(),
-            suburb: shippingApartment.trim(),
-            country: 'ZA',
-            type: 'residential'
-          }
-        })
-      });
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error || 'Could not calculate shipping for this address.');
-      const rates = Array.isArray(data.rates) ? data.rates as ShippingRate[] : [];
-      if (!rates.length) throw new Error('No carrier services are available for this route.');
-      setShippingOptions(rates.slice(0, 3));
-      setSelectedShippingRate(rates[0]);
-      setShippingMethod(rates[0].service_code);
-    } catch (error: any) {
-      setShippingQuoteError(error.message || 'Could not calculate shipping.');
-    } finally {
-      setIsQuotingShipping(false);
-    }
-  };
+  // Shipping is temporarily free for every South African order; no carrier quote is required.
 
 
   useEffect(() => {
@@ -93,12 +49,9 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({ onBackToBag, onOrder
     }
   }, [user, customerEmail]);
 
-  // Automatically fetch the configured standard delivery fee once the address is complete.
   useEffect(() => {
-    if (shippingStreet.trim() && shippingCity.trim() && shippingState && shippingPostalCode.trim()) {
-      void calculateShipping();
-    }
-  }, [shippingStreet, shippingCity, shippingState, shippingPostalCode]);
+    if (shippingMethod !== 'free') setShippingMethod('free');
+  }, [shippingMethod, setShippingMethod]);
 
   if (items.length === 0) {
     return (
@@ -123,10 +76,6 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({ onBackToBag, onOrder
   const handleSubmitOrder = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage(null);
-    if (!selectedShippingRate) {
-      setErrorMessage('Please complete all required South African delivery address fields. Delivery is free for now.');
-      return;
-    }
     setIsSubmitting(true);
 
     try {
@@ -134,9 +83,9 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({ onBackToBag, onOrder
       const orderPayload = {
         items: items.map((i) => ({ variantId: i.variantId, quantity: i.quantity })),
         discountCode: discountCode || undefined,
-        shippingMethod,
-        shippingQuoteToken: selectedShippingRate.quoteToken,
-        shippingServiceCode: selectedShippingRate.service_code,
+        shippingMethod: 'free',
+        shippingCost: 0,
+        shippingServiceCode: 'FREE',
         customerEmail,
         customerName,
         customerPhone,
@@ -281,7 +230,7 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({ onBackToBag, onOrder
                   type="text"
                   required
                   value={shippingStreet}
-                  onChange={(e) => { invalidateShippingQuote(); setShippingStreet(e.target.value); }}
+                  onChange={(e) => setShippingStreet(e.target.value)}
                   className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-900 font-medium focus:outline-none focus:ring-2 focus:ring-rose-500 focus:bg-white"
                 />
               </div>
@@ -291,7 +240,7 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({ onBackToBag, onOrder
                 <input
                   type="text"
                   value={shippingApartment}
-                  onChange={(e) => { invalidateShippingQuote(); setShippingApartment(e.target.value); }}
+                  onChange={(e) => setShippingApartment(e.target.value)}
                   className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-900 font-medium focus:outline-none focus:ring-2 focus:ring-rose-500 focus:bg-white"
                 />
               </div>
@@ -302,7 +251,7 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({ onBackToBag, onOrder
                   type="text"
                   required
                   value={shippingCity}
-                  onChange={(e) => { invalidateShippingQuote(); setShippingCity(e.target.value); }}
+                  onChange={(e) => setShippingCity(e.target.value)}
                   className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-900 font-medium focus:outline-none focus:ring-2 focus:ring-rose-500 focus:bg-white"
                 />
               </div>
@@ -311,7 +260,7 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({ onBackToBag, onOrder
                 <label className="block text-slate-700 mb-1 font-bold">Province *</label>
                 <select
                   value={shippingState}
-                  onChange={(e) => { invalidateShippingQuote(); setShippingState(e.target.value); }}
+                  onChange={(e) => setShippingState(e.target.value)}
                   className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-900 font-bold focus:outline-none focus:ring-2 focus:ring-rose-500 focus:bg-white cursor-pointer"
                 >
                   <option value="">Select province</option>
@@ -333,7 +282,7 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({ onBackToBag, onOrder
                   type="text"
                   required
                   value={shippingPostalCode}
-                  onChange={(e) => { invalidateShippingQuote(); setShippingPostalCode(e.target.value); }}
+                  onChange={(e) => setShippingPostalCode(e.target.value)}
                   className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-900 font-medium focus:outline-none focus:ring-2 focus:ring-rose-500 focus:bg-white"
                 />
               </div>
@@ -351,7 +300,7 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({ onBackToBag, onOrder
             </div>
           </div>
 
-          {/* Shipping is quoted automatically using the configured standard South African delivery fee. */}
+          {/* Free delivery: no carrier quote or shipping fee is required. */}
           {/* Payment provider is fixed to Debito Pay; no gateway or bank selector is shown. */}
           <div className="bg-white border border-slate-200 p-6 rounded-2xl shadow-sm space-y-4">
             {/* Error Message */}
@@ -374,7 +323,7 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({ onBackToBag, onOrder
               {isSubmitting
                 ? 'Processing Authorization...'
                 : paymentProvider === 'debito_pay'
-                ? `Pay with Debito Pay · ${formatZAR(Math.max(0, (calculation?.subtotal || 0) - (calculation?.discountAmount || 0) + (selectedShippingRate?.amount_zar || 0) + (calculation?.taxAmount || 0)))}`
+                ? `Pay with Debito Pay · ${formatZAR(Math.max(0, (calculation?.subtotal || 0) - (calculation?.discountAmount || 0) + (calculation?.taxAmount || 0)))}`
                 : `Authorize Card · ${formatZAR(calculation?.totalAmount || 0)}`}
             </span>
           </button>
@@ -440,7 +389,7 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({ onBackToBag, onOrder
             <div className="flex justify-between">
               <span>Delivery (South Africa)</span>
               <span className="font-mono tabular-nums font-semibold">
-                {selectedShippingRate ? formatZAR(selectedShippingRate.amount_zar) : 'Calculate shipping first'}
+                {formatZAR(0)}
               </span>
             </div>
 
