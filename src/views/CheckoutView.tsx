@@ -95,7 +95,7 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({ onBackToBag, onOrder
       };
 
       const token = localStorage.getItem('aveart_auth_token');
-      const orderRes = await fetch('/api/orders', {
+      const orderRes = await fetch('https://aveart-api.delcidioeliasnhatingo.workers.dev/api/orders', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -105,8 +105,10 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({ onBackToBag, onOrder
       });
 
       if (!orderRes.ok) {
-        const errorData = await orderRes.json();
-        throw new Error(errorData.error || 'Failed to initialize order.');
+        const rawError = await orderRes.text();
+        let errorData: any = {};
+        try { errorData = JSON.parse(rawError); } catch { /* API may return HTML when misconfigured */ }
+        throw new Error(errorData.error || 'Could not create your order. Please check your details and try again.');
       }
 
       const orderData = await orderRes.json();
@@ -120,25 +122,28 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({ onBackToBag, onOrder
           orderId: createdOrder.id,
           provider: paymentProvider,
           details: {
-            bankName: selectedBank,
-            cardNumber,
-            cardExpiry,
-            cardCvc,
+            customerEmail,
+            customerName,
+            customerPhone,
             amount: createdOrder.total_amount,
             currency: 'ZAR',
           },
         }),
       });
 
-      const paymentData = await paymentRes.json();
+      const paymentRaw = await paymentRes.text();
+      let paymentData: any = {};
+      try { paymentData = JSON.parse(paymentRaw); } catch { /* convert HTML/non-JSON failures to a readable message */ }
 
       if (!paymentRes.ok || !paymentData.success) {
-        throw new Error(paymentData.error || 'Payment authorization was declined. Please verify details.');
+        throw new Error(paymentData.error || 'Could not start Debito Pay checkout. Please try again.');
       }
-
-      // Success
-      clearCart();
-      onOrderComplete(paymentData.order || createdOrder);
+      if (paymentData.checkout_url) {
+        clearCart();
+        window.location.assign(paymentData.checkout_url);
+        return;
+      }
+      throw new Error('Debito Pay did not return a checkout link. Please try again.');
     } catch (err: any) {
       setErrorMessage(err.message || 'An error occurred during payment processing.');
     } finally {
