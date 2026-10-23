@@ -1,11 +1,22 @@
-import { medusa, mapProduct, sendError } from "../../_medusa.ts";
+const PRODUCT_API = "https://aveart-api.delcidioeliasnhatingo.workers.dev/api/products";
 
 export default async function handler(req: any, res: any) {
   try {
     const slug = String(req.query?.slug || "");
-    const data = await medusa("/storefront/products");
-    const products = (data.products || []).map(mapProduct).filter((p: any) => p.is_published === 1 && p.slug !== slug);
-    res.setHeader("Cache-Control", "s-maxage=60, stale-while-revalidate=300");
-    res.status(200).json(products.slice(0, 4));
-  } catch (error) { sendError(res, error); }
+    const response = await fetch(PRODUCT_API, { headers: { Accept: "application/json" } });
+    if (!response.ok) throw new Error(`Cloudflare product API returned ${response.status}`);
+
+    const data = await response.json();
+    const products = (Array.isArray(data) ? data : [])
+      .filter((p: any) => p.is_published === 1 && String(p.slug || "") !== slug)
+      .slice(0, 4);
+
+    res.setHeader("Cache-Control", "s-maxage=30, stale-while-revalidate=60");
+    return res.status(200).json(products);
+  } catch (error: any) {
+    return res.status(502).json({
+      error: "Unable to load AVEART product recommendations.",
+      details: process.env.NODE_ENV === "development" ? String(error?.message || error) : undefined,
+    });
+  }
 }
