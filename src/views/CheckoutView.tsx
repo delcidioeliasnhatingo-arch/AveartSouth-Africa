@@ -11,7 +11,7 @@ interface CheckoutViewProps {
 
 export const CheckoutView: React.FC<CheckoutViewProps> = ({ onBackToBag, onOrderComplete }) => {
   const { user, addresses } = useAuth();
-  const { items, calculation, discountCode, setDiscountCode, shippingMethod, setShippingMethod, clearCart } = useCart();
+  const { items, calculation, discountCode, setDiscountCode, clearCart } = useCart();
 
   // Contact & Address
   const defaultAddress = addresses.find((a) => a.is_default) || addresses[0];
@@ -38,7 +38,6 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({ onBackToBag, onOrder
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  type ShippingRate = { service_code: string; service_name: string; amount_zar: number; estimated_delivery_from?: string | null; estimated_delivery_to?: string | null; quoteToken: string };
   // Shipping is temporarily free for every South African order; no carrier quote is required.
 
 
@@ -48,10 +47,6 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({ onBackToBag, onOrder
       setCustomerName(user.name);
     }
   }, [user, customerEmail]);
-
-  useEffect(() => {
-    if (shippingMethod !== 'free') setShippingMethod('free');
-  }, [shippingMethod, setShippingMethod]);
 
   if (items.length === 0) {
     return (
