@@ -60,6 +60,7 @@ export interface Product {
   max_price?: number;
   total_stock?: number;
   primary_image?: string;
+  images?: string[];
 }
 
 export interface CartItem {
