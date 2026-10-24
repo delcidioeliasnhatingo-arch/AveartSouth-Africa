@@ -175,9 +175,17 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
   const isLowStock = selectedVariant && selectedVariant.stock_quantity > 0 && selectedVariant.stock_quantity <= selectedVariant.low_stock_threshold;
   const hasDiscount = product.original_price && product.original_price > product.base_price;
 
-  const galleryImages = [
-    selectedVariant?.image_url || product.primary_image || '/src/assets/images/fashion_women_linen_blazer_1792263530901.jpg',
-  ];
+  const galleryImages = Array.from(new Set([
+    ...(Array.isArray((product as Product & { images?: string[] }).images)
+      ? (product as Product & { images?: string[] }).images!.filter(Boolean)
+      : []),
+    product.primary_image,
+    selectedVariant?.image_url,
+    ...(product.variants || []).map((variant) => variant.image_url),
+    '/src/assets/images/fashion_women_linen_blazer_1792263530901.jpg',
+  ].filter((image): image is string => Boolean(image))));
+  const safeImageIndex = Math.min(activeImageIndex, Math.max(0, galleryImages.length - 1));
+  const activeGalleryImage = galleryImages[safeImageIndex] || product.primary_image || '/src/assets/images/fashion_women_linen_blazer_1792263530901.jpg';
 
   const handleAddToCart = () => {
     if (!selectedVariant || isOutOfStock) return;
@@ -229,7 +237,7 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
         <div className="lg:col-span-7 space-y-4">
           <div className="relative aspect-[3/4] bg-slate-100 rounded-3xl overflow-hidden border border-slate-200 shadow-sm">
             <img
-              src={galleryImages[activeImageIndex]}
+              src={activeGalleryImage}
               alt={product.title}
               className="w-full h-full object-cover object-top"
             />
@@ -247,6 +255,22 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
               </div>
             ) : null}
           </div>
+          {galleryImages.length > 1 && (
+            <div className="flex gap-3 overflow-x-auto pb-1" aria-label="Product photos">
+              {galleryImages.map((image, index) => (
+                <button
+                  key={image}
+                  type="button"
+                  onClick={() => setActiveImageIndex(index)}
+                  aria-label={`View product photo ${index + 1}`}
+                  aria-pressed={safeImageIndex === index}
+                  className={`shrink-0 w-20 h-24 sm:w-24 sm:h-28 rounded-xl overflow-hidden border-2 transition-colors cursor-pointer ${safeImageIndex === index ? 'border-rose-500 ring-2 ring-rose-100' : 'border-slate-200 hover:border-rose-300'}`}
+                >
+                  <img src={image} alt={`${product.title} photo ${index + 1}`} className="w-full h-full object-cover object-top" loading="lazy" />
+                </button>
+              ))}
+            </div>
+          )}
 
           {/* Fabric & Design Highlights */}
           <div className="p-6 bg-white border border-slate-200 rounded-2xl space-y-3 shadow-sm">
