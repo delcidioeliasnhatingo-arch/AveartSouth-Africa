@@ -116,6 +116,7 @@ export default async function handler(req: any, res: any) {
     res.setHeader("CDN-Cache-Control", "public, s-maxage=120, stale-while-revalidate=600");
     return res.status(200).json(products);
   } catch (error: any) {
+    console.error("AVEART products upstream request failed:", error?.message || error);
     res.setHeader("Cache-Control", "no-store");
     return res.status(502).json({ error: "Unable to load AVEART products.", details: process.env.NODE_ENV === "development" ? String(error?.message || error) : undefined });
   }
