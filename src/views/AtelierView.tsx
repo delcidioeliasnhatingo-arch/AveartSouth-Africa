@@ -1,6 +1,6 @@
 import React from 'react';
 import portraitImage from '../assets/images/Retrato urbano em tons neutros.png';
-import { Award, Compass, ShieldCheck, MapPin, ArrowRight, Sparkles, Scissors, Feather, Heart } from 'lucide-react';
+import { Award, Compass, ShieldCheck, MapPin, ArrowRight, Scissors, Feather, Heart } from 'lucide-react';
 
 interface AtelierViewProps {
   onNavigateCatalog: () => void;
@@ -13,7 +13,6 @@ export const AtelierView: React.FC<AtelierViewProps> = ({ onNavigateCatalog }) =
       {/* Editorial Header */}
       <div className="max-w-3xl space-y-4">
         <span className="text-xs uppercase tracking-wider text-[#65775D] font-extrabold flex items-center gap-1.5">
-          <Sparkles className="w-4 h-4" />
           <span>Our Story & Craft</span>
         </span>
         <h1 className="text-4xl sm:text-5xl text-slate-900 font-black leading-tight [text-wrap:balance]">
