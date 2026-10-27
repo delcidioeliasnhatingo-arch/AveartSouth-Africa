@@ -72,109 +72,28 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate }) => {
   return (
     <div className="space-y-16 md:space-y-24 pb-16">
       
-      {/* =========================================================================
-          SECTION 1: FULL-SCREEN HERO (MODEL OCCUPYING ENTIRE HERO WITH NEW LOGO)
-          ========================================================================= */}
-      <section className="relative w-full min-h-[90vh] lg:min-h-[calc(100vh-4.5rem)] flex items-center bg-[#090D16] text-white overflow-hidden border-b border-slate-800/60">
-        
-        {/* Full-Bleed Model Photo: Occupies the entire hero background from edge to edge */}
-        <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none">
-          <img
-            src={heroImage}
-            alt="AVEART Model wearing Sand Tailored Linen Double-Breasted Blazer"
-            className="w-full h-full object-cover object-[center_top] sm:object-[center_15%] md:object-[68%_18%] lg:object-[68%_18%] xl:object-[65%_15%] scale-100 transition-transform duration-1000 ease-out"
-          />
-          {/* Subtle cinematic overlays for high-contrast typography while leaving the model radiant and prominent */}
-          <div className="absolute inset-0 bg-gradient-to-r from-slate-950/95 via-slate-950/75 sm:via-slate-950/45 md:via-slate-950/30 to-slate-950/10" />
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-transparent to-slate-950/40" />
+      {/* AVEART editorial hero — rebuilt to match the approved storefront concept */}
+      <section className="aveart-hero relative w-full min-h-[500px] lg:min-h-[570px] flex items-center overflow-hidden">
+        <div className="absolute inset-0">
+          <img src={heroImage} alt="AVEART contemporary fashion collection" className="w-full h-full object-cover object-[65%_35%]" />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/55 via-black/25 to-transparent" />
         </div>
-
-        {/* Content Layer over the Full Hero Photo */}
-        <div className="relative z-10 w-full max-w-[1920px] mx-auto px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20 py-12 md:py-16">
-          <div className="max-w-xl lg:max-w-2xl space-y-6">
-            
-            {/* Announcement badge with Geometric Flight Emblem */}
-            <div className="inline-flex items-center gap-2.5 px-4 py-1.5 bg-emerald-600/20 border border-emerald-300/30 backdrop-blur-md rounded-full text-xs font-bold text-rose-200 shadow-xs">
-              <Logo className="w-4 h-4 text-emerald-600 shrink-0" />
-              <span>New Season 2026 · Ready to Ship</span>
-            </div>
-
-            <h1 className="text-3xl sm:text-5xl lg:text-6xl text-white font-black leading-[1.08] tracking-tight [text-wrap:balance] drop-shadow-md">
-              AUTHENTIC FASHION CRAFTED FOR EVERYDAY ELEGANCE
-            </h1>
-
-            <p className="text-sm sm:text-base md:text-lg text-slate-200 leading-relaxed font-medium max-w-xl">
-              Versatile silhouettes in pure European linen, natural silk, organic cotton, and selvedge denim. Contemporary comfort and effortless style tailored for daily life.
-            </p>
-
-            {/* Action Buttons */}
-            <div className="pt-2 flex flex-wrap items-center gap-3 sm:gap-4">
-              <button
-                onClick={() => onNavigate('catalog_gender', 'women')}
-                className="bg-emerald-600 hover:bg-emerald-700 text-white px-7 py-3.5 text-sm font-bold rounded-xl flex items-center gap-2 shadow-lg shadow-rose-500/30 hover:shadow-xl hover:shadow-rose-500/40 transition-all cursor-pointer active:scale-95"
-              >
-                <span>Women's Collection</span>
-                <ArrowRight className="w-4 h-4" />
-              </button>
-
-              <button
-                onClick={() => onNavigate('catalog_gender', 'men')}
-                className="border border-white/30 hover:border-white text-white hover:bg-white/10 backdrop-blur-sm px-7 py-3.5 text-sm font-bold rounded-xl transition-all cursor-pointer shadow-sm active:scale-95"
-              >
-                Men's Collection
-              </button>
-
-              <button
-                onClick={() => onNavigate('catalog')}
-                className="text-xs font-extrabold uppercase tracking-wider text-emerald-600 hover:text-white py-3 px-2 flex items-center gap-1.5 cursor-pointer transition-colors"
-              >
-                <span>View Full Catalog</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </button>
-            </div>
-
-            {/* Interactive Pill: Outfit Identifier with brand emblem */}
-            <div
-              onClick={() => onNavigate('product', 'tailored-double-breasted-linen-blazer')}
-              className="inline-flex items-center gap-3 px-4 py-2.5 rounded-xl bg-slate-900/80 hover:bg-slate-900 backdrop-blur-md border border-white/15 text-xs text-slate-200 shadow-lg transition-all cursor-pointer group/pill active:scale-98"
-            >
-              <Logo className="w-3.5 h-3.5 text-emerald-600 group-hover/pill:rotate-12 transition-transform" />
-              <span>
-                Featured on model: <strong className="text-white font-extrabold">Tailored Linen Blazer in Sand</strong> · <span className="text-emerald-600 font-black">R 3,450</span>
-              </span>
-              <span className="px-2 py-0.5 rounded-lg bg-white/10 text-white text-[10px] font-bold uppercase tracking-wider group-hover/pill:bg-emerald-600 transition-colors">
-                View Piece
-              </span>
-            </div>
-
-            {/* Trust Highlights in Glassmorphism */}
-            <div className="pt-4 border-t border-white/15 grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-slate-200">
-              <div className="p-3.5 bg-slate-900/60 backdrop-blur-md rounded-xl border border-white/10 shadow-sm flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl bg-emerald-600/20 border border-emerald-300/30 flex items-center justify-center shrink-0">
-                  <Truck className="w-4 h-4 text-emerald-600" />
-                </div>
-                <div>
-                  <span className="font-extrabold text-white text-sm block">Free Express Delivery</span>
-                  <p className="text-[11px] text-slate-300">Complimentary nationwide shipping on orders over R 1,000.</p>
-                </div>
-              </div>
-
-              <div className="p-3.5 bg-slate-900/60 backdrop-blur-md rounded-xl border border-white/10 shadow-sm flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl bg-emerald-500/20 border border-emerald-400/30 flex items-center justify-center shrink-0">
-                  <ShieldCheck className="w-4 h-4 text-emerald-400" />
-                </div>
-                <div>
-                  <span className="font-extrabold text-white text-sm block">Secure Payment</span>
-                  <p className="text-[11px] text-slate-300">Instant EFT, Debit Cards & Capitec Pay protected.</p>
-                </div>
-              </div>
-            </div>
-
+        <div className="relative z-10 w-full max-w-[1440px] mx-auto px-5 sm:px-8 lg:px-16 py-16">
+          <div className="max-w-lg text-white">
+            <p className="text-xs sm:text-sm uppercase tracking-[0.22em] font-semibold mb-5">Modern / Sophisticated / Minimal</p>
+            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold leading-[0.98] tracking-tight">Timeless<br />Style</h1>
+            <p className="mt-5 max-w-sm text-sm sm:text-base leading-7 text-white/90">Effortless looks for every moment. Discover considered essentials designed to move with you.</p>
+            <button onClick={() => onNavigate('catalog')} className="mt-7 inline-flex items-center gap-3 bg-white text-slate-900 hover:bg-emerald-50 px-6 py-3.5 rounded-md text-xs font-bold uppercase tracking-wide transition-colors">
+              Shop the collection <ArrowRight className="w-4 h-4" />
+            </button>
           </div>
         </div>
       </section>
-
-
+      <section className="aveart-benefits grid grid-cols-1 sm:grid-cols-3 gap-5 px-5 sm:px-8 lg:px-14 py-6">
+        <div className="flex items-center justify-center sm:justify-start gap-3"><Truck className="w-6 h-6 text-emerald-700 shrink-0" /><div><strong className="block text-sm font-bold">Thoughtful delivery</strong><span className="text-xs text-slate-500">Clear shipping updates</span></div></div>
+        <div className="flex items-center justify-center sm:justify-start gap-3"><ShieldCheck className="w-6 h-6 text-emerald-700 shrink-0" /><div><strong className="block text-sm font-bold">Secure checkout</strong><span className="text-xs text-slate-500">Your details stay protected</span></div></div>
+        <div className="flex items-center justify-center sm:justify-start gap-3"><Heart className="w-6 h-6 text-emerald-700 shrink-0" /><div><strong className="block text-sm font-bold">Here to help</strong><span className="text-xs text-slate-500">Customer support when you need it</span></div></div>
+      </section>
       {/* =========================================================================
           SECTION 2: FEATURED CATEGORIES & DEPARTMENTS (Categories Grid)
           ========================================================================= */}
