@@ -226,3 +226,34 @@ button:disabled { cursor: not-allowed; }
   .aveart-newsletter-form { align-items: stretch; }
   .aveart-newsletter-form button { padding-left: 10px; font-size: 9px; }
 }
+
+
+/* Footer matching the AVEART HTML reference */
+.aveart-reference-footer { margin-top: 0 !important; padding: 0 !important; background: #fff !important; color: var(--aveart-ink) !important; border-top: 1px solid var(--ref-line, #e5e8e2) !important; }
+.aveart-reference-footer .aveart-footer-main {
+  width: min(100% - 48px, 1320px); margin: 0 auto; padding: 58px 0 50px;
+  display: grid; grid-template-columns: 1.35fr .75fr .9fr 1.2fr; gap: clamp(26px, 4vw, 66px);
+}
+.aveart-reference-footer .aveart-footer-wordmark { display: inline-flex; align-items: center; gap: 11px; padding: 0; border: 0; background: transparent; color: var(--aveart-ink); font-size: 20px; font-weight: 700; letter-spacing: .16em; }
+.aveart-reference-footer .aveart-footer-logo { width: 26px; height: 26px; color: var(--aveart-ink); }
+.aveart-reference-footer .aveart-footer-brand > p, .aveart-reference-footer .aveart-footer-newsletter > p { max-width: 290px; margin: 18px 0 0; color: #70756e !important; font-size: 12px; line-height: 1.9; }
+.aveart-reference-footer .aveart-footer-tagline { display: inline-block; margin-top: 18px; color: #78936a; font-size: 9px; font-weight: 700; letter-spacing: .2em; }
+.aveart-reference-footer .aveart-footer-column { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; }
+.aveart-reference-footer .aveart-footer-column h3 { margin: 3px 0 8px; color: var(--aveart-ink) !important; font-size: 10px; font-weight: 700; letter-spacing: .15em; text-transform: uppercase; }
+.aveart-reference-footer .aveart-footer-column > button { padding: 0; border: 0; background: transparent; color: #70756e !important; font-size: 12px; text-align: left; }
+.aveart-reference-footer .aveart-footer-column > button:hover { color: #78936a !important; }
+.aveart-reference-footer .aveart-footer-newsletter > p { margin: 0; }
+.aveart-reference-footer .aveart-footer-form { display: flex; width: 100%; margin-top: 7px; border-bottom: 1px solid #aeb4aa; }
+.aveart-reference-footer .aveart-footer-form input { min-width: 0; flex: 1; padding: 11px 0; border: 0 !important; border-radius: 0 !important; background: transparent !important; box-shadow: none !important; font-size: 11px; }
+.aveart-reference-footer .aveart-footer-form button { display: grid; place-items: center; padding: 0 2px 0 12px; border: 0; background: transparent; color: var(--aveart-ink); }
+.aveart-reference-footer .aveart-footer-social { display: inline-flex; align-items: center; gap: 8px; margin-top: 10px; padding: 0; border: 0; background: transparent; color: #70756e; font-size: 10px; }
+.aveart-reference-footer .aveart-footer-success { color: #65775d !important; }
+.aveart-reference-footer .aveart-footer-bottom { display: flex; justify-content: space-between; gap: 18px; width: min(100% - 48px, 1320px); margin: 0 auto; padding: 20px 0 25px; border-top: 1px solid var(--ref-line, #e5e8e2); color: #777d75; font-size: 10px; }
+@media (max-width: 800px) {
+  .aveart-reference-footer .aveart-footer-main { grid-template-columns: repeat(2, minmax(0, 1fr)); width: calc(100% - 40px); gap: 38px 28px; padding: 45px 0 38px; }
+  .aveart-reference-footer .aveart-footer-bottom { width: calc(100% - 40px); flex-direction: column; }
+}
+@media (max-width: 480px) {
+  .aveart-reference-footer .aveart-footer-main { grid-template-columns: 1fr; gap: 30px; }
+  .aveart-reference-footer .aveart-footer-bottom { width: calc(100% - 32px); }
+}
