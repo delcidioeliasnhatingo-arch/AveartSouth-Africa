@@ -185,7 +185,7 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
     product.primary_image,
     selectedVariant?.image_url,
     ...(product.variants || []).map((variant) => variant.image_url),
-    '/src/assets/images/fashion_women_linen_blazer_1792263530901.jpg',
+    '/src/assets/images/fashion_women_silk_midi_dress_1792263530827.jpg',
   ].filter((image): image is string => Boolean(image))));
   const safeImageIndex = Math.min(activeImageIndex, Math.max(0, galleryImages.length - 1));
   const activeGalleryImage = galleryImages[safeImageIndex] || product.primary_image || '/src/assets/images/fashion_women_linen_blazer_1792263530901.jpg';
