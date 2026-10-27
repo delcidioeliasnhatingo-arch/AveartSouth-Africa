@@ -1,4 +1,4 @@
-const PRODUCT_API = "https://aveart-api.delcidioeliasnhatingo.workers.dev/api/products";
+const PRODUCT_API = "https://aveart-products-public.delcidioeliasnhatingo.workers.dev/api/products";
 
 function descriptionForProduct(product: any): string {
   if (typeof product.description === "string" && product.description.trim()) return product.description;
@@ -86,7 +86,7 @@ export default async function handler(req: any, res: any) {
 
     const data = await response.json();
     const products = (Array.isArray(data) ? data : []).map(normalizeProduct);
-    const product = products.find((p: any) =>
+    let product = products.find((p: any) =>
       String(p.slug || "") === slug ||
       String(p.id || "") === slug ||
       String(p.title || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") === slug
@@ -94,7 +94,13 @@ export default async function handler(req: any, res: any) {
 
     if (!product) return res.status(404).json({ error: "Product not found in the AVEART catalogue." });
 
-    res.setHeader("Cache-Control", "s-maxage=30, stale-while-revalidate=60");
+    const detailResponse = await fetch(`${PRODUCT_API}/${encodeURIComponent(String(product.id))}`, { headers: { Accept: "application/json" } });
+    if (detailResponse.ok) {
+      const detailData = await detailResponse.json();
+      product = normalizeProduct(detailData);
+    }
+
+    res.setHeader("Cache-Control", "s-maxage=120, stale-while-revalidate=600");
     return res.status(200).json(product);
   } catch (error: any) {
     return res.status(502).json({
