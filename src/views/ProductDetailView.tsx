@@ -26,6 +26,25 @@ interface ProductDetailViewProps {
 
 const RECENTLY_VIEWED_KEY = 'aveart_recently_viewed_slugs';
 
+function inferAudience(product: any): 'women' | 'men' | 'unisex' | '' {
+  const images = [
+    product.primary_image, product.image_url, product.imageUrl,
+    ...(Array.isArray(product.images) ? product.images : []),
+    ...(Array.isArray(product.variants) ? product.variants.map((v: any) => v.image_url) : []),
+  ].filter(Boolean).join(' ').toLowerCase().replace(/[_-]+/g, ' ');
+  const metadata = [
+    product.title, product.name, product.subtitle, product.category_name,
+    product.category, product.category_slug, product.audience,
+    ...(Array.isArray(product.tags) ? product.tags : []),
+  ].filter(Boolean).join(' ').toLowerCase().replace(/[_-]+/g, ' ');
+  const evidence = metadata + ' ' + images;
+  if (/\b(unisex|all gender|gender neutral)\b/.test(evidence)) return 'unisex';
+  if (/\b(men|mens|men's|man|male|menswear)\b/.test(evidence)) return 'men';
+  if (/\b(women|womens|women's|woman|female|womenswear)\b/.test(evidence)) return 'women';
+  return '';
+}
+
+
 export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
   slug,
   onBack,
@@ -177,14 +196,8 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
   const isOutOfStock = !selectedVariant || selectedVariant.stock_quantity <= 0;
   const isLowStock = selectedVariant && selectedVariant.stock_quantity > 0 && selectedVariant.stock_quantity <= selectedVariant.low_stock_threshold;
   const hasDiscount = product.original_price && product.original_price > product.base_price;
-  const genderValue = String(product.gender || '').toLowerCase();
-  const audienceTag = genderValue.includes('unisex')
-    ? 'UNISEX'
-    : (genderValue.includes('women') || genderValue.includes('woman') || genderValue.includes('female'))
-      ? 'WOMEN'
-      : (genderValue.includes('men') || genderValue.includes('man') || genderValue.includes('male'))
-        ? 'MEN'
-        : '';
+  const inferredAudience = inferAudience(product);
+  const audienceTag = inferredAudience ? inferredAudience.toUpperCase() : '';
 
   // The gallery must contain only images attached to this product.
   // Never add a site-wide fallback photo, because it may belong to another product.
