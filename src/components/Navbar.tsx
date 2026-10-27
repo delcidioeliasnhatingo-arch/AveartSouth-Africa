@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, ShoppingCart, User as UserIcon, Shield, X, Sparkles, Heart } from 'lucide-react';
+import { Search, ShoppingCart, User as UserIcon, Shield, X, Heart } from 'lucide-react';
 import { useAuth } from '../context/AuthContext.tsx';
 import { useCart } from '../context/CartContext.tsx';
 import { Logo } from './Logo.tsx';
@@ -125,7 +125,6 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate }) => {
           <div className="bg-white w-full max-w-2xl p-6 rounded-xl shadow-2xl border border-slate-200">
             <div className="flex items-center justify-between pb-4 border-b border-slate-100">
               <span className="text-xs font-bold uppercase tracking-wider text-emerald-700 flex items-center gap-1.5">
-                <Sparkles className="w-4 h-4" />
                 <span>Search Fashion Collection</span>
               </span>
               <button
