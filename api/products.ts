@@ -1,4 +1,4 @@
-const PRODUCT_API = "https://aveart-api.delcidioeliasnhatingo.workers.dev/api/products";
+const PRODUCT_API = "https://aveart-products-public.delcidioeliasnhatingo.workers.dev/api/products";
 
 function descriptionForProduct(product: any): string {
   if (typeof product.description === "string" && product.description.trim()) return product.description;
