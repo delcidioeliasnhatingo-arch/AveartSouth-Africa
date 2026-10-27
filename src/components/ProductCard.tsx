@@ -59,26 +59,26 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect }) =
   return (
     <article
       onClick={() => onSelect(product.slug)}
-      className="group flex flex-col bg-white border border-slate-200 rounded-2xl overflow-hidden cursor-pointer hover:-translate-y-1 hover:shadow-xl hover:border-emerald-300 transition-all duration-300"
+      className="group flex flex-col bg-white border border-slate-200 rounded-xl overflow-hidden cursor-pointer hover:shadow-lg hover:border-[#b7c5ad] transition-all duration-200"
     >
       {/* 3:4 Proportional Fashion Image Container */}
-      <div className="relative aspect-[3/4] bg-slate-100 overflow-hidden">
+      <div className="relative aspect-[3/4] bg-[#f5f6f2] overflow-hidden">
         <img
           src={displayImage}
           alt={product.title}
           referrerPolicy="no-referrer"
-          className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500 ease-out"
+          className="w-full h-full object-cover object-top group-hover:scale-[1.025] transition-transform duration-300 ease-out"
           loading="lazy"
         />
 
         {/* Status Badges */}
         {isOutOfStock ? (
-          <div className="absolute top-3 left-3 bg-slate-800 text-white text-[11px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full shadow-sm">
+          <div className="absolute top-3 left-3 bg-slate-800 text-white text-[11px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-md shadow-sm">
             Sold Out
           </div>
         ) : hasDiscount ? (
           <div className="absolute top-3 left-3 bg-rose-500 text-white text-[11px] font-extrabold uppercase tracking-wider px-2.5 py-1 rounded-full shadow-sm">
-            Sale Offer
+            Sale
           </div>
         ) : isLowStock ? (
           <div className="absolute top-3 left-3 bg-amber-500 text-white text-[11px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full shadow-sm">
@@ -86,7 +86,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect }) =
           </div>
         ) : null}
 
-        {/* Quick Add Overlay on Hover */}
+        {/* Add to Cart Overlay on Hover */}
         {!isOutOfStock && (
           <div
             onClick={(e) => e.stopPropagation()}
@@ -122,7 +122,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect }) =
                   onClick={handleQuickAdd}
                   className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2 text-xs font-bold rounded-lg transition-colors shadow-xs cursor-pointer"
                 >
-                  Confirm Size · Add to Bag
+                  Confirm Size · Add to Cart
                 </button>
               </div>
             ) : (
@@ -135,12 +135,12 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect }) =
                     handleQuickAdd(e);
                   }
                 }}
-                className="w-full bg-rose-500 hover:bg-rose-600 text-white py-2.5 px-3 text-xs font-bold rounded-xl shadow-md flex items-center justify-center gap-1.5 transition-colors cursor-pointer active:scale-95"
+                className="w-full bg-[#87977D] hover:bg-[#65775D] text-white py-2.5 px-3 text-xs font-bold rounded-md shadow-sm flex items-center justify-center gap-1.5 transition-colors cursor-pointer active:scale-95"
               >
                 {isAdded ? (
                   <>
                     <Check className="w-4 h-4 text-white" />
-                    <span>Added to Bag!</span>
+                    <span>Added to Cart</span>
                   </>
                 ) : (
                   <>
@@ -199,12 +199,12 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect }) =
                 {formatZAR(product.original_price!)}
               </span>
             )}
-            <span className={`font-mono tabular-nums text-base font-extrabold ${hasDiscount ? 'text-rose-600' : 'text-slate-900'}`}>
+            <span className={`font-mono tabular-nums text-base font-extrabold ${hasDiscount ? 'text-[#65775D]' : 'text-slate-900'}`}>
               {formatZAR(product.base_price)}
             </span>
           </div>
 
-          <span className="text-xs font-bold text-rose-600 group-hover:text-rose-700 flex items-center gap-1">
+          <span className="text-xs font-bold text-rose-600 group-hover:text-[#52664A] flex items-center gap-1">
             View <span aria-hidden="true">→</span>
           </span>
         </div>
