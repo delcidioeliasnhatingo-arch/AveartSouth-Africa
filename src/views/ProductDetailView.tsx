@@ -177,6 +177,14 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
   const isOutOfStock = !selectedVariant || selectedVariant.stock_quantity <= 0;
   const isLowStock = selectedVariant && selectedVariant.stock_quantity > 0 && selectedVariant.stock_quantity <= selectedVariant.low_stock_threshold;
   const hasDiscount = product.original_price && product.original_price > product.base_price;
+  const genderValue = String(product.gender || '').toLowerCase();
+  const audienceTag = genderValue.includes('unisex')
+    ? 'UNISEX'
+    : (genderValue.includes('women') || genderValue.includes('woman') || genderValue.includes('female'))
+      ? 'WOMEN'
+      : (genderValue.includes('men') || genderValue.includes('man') || genderValue.includes('male'))
+        ? 'MEN'
+        : '';
 
   // The gallery must contain only images attached to this product.
   // Never add a site-wide fallback photo, because it may belong to another product.
@@ -246,11 +254,22 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
         {/* Left Column: High-Res Fashion Imagery */}
         <div className="lg:col-span-7 space-y-4">
           <div className="relative aspect-[3/4] bg-slate-100 rounded-xl overflow-hidden border border-slate-200 shadow-sm">
-            <img
-              src={activeGalleryImage}
-              alt={product.title}
-              className="w-full h-full object-cover object-top"
-            />
+            {activeGalleryImage ? (
+              <img
+                src={activeGalleryImage}
+                alt={product.title}
+                className="w-full h-full object-cover object-top"
+              />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center text-xs text-slate-400">
+                Product image unavailable
+              </div>
+            )}
+            {audienceTag && (
+              <span className="absolute top-4 right-4 z-[1] bg-white/95 text-slate-900 border border-slate-200 px-3 py-1.5 rounded-full text-[10px] font-extrabold tracking-[0.14em] shadow-sm">
+                {audienceTag}
+              </span>
+            )}
             {isOutOfStock ? (
               <div className="absolute top-4 left-4 bg-slate-800 text-white text-xs uppercase tracking-wider px-3.5 py-1.5 font-bold rounded-full shadow-sm">
                 Sold Out
