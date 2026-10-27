@@ -6,24 +6,22 @@ interface LogoProps {
   color?: string;
 }
 
-/** Displays the AVEART emblem with a transparent background and a readable horizontal size. */
-export const Logo: React.FC<LogoProps> = ({
-  className = '',
-  size,
-}) => {
+/** AVEART logo: pure black artwork on a genuinely transparent background. */
+export const Logo: React.FC<LogoProps> = ({ className = '', size }) => {
   return (
     <img
-      src="/aveart-logo-transparent.svg?v=2"
+      src="/aveart-logo-transparent.svg?v=3"
       alt="AVEART"
       className={className}
       style={{
-        width: size ?? '160px',
+        width: size ?? '320px',
         height: 'auto',
-        maxWidth: '100%',
+        maxWidth: 'none',
         objectFit: 'contain',
-        backgroundColor: 'transparent',
+        background: 'transparent',
         display: 'block',
         flexShrink: 0,
+        filter: 'brightness(0) saturate(100%)',
       }}
       draggable={false}
     />
