@@ -25,7 +25,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
         {/* Value Props Row - Fresh, colorful, accessible */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 pb-12 mb-12 border-b border-slate-800">
           <div className="flex items-center gap-3.5 p-4 rounded-2xl bg-slate-800/60 border border-slate-700/50">
-            <div className="w-11 h-11 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center shrink-0">
+            <div className="w-11 h-11 rounded-xl bg-emerald-500/15 text-emerald-300 flex items-center justify-center shrink-0">
               <Truck className="w-5 h-5" />
             </div>
             <div>
@@ -75,14 +75,14 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
 
           {/* Women & Men Categories */}
           <div className="md:col-span-2 space-y-3">
-            <h4 className="text-xs uppercase tracking-wider text-rose-400 font-extrabold">
+            <h4 className="text-xs uppercase tracking-wider text-emerald-300 font-extrabold">
               Shop Fashion
             </h4>
             <ul className="text-sm text-slate-300 space-y-2">
               <li>
                 <button
                   onClick={() => onNavigate('catalog_gender', 'women')}
-                  className="hover:text-rose-400 transition-colors cursor-pointer text-left"
+                  className="hover:text-emerald-300 transition-colors cursor-pointer text-left"
                 >
                   Women's Collection
                 </button>
@@ -109,7 +109,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                   className="text-rose-400 hover:text-rose-300 font-bold transition-colors cursor-pointer text-left flex items-center gap-1"
                 >
                   <span>Sale & Specials</span>
-                  <span className="px-1.5 py-0.2 bg-rose-500/20 text-rose-400 text-[10px] rounded font-bold">UP TO 40%</span>
+                  <span className="px-1.5 py-0.2 bg-emerald-500/15 text-emerald-300 text-[10px] rounded font-bold">UP TO 40%</span>
                 </button>
               </li>
               <li>
