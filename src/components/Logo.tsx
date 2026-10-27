@@ -1,5 +1,4 @@
 import React from 'react';
-import aveartEmblem from '../assets/images/Emblema Abstrato de Voo.png';
 
 interface LogoProps {
   className?: string;
@@ -7,7 +6,7 @@ interface LogoProps {
   color?: string;
 }
 
-/** Uses the exact AVEART emblem image uploaded to the repository. */
+/** Uses the exact original SVG emblem uploaded to public/. */
 export const Logo: React.FC<LogoProps> = ({
   className = 'w-8 h-8',
   size,
@@ -16,7 +15,7 @@ export const Logo: React.FC<LogoProps> = ({
 
   return (
     <img
-      src={aveartEmblem}
+      src="/Emblema-Abstrato-de-Voo.svg"
       alt="AVEART emblem"
       className={className}
       style={{ ...style, objectFit: 'contain' }}
