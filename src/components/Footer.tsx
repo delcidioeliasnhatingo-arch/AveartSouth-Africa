@@ -19,7 +19,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
   };
 
   return (
-    <footer className="aveart-reference-footer">
+    <footer id="aveart-footer" className="aveart-reference-footer">
       <div className="aveart-footer-main">
         <div className="aveart-footer-brand">
           <button className="aveart-footer-wordmark" onClick={() => onNavigate('home')} aria-label="AVEART home">
