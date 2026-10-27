@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ShoppingBag, Check } from 'lucide-react';
+import { ShoppingCart, Check, Zap } from 'lucide-react';
 import { Product, formatZAR } from '../types/index.ts';
 import { useCart } from '../context/CartContext.tsx';
 
@@ -59,7 +59,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect }) =
   return (
     <article
       onClick={() => onSelect(product.slug)}
-      className="group flex flex-col bg-white border border-slate-200 rounded-2xl overflow-hidden cursor-pointer hover:-translate-y-1 hover:shadow-xl hover:border-rose-300 transition-all duration-300"
+      className="group flex flex-col bg-white border border-slate-200 rounded-2xl overflow-hidden cursor-pointer hover:-translate-y-1 hover:shadow-xl hover:border-emerald-300 transition-all duration-300"
     >
       {/* 3:4 Proportional Fashion Image Container */}
       <div className="relative aspect-[3/4] bg-slate-100 overflow-hidden">
@@ -110,8 +110,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect }) =
                       onClick={() => setSelectedSize(sz)}
                       className={`px-2.5 py-1 text-xs font-bold rounded-lg border transition-colors cursor-pointer ${
                         selectedSize === sz
-                          ? 'border-rose-500 bg-rose-500 text-white shadow-xs'
-                          : 'border-slate-200 bg-slate-50 text-slate-800 hover:border-rose-400'
+                          ? 'border-emerald-600 bg-emerald-600 text-white shadow-xs'
+                          : 'border-slate-200 bg-slate-50 text-slate-800 hover:border-emerald-400'
                       }`}
                     >
                       {sz}
@@ -120,7 +120,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect }) =
                 </div>
                 <button
                   onClick={handleQuickAdd}
-                  className="w-full bg-rose-500 hover:bg-rose-600 text-white py-2 text-xs font-bold rounded-lg transition-colors shadow-xs cursor-pointer"
+                  className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2 text-xs font-bold rounded-lg transition-colors shadow-xs cursor-pointer"
                 >
                   Confirm Size · Add to Bag
                 </button>
@@ -144,7 +144,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect }) =
                   </>
                 ) : (
                   <>
-                    <ShoppingBag className="w-4 h-4" />
+                    <ShoppingCart className="w-4 h-4" />
                     <span>Quick Add</span>
                   </>
                 )}
@@ -158,14 +158,14 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect }) =
       <div className="p-4 flex flex-col flex-1 justify-between gap-2.5">
         <div>
           {/* Metadata (Gender · Category) */}
-          <div className="flex items-center gap-1.5 text-xs text-rose-600 uppercase font-bold tracking-wider">
+          <div className="flex items-center gap-1.5 text-xs text-emerald-700 uppercase font-bold tracking-wider">
             <span>{product.gender || 'Fashion'}</span>
             <span aria-hidden="true">·</span>
             <span>{product.category_name}</span>
           </div>
 
           {/* Product Title */}
-          <h3 className="text-base font-bold text-slate-900 group-hover:text-rose-600 transition-colors mt-1 leading-snug line-clamp-1">
+          <h3 className="text-base font-bold text-slate-900 group-hover:text-emerald-700 transition-colors mt-1 leading-snug line-clamp-1">
             {product.title}
           </h3>
 
