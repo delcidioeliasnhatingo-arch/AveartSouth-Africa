@@ -21,6 +21,19 @@ function descriptionForProduct(product: any): string {
   return match?.[1] || "A versatile wardrobe piece selected by AVEART for contemporary everyday style. Easy to combine with your existing wardrobe and suitable for creating polished, effortless outfits.";
 }
 
+function inferGender(product: any): string {
+  const evidence = [
+    product.name, product.title, product.subtitle, product.category,
+    product.category_name, product.audience,
+    ...(Array.isArray(product.tags) ? product.tags : []),
+  ].filter(Boolean).join(" ").toLowerCase().replace(/[_-]+/g, " ");
+  if (/\b(unisex|all gender|gender neutral)\b/.test(evidence)) return "unisex";
+  if (/\b(women|womens|women's|woman|female|womenswear)\b/.test(evidence)) return "women";
+  if (/\b(men|mens|men's|man|male|menswear)\b/.test(evidence)) return "men";
+  // Keep unclear items available in All Fashion rather than falsely assigning them to Women.
+  return "unisex";
+}
+
 function normalizeProduct(raw: any) {
   const product = { ...raw };
   const variants = Array.isArray(product.variants)
@@ -52,6 +65,7 @@ function normalizeProduct(raw: any) {
 
   return {
     ...product,
+    gender: inferGender(product),
     title: product.title ?? product.name ?? "",
     description: descriptionForProduct(product),
     images: Array.isArray(product.images) ? product.images : (product.imageUrl || product.image_url ? [product.imageUrl || product.image_url] : []),
