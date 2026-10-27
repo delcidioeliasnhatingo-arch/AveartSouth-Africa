@@ -203,7 +203,13 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
     });
   };
 
-  const handleBuyNow = () => {\n    if (!selectedVariant || isOutOfStock) return;\n    handleAddToCart();\n    onBuyNow();\n  };\n\n  const displayedRecommendations = recommendationType === 'recent' ? recentProducts : recommendations;
+  const handleBuyNow = () => {
+    if (!selectedVariant || isOutOfStock) return;
+    handleAddToCart();
+    onBuyNow();
+  };
+
+  const displayedRecommendations = recommendationType === 'recent' ? recentProducts : recommendations;
 
   return (
     <div className="w-full max-w-[1920px] mx-auto px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20 py-8 space-y-16">
