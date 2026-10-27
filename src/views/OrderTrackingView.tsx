@@ -51,7 +51,7 @@ export const OrderTrackingView: React.FC<OrderTrackingViewProps> = ({ initialOrd
       
       {/* Search Header */}
       <div className="text-center space-y-3">
-        <span className="text-xs uppercase tracking-wider text-rose-600 font-extrabold flex items-center justify-center gap-1.5">
+        <span className="text-xs uppercase tracking-wider text-[#65775D] font-extrabold flex items-center justify-center gap-1.5">
           <Truck className="w-4 h-4" />
           <span>Live Order Tracking (South Africa)</span>
         </span>
@@ -70,12 +70,12 @@ export const OrderTrackingView: React.FC<OrderTrackingViewProps> = ({ initialOrd
             placeholder="e.g. AVE-2026-9042"
             value={orderNumber}
             onChange={(e) => setOrderNumber(e.target.value)}
-            className="flex-1 bg-white border border-slate-200 rounded-xl px-4 py-3 text-xs uppercase tracking-wider text-slate-900 font-mono focus:outline-none focus:ring-2 focus:ring-rose-500 shadow-xs"
+            className="flex-1 bg-white border border-slate-200 rounded-xl px-4 py-3 text-xs uppercase tracking-wider text-slate-900 font-mono focus:outline-none focus:ring-2 focus:ring-[#87977D] shadow-xs"
           />
           <button
             type="submit"
             disabled={loading}
-            className="bg-rose-500 text-white px-6 py-3 text-xs uppercase tracking-wider font-bold rounded-xl hover:bg-rose-600 transition-colors whitespace-nowrap cursor-pointer shadow-md shadow-rose-500/25"
+            className="bg-[#87977D] text-white px-6 py-3 text-xs uppercase tracking-wider font-bold rounded-xl hover:bg-[#65775D] transition-colors whitespace-nowrap cursor-pointer shadow-md shadow-[#87977D]/20"
           >
             {loading ? 'Searching...' : 'Track'}
           </button>
@@ -90,7 +90,7 @@ export const OrderTrackingView: React.FC<OrderTrackingViewProps> = ({ initialOrd
       )}
 
       {order && (
-        <div className="bg-white border border-slate-200 p-8 rounded-3xl shadow-sm space-y-8">
+        <div className="bg-white border border-slate-200 p-8 rounded-2xl shadow-sm space-y-8">
           
           {/* Top Status Header */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-6 border-b border-slate-100 gap-4">
@@ -110,7 +110,7 @@ export const OrderTrackingView: React.FC<OrderTrackingViewProps> = ({ initialOrd
               <span className="text-[11px] uppercase tracking-wider text-slate-400 font-bold block">
                 Courier Waybill Number
               </span>
-              <span className="font-mono text-sm font-black text-rose-600">
+              <span className="font-mono text-sm font-black text-[#65775D]">
                 {order.tracking_number || 'Dispatch booking in progress'}
               </span>
               <p className="text-xs text-slate-500 mt-0.5 capitalize font-medium">
@@ -183,7 +183,7 @@ export const OrderTrackingView: React.FC<OrderTrackingViewProps> = ({ initialOrd
           {/* Total */}
           <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-bold">
             <span className="text-slate-500">Total Order Value:</span>
-            <span className="font-mono tabular-nums font-black text-rose-600 text-sm">
+            <span className="font-mono tabular-nums font-black text-[#65775D] text-sm">
               {formatZAR(order.total_amount)}
             </span>
           </div>
