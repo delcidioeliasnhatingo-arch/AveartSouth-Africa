@@ -16,8 +16,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect }) =
   const [isQuickAddOpen, setIsQuickAddOpen] = useState(false);
   const [isAdded, setIsAdded] = useState(false);
 
-  const fallbackImage = '/src/assets/images/fashion_women_silk_midi_dress_1792263530827.jpg';
-  const displayImage = product.primary_image || fallbackImage;
+  // Never use another product's photo as a fallback.
+  const displayImage = product.primary_image || '';
 
   const isLowStock = product.total_stock !== undefined && product.total_stock > 0 && product.total_stock <= 3;
   const isOutOfStock = product.total_stock !== undefined && product.total_stock <= 0;
@@ -63,13 +63,19 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect }) =
     >
       {/* 3:4 Proportional Fashion Image Container */}
       <div className="relative aspect-[3/4] bg-[#f5f6f2] overflow-hidden">
-        <img
-          src={displayImage}
-          alt={product.title}
-          referrerPolicy="no-referrer"
-          className="w-full h-full object-cover object-top group-hover:scale-[1.025] transition-transform duration-300 ease-out"
-          loading="lazy"
-        />
+        {displayImage ? (
+          <img
+            src={displayImage}
+            alt={product.title}
+            referrerPolicy="no-referrer"
+            className="w-full h-full object-cover object-top group-hover:scale-[1.025] transition-transform duration-300 ease-out"
+            loading="lazy"
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center px-4 text-center text-xs text-slate-400">
+            Product image unavailable
+          </div>
+        )}
 
         {/* Status Badges */}
         {isOutOfStock ? (
