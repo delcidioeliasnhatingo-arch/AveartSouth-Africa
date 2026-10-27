@@ -42,7 +42,7 @@ function asImageList(product: any): string[] {
   return [...new Set(candidates.filter((value) => typeof value === "string" && value.trim()))] as string[];
 }
 
-function normalizeProduct(raw: any) {
+function normalizeProduct(raw: any, includeGallery = false) {
   const product = { ...raw };
   const images = asImageList(product);
   const variants = Array.isArray(product.variants)
@@ -54,7 +54,7 @@ function normalizeProduct(raw: any) {
         color: variant.color ?? variant.colorName ?? "",
         price_offset: Number(variant.price_offset ?? 0),
         stock_quantity: Number(variant.stock_quantity ?? variant.stock ?? 0),
-        image_url: variant.image_url ?? variant.imageUrl ?? "",
+        image_url: (variant.image_url ?? variant.imageUrl ?? "").startsWith("data:image/") ? "" : (variant.image_url ?? variant.imageUrl ?? ""),
       }))
     : [];
   const variantStock = variants.reduce(
@@ -64,8 +64,16 @@ function normalizeProduct(raw: any) {
   const title = String(product.title ?? product.name ?? "AVEART Product");
   const slug = String(product.slug ?? title.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, ""));
 
+  const cleanProduct = { ...product };
+  delete cleanProduct.imageUrl;
+  delete cleanProduct.image_url;
+  delete cleanProduct.thumbnail;
+  delete cleanProduct.thumbnail_url;
+  delete cleanProduct.images;
+  delete cleanProduct.variants;
+
   return {
-    ...product,
+    ...cleanProduct,
     id: String(product.id ?? slug),
     title,
     slug,
@@ -73,7 +81,7 @@ function normalizeProduct(raw: any) {
     category_name: product.category_name ?? product.category ?? "Clothing",
     category_slug: product.category_slug ?? "clothing",
     description: descriptionForProduct(product),
-    images,
+    images: includeGallery ? images : [],
     primary_image: product.primary_image ?? images[0] ?? "",
     base_price: Number(product.base_price ?? product.price ?? 0),
     total_stock: totalStock,
@@ -89,7 +97,7 @@ export default async function handler(req: any, res: any) {
     const rawProducts = Array.isArray(payload) ? payload : Array.isArray(payload?.products) ? payload.products : Array.isArray(payload?.data) ? payload.data : [];
     let products = rawProducts
       .filter((product: any) => !product.status || ["active", "ativo", "published"].includes(String(product.status).toLowerCase()) || product.is_published === 1 || product.is_published === true)
-      .map(normalizeProduct);
+      .map((product: any) => normalizeProduct(product, false));
 
     const q = req.query || {};
     if (q.search) {
