@@ -14,7 +14,6 @@ import {
   Database,
   Sliders,
   Send,
-  Sparkles,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext.tsx';
 import { Order, ProductVariant, InventoryLog, AdminMetrics, formatZAR } from '../types/index.ts';
@@ -235,7 +234,6 @@ export const AdminHubView: React.FC<AdminHubViewProps> = ({ onNavigateHome }) =>
         <div>
           <div className="flex items-center gap-2">
             <span className="text-xs uppercase tracking-wider text-[#65775D] font-extrabold flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5" />
               <span>Store Operations</span>
             </span>
             <span className="text-[10px] uppercase font-mono font-bold px-2 py-0.5 bg-rose-50 border border-rose-200 text-rose-700 rounded-full">
