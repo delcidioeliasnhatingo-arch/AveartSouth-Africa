@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Package, Truck, CheckCircle2, AlertCircle, Sparkles } from 'lucide-react';
+import { Search, Package, Truck, CheckCircle2, AlertCircle } from 'lucide-react';
 import { Order, formatZAR } from '../types/index.ts';
 
 interface OrderTrackingViewProps {
