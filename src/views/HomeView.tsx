@@ -505,12 +505,12 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate }) => {
                     value={newsletterEmail}
                     onChange={(e) => setNewsletterEmail(e.target.value)}
                     placeholder="Enter your email address"
-                    className="w-full bg-slate-800/90 border border-slate-700 focus:border-emerald-600 focus:ring-2 focus:ring-rose-500/30 text-white placeholder-slate-400 pl-11 pr-4 py-3 rounded-xl text-sm transition-all outline-hidden"
+                    className="w-full bg-slate-800/90 border border-slate-700 focus:border-emerald-600 focus:ring-2 focus:ring-[#87977D]/30 text-white placeholder-slate-400 pl-11 pr-4 py-3 rounded-xl text-sm transition-all outline-hidden"
                   />
                 </div>
                 <button
                   type="submit"
-                  className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-6 py-3 rounded-xl text-sm transition-all cursor-pointer shadow-lg shadow-rose-500/25 active:scale-95 shrink-0"
+                  className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-6 py-3 rounded-xl text-sm transition-all cursor-pointer shadow-lg shadow-[#87977D]/20 active:scale-95 shrink-0"
                 >
                   Subscribe
                 </button>
