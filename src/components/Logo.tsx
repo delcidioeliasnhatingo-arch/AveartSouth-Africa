@@ -6,19 +6,25 @@ interface LogoProps {
   color?: string;
 }
 
-/** Uses the AVEART logo SVG from the public directory. */
+/** Displays the AVEART emblem with a transparent background and a readable horizontal size. */
 export const Logo: React.FC<LogoProps> = ({
-  className = 'w-8 h-8',
+  className = '',
   size,
 }) => {
-  const style = size ? { width: size, height: size } : undefined;
-
   return (
     <img
-      src="/aveart-logo-transparent.svg"
+      src="/aveart-logo-transparent.svg?v=2"
       alt="AVEART"
       className={className}
-      style={{ ...style, objectFit: 'contain' }}
+      style={{
+        width: size ?? '160px',
+        height: 'auto',
+        maxWidth: '100%',
+        objectFit: 'contain',
+        backgroundColor: 'transparent',
+        display: 'block',
+        flexShrink: 0,
+      }}
       draggable={false}
     />
   );
