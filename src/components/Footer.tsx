@@ -29,6 +29,12 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => (
         <button onClick={() => onNavigate('policy', 'size-guide')}>Size guide</button>
         <button onClick={() => onNavigate('policy', 'contact')}>Contact us</button>
       </div>
+      <div className="aveart-footer-column">
+        <h3>Policies</h3>
+        <button onClick={() => onNavigate('policy', 'privacy')}>Privacy policy</button>
+        <button onClick={() => onNavigate('policy', 'cookies')}>Cookie policy</button>
+        <button onClick={() => onNavigate('policy', 'terms')}>Terms of service</button>
+      </div>
       <div className="aveart-footer-column aveart-footer-newsletter">
         <h3>Follow along</h3>
         <button onClick={() => onNavigate('atelier')}>Instagram ↗</button>
