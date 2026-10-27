@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   ArrowLeft,
   ShieldCheck,
@@ -10,6 +10,8 @@ import {
   RotateCcw,
   Heart,
   Share2,
+  ChevronLeft,
+  ChevronRight,
 } from 'lucide-react';
 import { Product, ProductVariant, formatZAR } from '../types/index.ts';
 import { useCart } from '../context/CartContext.tsx';
@@ -60,6 +62,7 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
+  const touchStartX = useRef<number | null>(null);
 
   // Recommendations state
   const [recommendationType, setRecommendationType] = useState<'also_like' | 'similar' | 'complete_look' | 'recent'>('also_like');
@@ -265,17 +268,84 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
         
         {/* Left Column: High-Res Fashion Imagery */}
         <div className="lg:col-span-7 space-y-4">
-          <div className="relative aspect-[3/4] bg-slate-100 rounded-xl overflow-hidden border border-slate-200 shadow-sm">
+          <div
+            className="relative aspect-[3/4] bg-slate-100 rounded-xl overflow-hidden border border-slate-200 shadow-sm touch-pan-y"
+            role="region"
+            aria-label="Product photo carousel"
+            tabIndex={0}
+            onKeyDown={(event) => {
+              if (event.key === 'ArrowRight' && galleryImages.length > 1) {
+                event.preventDefault();
+                setActiveImageIndex((index) => (index + 1) % galleryImages.length);
+              }
+              if (event.key === 'ArrowLeft' && galleryImages.length > 1) {
+                event.preventDefault();
+                setActiveImageIndex((index) => (index - 1 + galleryImages.length) % galleryImages.length);
+              }
+            }}
+            onTouchStart={(event) => {
+              touchStartX.current = event.changedTouches[0]?.clientX ?? null;
+            }}
+            onTouchEnd={(event) => {
+              const startX = touchStartX.current;
+              const endX = event.changedTouches[0]?.clientX;
+              touchStartX.current = null;
+              if (startX === null || endX === undefined || galleryImages.length < 2) return;
+              const deltaX = endX - startX;
+              if (Math.abs(deltaX) < 45) return;
+              setActiveImageIndex((index) =>
+                deltaX < 0
+                  ? (index + 1) % galleryImages.length
+                  : (index - 1 + galleryImages.length) % galleryImages.length
+              );
+            }}
+          >
             {activeGalleryImage ? (
               <img
                 src={activeGalleryImage}
-                alt={product.title}
-                className="w-full h-full object-cover object-top"
+                alt={`${product.title} — photo ${safeImageIndex + 1} of ${galleryImages.length}`}
+                draggable={false}
+                className="w-full h-full object-cover object-top select-none"
               />
             ) : (
               <div className="w-full h-full flex items-center justify-center text-xs text-slate-400">
                 Product image unavailable
               </div>
+            )}
+            {galleryImages.length > 1 && (
+              <>
+                <button
+                  type="button"
+                  onClick={() => setActiveImageIndex((index) => (index - 1 + galleryImages.length) % galleryImages.length)}
+                  aria-label="Previous product photo"
+                  className="absolute left-3 top-1/2 -translate-y-1/2 z-[2] grid place-items-center w-10 h-10 rounded-full bg-white/90 text-slate-900 shadow-md hover:bg-white transition-colors"
+                >
+                  <ChevronLeft className="w-5 h-5" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setActiveImageIndex((index) => (index + 1) % galleryImages.length)}
+                  aria-label="Next product photo"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 z-[2] grid place-items-center w-10 h-10 rounded-full bg-white/90 text-slate-900 shadow-md hover:bg-white transition-colors"
+                >
+                  <ChevronRight className="w-5 h-5" />
+                </button>
+                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-[2] flex items-center gap-2 rounded-full bg-black/35 px-3 py-2" aria-label={`Photo ${safeImageIndex + 1} of ${galleryImages.length}`}>
+                  {galleryImages.map((image, index) => (
+                    <button
+                      key={image}
+                      type="button"
+                      onClick={() => setActiveImageIndex(index)}
+                      aria-label={`Go to product photo ${index + 1}`}
+                      aria-pressed={safeImageIndex === index}
+                      className={`h-2 rounded-full transition-all ${safeImageIndex === index ? 'w-5 bg-white' : 'w-2 bg-white/60 hover:bg-white/90'}`}
+                    />
+                  ))}
+                </div>
+                <span className="absolute top-4 left-1/2 -translate-x-1/2 z-[2] rounded-full bg-black/45 px-2.5 py-1 text-[11px] font-semibold text-white" aria-live="polite">
+                  {safeImageIndex + 1} / {galleryImages.length}
+                </span>
+              </>
             )}
             {audienceTag && (
               <span className="absolute top-4 right-4 z-[1] bg-white/95 text-slate-900 border border-slate-200 px-3 py-1.5 rounded-full text-[10px] font-extrabold tracking-[0.14em] shadow-sm">
