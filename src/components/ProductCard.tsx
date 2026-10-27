@@ -18,7 +18,7 @@ function inferAudience(product: any): 'women' | 'men' | 'unisex' | '' {
   ].filter(Boolean).join(' ');
   const evidence = [
     product.title, product.name, product.subtitle, product.category_name,
-    product.category, product.category_slug, product.gender, product.audience,
+    product.category, product.category_slug, product.audience,
     ...(Array.isArray(product.tags) ? product.tags : []),
     images,
   ].filter(Boolean).join(' ').toLowerCase().replace(/[_-]+/g, ' ');
