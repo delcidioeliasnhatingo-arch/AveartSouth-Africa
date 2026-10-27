@@ -81,11 +81,11 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate }) => {
       <section className="aveart-reference-section" id="best-sellers">
         <div className="aveart-section-heading">
           <div>
-            <p className="aveart-eyebrow">The considered edit</p>
+            <p className="aveart-eyebrow">The edit</p>
             <h2>Best Sellers</h2>
-            <p className="aveart-section-intro">Everyday favourites, chosen to work beautifully together.</p>
+            
           </div>
-          <button className="aveart-text-link" onClick={() => onNavigate('catalog')}>Shop all pieces <ArrowRight size={15} /></button>
+          <button className="aveart-text-link" onClick={() => onNavigate('catalog')}>Explore all pieces ↗</button>
         </div>
         <div className="aveart-filter-row" role="group" aria-label="Filter best sellers">
           {([
@@ -121,10 +121,10 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate }) => {
           <img src={heroImage} alt="AVEART modern tailoring editorial" />
         </div>
         <div className="aveart-editorial-copy">
-          <p className="aveart-eyebrow">The AVEART point of view</p>
+          <p className="aveart-eyebrow">Style, your way</p>
           <h2>Made for your<br />everyday story.</h2>
-          <p>Personal style should feel effortless. Explore considered shapes, versatile pieces and finishing touches that make getting dressed feel like you.</p>
-          <button className="aveart-outline-button" onClick={() => onNavigate('atelier')}>Discover our story <ArrowRight size={15} /></button>
+          <p>Versatile silhouettes, considered details and effortless combinations. Find the pieces that feel like you.</p>
+          <button className="aveart-outline-button" onClick={() => onNavigate('atelier')}>Discover the edit <ArrowRight size={15} /></button>
         </div>
       </section>
 
@@ -132,25 +132,25 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate }) => {
       <section className="aveart-reference-section aveart-category-section">
         <div className="aveart-section-heading centered">
           <div>
-            <p className="aveart-eyebrow">Find your next favourite</p>
-            <h2>Shop by Category</h2>
+            <p className="aveart-eyebrow">Find your fit</p>
+            <h2>Shop by category</h2>
           </div>
         </div>
         <div className="aveart-category-grid">
           <button className="aveart-category-card" onClick={() => onNavigate('catalog_gender', 'women')}>
             <img src={womenImage} alt="Women's fashion" />
             <span className="aveart-category-overlay" />
-            <span className="aveart-category-copy"><small>Explore the edit</small><strong>Women</strong><span>Shop women <ArrowRight size={15} /></span></span>
+            <span className="aveart-category-copy"><strong>Women</strong><span>↗</span></span>
           </button>
           <button className="aveart-category-card" onClick={() => onNavigate('catalog_gender', 'men')}>
             <img src={menImage} alt="Men's fashion" />
             <span className="aveart-category-overlay" />
-            <span className="aveart-category-copy"><small>Everyday essentials</small><strong>Men</strong><span>Shop men <ArrowRight size={15} /></span></span>
+            <span className="aveart-category-copy"><strong>Men</strong><span>↗</span></span>
           </button>
           <button className="aveart-category-card" onClick={() => onNavigate('catalog_gender', 'accessories')}>
             <img src={accessoriesImage} alt="Bags and accessories" />
             <span className="aveart-category-overlay" />
-            <span className="aveart-category-copy"><small>The finishing touch</small><strong>Bags &amp; Accessories</strong><span>Shop accessories <ArrowRight size={15} /></span></span>
+            <span className="aveart-category-copy"><strong>Accessories</strong><span>↗</span></span>
           </button>
         </div>
       </section>
@@ -158,19 +158,19 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate }) => {
       {/* 6. NEWSLETTER */}
       <section className="aveart-reference-newsletter">
         <div className="aveart-newsletter-inner">
-          <p className="aveart-eyebrow">A note from AVEART</p>
-          <h2>A little more style<br />in your inbox.</h2>
-          <p>Be first to discover new arrivals, considered edits and updates from AVEART.</p>
+          <p className="aveart-eyebrow">The AVEART letter</p>
+          <h2>A little more style in your inbox.</h2>
+          <p>Be first to discover new arrivals, styling notes and special edits.</p>
           {newsletterSubscribed ? (
             <p className="aveart-newsletter-success" role="status">Thank you for joining the AVEART list.</p>
           ) : (
             <form className="aveart-newsletter-form" onSubmit={handleNewsletterSubmit}>
               <label className="sr-only" htmlFor="aveart-newsletter-email">Email address</label>
               <input id="aveart-newsletter-email" type="email" required value={newsletterEmail} onChange={(event) => setNewsletterEmail(event.target.value)} placeholder="Your email address" />
-              <button type="submit">Sign me up <ArrowRight size={15} /></button>
+              <button type="submit">SIGN ME UP →</button>
             </form>
           )}
-          <small><Mail size={13} /> Thoughtful updates only. Unsubscribe whenever you like.</small>
+          
         </div>
       </section>
     </div>
