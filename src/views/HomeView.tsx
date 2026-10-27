@@ -24,10 +24,6 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate }) => {
   const heroSlides = [
     { image: heroImage, alt: 'AVEART fashion editorial with modern streetwear' },
     { image: portraitImage, alt: 'AVEART urban portrait in neutral tones' },
-    { image: womenImage, alt: "AVEART women's silk midi dress" },
-    { image: editorialImage, alt: 'AVEART contemporary womenswear tailoring' },
-    { image: menImage, alt: "AVEART men's modern wool overshirt" },
-    { image: accessoriesImage, alt: 'AVEART bags and accessories' },
   ];
 
   useEffect(() => {
