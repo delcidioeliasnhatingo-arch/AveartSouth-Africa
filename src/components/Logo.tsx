@@ -6,6 +6,7 @@ interface LogoProps {
   color?: string;
 }
 
+/** AVEART's selected option 3: a refined, flowing ribbon/wing mark. */
 export const Logo: React.FC<LogoProps> = ({
   className = 'w-8 h-8',
   size,
@@ -20,37 +21,19 @@ export const Logo: React.FC<LogoProps> = ({
       xmlns="http://www.w3.org/2000/svg"
       className={className}
       style={style}
-      aria-label="AVEART Emblem"
+      role="img"
+      aria-label="AVEART emblem"
     >
-      {/* 
-        Geometric Flight Emblem (Emblema Geométrico de Voo)
-        Faithfully traced from official brand emblem:
-        - Geometric Beak, Head & Throat
-        - High Soaring Top Wing
-        - Angular Mid Wing
-        - Tapered Aerodynamic Body & Tail
-      */}
-      {/* Head, Beak & Throat */}
-      <polygon
-        points="102,512 228,462 476,558 412,692"
+      <path
+        d="M110 585C220 526 331 467 447 398L875 126L734 344L495 508L665 474L526 628L391 650L724 876L476 758L310 660L110 585Z"
         fill={color}
       />
-
-      {/* Body & Swept-back Tail */}
-      <polygon
-        points="412,692 476,558 580,694 780,872"
+      <path
+        d="M312 660L494 508L526 628L391 650L312 660Z"
         fill={color}
       />
-
-      {/* Soaring Upper Wing */}
-      <polygon
-        points="424,472 912,136 782,362 540,554"
-        fill={color}
-      />
-
-      {/* Mid Angular Wing */}
-      <polygon
-        points="540,554 800,434 596,672"
+      <path
+        d="M447 398L575 480L495 508L447 398Z"
         fill={color}
       />
     </svg>
