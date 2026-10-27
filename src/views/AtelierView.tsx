@@ -11,7 +11,7 @@ export const AtelierView: React.FC<AtelierViewProps> = ({ onNavigateCatalog }) =
       
       {/* Editorial Header */}
       <div className="max-w-3xl space-y-4">
-        <span className="text-xs uppercase tracking-wider text-rose-600 font-extrabold flex items-center gap-1.5">
+        <span className="text-xs uppercase tracking-wider text-[#65775D] font-extrabold flex items-center gap-1.5">
           <Sparkles className="w-4 h-4" />
           <span>Our Story & Craft</span>
         </span>
@@ -32,12 +32,12 @@ export const AtelierView: React.FC<AtelierViewProps> = ({ onNavigateCatalog }) =
         />
         <div className="absolute bottom-5 left-5 right-5 bg-white/95 backdrop-blur-md p-4 rounded-2xl border border-slate-200 flex items-center justify-between shadow-lg">
           <div>
-            <span className="text-xs uppercase font-extrabold text-rose-600 tracking-wider">Cape Town Design Studio</span>
+            <span className="text-xs uppercase font-extrabold text-[#65775D] tracking-wider">Cape Town Design Studio</span>
             <p className="text-sm font-bold text-slate-900">Tailoring & Pattern Cutting Workshop · Kloof Street</p>
           </div>
           <button
             onClick={onNavigateCatalog}
-            className="bg-rose-500 hover:bg-rose-600 text-white text-xs font-bold px-4 py-2 rounded-xl transition-colors shadow-sm cursor-pointer"
+            className="bg-[#87977D] hover:bg-[#65775D] text-white text-xs font-bold px-4 py-2 rounded-xl transition-colors shadow-sm cursor-pointer"
           >
             Shop Collection →
           </button>
@@ -47,7 +47,7 @@ export const AtelierView: React.FC<AtelierViewProps> = ({ onNavigateCatalog }) =
       {/* 3 Foundational Pillars */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pt-2">
         <div className="bg-white border border-slate-200 p-6 rounded-2xl shadow-sm space-y-3">
-          <div className="w-10 h-10 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center">
+          <div className="w-10 h-10 rounded-xl bg-rose-50 text-[#65775D] flex items-center justify-center">
             <Feather className="w-5 h-5" />
           </div>
           <h3 className="text-lg font-bold text-slate-900">
@@ -59,7 +59,7 @@ export const AtelierView: React.FC<AtelierViewProps> = ({ onNavigateCatalog }) =
         </div>
 
         <div className="bg-white border border-slate-200 p-6 rounded-2xl shadow-sm space-y-3">
-          <div className="w-10 h-10 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center">
+          <div className="w-10 h-10 rounded-xl bg-rose-50 text-[#65775D] flex items-center justify-center">
             <Scissors className="w-5 h-5" />
           </div>
           <h3 className="text-lg font-bold text-slate-900">
@@ -71,7 +71,7 @@ export const AtelierView: React.FC<AtelierViewProps> = ({ onNavigateCatalog }) =
         </div>
 
         <div className="bg-white border border-slate-200 p-6 rounded-2xl shadow-sm space-y-3">
-          <div className="w-10 h-10 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center">
+          <div className="w-10 h-10 rounded-xl bg-rose-50 text-[#65775D] flex items-center justify-center">
             <Heart className="w-5 h-5" />
           </div>
           <h3 className="text-lg font-bold text-slate-900">
@@ -86,7 +86,7 @@ export const AtelierView: React.FC<AtelierViewProps> = ({ onNavigateCatalog }) =
       {/* Studio Visitation */}
       <div className="bg-gradient-to-br from-rose-50 via-white to-amber-50 border border-rose-100 p-8 md:p-12 rounded-3xl flex flex-col md:flex-row md:items-center justify-between gap-8 shadow-sm">
         <div className="space-y-3 max-w-xl">
-          <div className="flex items-center gap-1.5 text-xs text-rose-600 font-extrabold uppercase tracking-wider">
+          <div className="flex items-center gap-1.5 text-xs text-[#65775D] font-extrabold uppercase tracking-wider">
             <MapPin className="w-4 h-4" />
             <span>Cape Town Flagship</span>
           </div>
@@ -100,7 +100,7 @@ export const AtelierView: React.FC<AtelierViewProps> = ({ onNavigateCatalog }) =
 
         <button
           onClick={onNavigateCatalog}
-          className="bg-rose-500 hover:bg-rose-600 text-white px-8 py-3.5 text-xs uppercase tracking-wider font-bold rounded-xl transition-all shadow-md hover:shadow-lg whitespace-nowrap self-start md:self-auto cursor-pointer"
+          className="bg-[#87977D] hover:bg-[#65775D] text-white px-8 py-3.5 text-xs uppercase tracking-wider font-bold rounded-xl transition-all shadow-md hover:shadow-lg whitespace-nowrap self-start md:self-auto cursor-pointer"
         >
           Explore Collection →
         </button>
