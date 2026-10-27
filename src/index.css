@@ -44,3 +44,12 @@ button { transition: background-color .18s ease, color .18s ease, border-color .
 .border-rose-500, .border-rose-400, .border-rose-300 { border-color: var(--aveart-sage) !important; }
 .bg-rose-50, .bg-rose-100 { background-color: #F0F3ED !important; }
 .ring-rose-200, .ring-rose-300 { --tw-ring-color: #DCE4D7 !important; }
+
+
+/* Finish the clean storefront treatment across legacy utility classes */
+footer { background: #FFFFFF !important; color: #374151 !important; border-color: #E5E7EB !important; }
+footer .text-white, footer .text-slate-200, footer .text-slate-300 { color: #374151 !important; }
+footer .text-slate-400, footer .text-slate-500 { color: #6B7280 !important; }
+footer .border-slate-800, footer .border-slate-700 { border-color: #E5E7EB !important; }
+footer .bg-slate-900, footer .bg-slate-800 { background: #F7F8F5 !important; }
+footer .text-emerald-300, footer .text-emerald-400 { color: #65775D !important; }
