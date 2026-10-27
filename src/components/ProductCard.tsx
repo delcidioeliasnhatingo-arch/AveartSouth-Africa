@@ -16,7 +16,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect }) =
   const [isQuickAddOpen, setIsQuickAddOpen] = useState(false);
   const [isAdded, setIsAdded] = useState(false);
 
-  const fallbackImage = '/src/assets/images/fashion_women_linen_blazer_1792263530901.jpg';
+  const fallbackImage = '/src/assets/images/fashion_women_silk_midi_dress_1792263530827.jpg';
   const displayImage = product.primary_image || fallbackImage;
 
   const isLowStock = product.total_stock !== undefined && product.total_stock > 0 && product.total_stock <= 3;
