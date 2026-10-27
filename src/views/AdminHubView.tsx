@@ -187,7 +187,7 @@ export const AdminHubView: React.FC<AdminHubViewProps> = ({ onNavigateHome }) =>
   if (!isAuthorized) {
     return (
       <div className="max-w-md mx-auto px-6 py-20 text-center space-y-6">
-        <div className="w-14 h-14 bg-rose-50 text-rose-600 rounded-2xl flex items-center justify-center mx-auto border border-rose-100 shadow-sm">
+        <div className="w-14 h-14 bg-rose-50 text-[#65775D] rounded-2xl flex items-center justify-center mx-auto border border-rose-100 shadow-sm">
           <Shield className="w-7 h-7" />
         </div>
         <h1 className="text-2xl font-black text-slate-900">
@@ -206,20 +206,20 @@ export const AdminHubView: React.FC<AdminHubViewProps> = ({ onNavigateHome }) =>
             className="w-full p-2.5 bg-slate-50 border border-slate-200 hover:border-rose-400 hover:bg-rose-50/50 rounded-xl flex justify-between items-center cursor-pointer transition-colors"
           >
             <span className="font-bold text-slate-800">Administrator (admin@aveart.design)</span>
-            <span className="text-rose-600 font-bold">Sign In →</span>
+            <span className="text-[#65775D] font-bold">Sign In →</span>
           </button>
           <button
             onClick={() => quickLoginAs('store_manager')}
             className="w-full p-2.5 bg-slate-50 border border-slate-200 hover:border-rose-400 hover:bg-rose-50/50 rounded-xl flex justify-between items-center cursor-pointer transition-colors"
           >
             <span className="font-bold text-slate-800">Store Manager (curator@aveart.design)</span>
-            <span className="text-rose-600 font-bold">Sign In →</span>
+            <span className="text-[#65775D] font-bold">Sign In →</span>
           </button>
         </div>
 
         <button
           onClick={onNavigateHome}
-          className="text-xs text-slate-500 hover:text-rose-600 hover:underline font-bold"
+          className="text-xs text-slate-500 hover:text-[#65775D] hover:underline font-bold"
         >
           ← Return to Storefront
         </button>
@@ -234,7 +234,7 @@ export const AdminHubView: React.FC<AdminHubViewProps> = ({ onNavigateHome }) =>
       <div className="flex flex-col md:flex-row md:items-center justify-between pb-6 border-b border-slate-200 gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <span className="text-xs uppercase tracking-wider text-rose-600 font-extrabold flex items-center gap-1.5">
+            <span className="text-xs uppercase tracking-wider text-[#65775D] font-extrabold flex items-center gap-1.5">
               <Sparkles className="w-3.5 h-3.5" />
               <span>Store Operations</span>
             </span>
@@ -254,9 +254,9 @@ export const AdminHubView: React.FC<AdminHubViewProps> = ({ onNavigateHome }) =>
           <button
             onClick={fetchAdminData}
             disabled={loading}
-            className="flex items-center gap-1.5 px-3.5 py-2 bg-white border border-slate-200 rounded-xl text-xs font-bold text-slate-700 hover:text-rose-600 hover:border-rose-300 transition-colors cursor-pointer shadow-xs"
+            className="flex items-center gap-1.5 px-3.5 py-2 bg-white border border-slate-200 rounded-xl text-xs font-bold text-slate-700 hover:text-[#65775D] hover:border-rose-300 transition-colors cursor-pointer shadow-xs"
           >
-            <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin text-rose-600' : ''}`} />
+            <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin text-[#65775D]' : ''}`} />
             <span>Sync Live Data</span>
           </button>
         </div>
@@ -268,7 +268,7 @@ export const AdminHubView: React.FC<AdminHubViewProps> = ({ onNavigateHome }) =>
           onClick={() => setActiveTab('metrics')}
           className={`px-5 py-3 transition-colors cursor-pointer whitespace-nowrap ${
             activeTab === 'metrics'
-              ? 'border-b-2 border-rose-500 text-rose-600 font-extrabold'
+              ? 'border-b-2 border-[#87977D] text-[#65775D] font-extrabold'
               : 'text-slate-500 hover:text-slate-800'
           }`}
         >
@@ -278,7 +278,7 @@ export const AdminHubView: React.FC<AdminHubViewProps> = ({ onNavigateHome }) =>
           onClick={() => setActiveTab('orders')}
           className={`px-5 py-3 transition-colors cursor-pointer whitespace-nowrap ${
             activeTab === 'orders'
-              ? 'border-b-2 border-rose-500 text-rose-600 font-extrabold'
+              ? 'border-b-2 border-[#87977D] text-[#65775D] font-extrabold'
               : 'text-slate-500 hover:text-slate-800'
           }`}
         >
@@ -288,7 +288,7 @@ export const AdminHubView: React.FC<AdminHubViewProps> = ({ onNavigateHome }) =>
           onClick={() => setActiveTab('inventory')}
           className={`px-5 py-3 transition-colors cursor-pointer whitespace-nowrap ${
             activeTab === 'inventory'
-              ? 'border-b-2 border-rose-500 text-rose-600 font-extrabold'
+              ? 'border-b-2 border-[#87977D] text-[#65775D] font-extrabold'
               : 'text-slate-500 hover:text-slate-800'
           }`}
         >
@@ -298,7 +298,7 @@ export const AdminHubView: React.FC<AdminHubViewProps> = ({ onNavigateHome }) =>
           onClick={() => setActiveTab('logs')}
           className={`px-5 py-3 transition-colors cursor-pointer whitespace-nowrap ${
             activeTab === 'logs'
-              ? 'border-b-2 border-rose-500 text-rose-600 font-extrabold'
+              ? 'border-b-2 border-[#87977D] text-[#65775D] font-extrabold'
               : 'text-slate-500 hover:text-slate-800'
           }`}
         >
@@ -308,7 +308,7 @@ export const AdminHubView: React.FC<AdminHubViewProps> = ({ onNavigateHome }) =>
           onClick={() => setActiveTab('discounts')}
           className={`px-5 py-3 transition-colors cursor-pointer whitespace-nowrap ${
             activeTab === 'discounts'
-              ? 'border-b-2 border-rose-500 text-rose-600 font-extrabold'
+              ? 'border-b-2 border-[#87977D] text-[#65775D] font-extrabold'
               : 'text-slate-500 hover:text-slate-800'
           }`}
         >
@@ -318,7 +318,7 @@ export const AdminHubView: React.FC<AdminHubViewProps> = ({ onNavigateHome }) =>
           onClick={() => setActiveTab('webhooks')}
           className={`px-5 py-3 transition-colors cursor-pointer whitespace-nowrap ${
             activeTab === 'webhooks'
-              ? 'border-b-2 border-rose-500 text-rose-600 font-extrabold'
+              ? 'border-b-2 border-[#87977D] text-[#65775D] font-extrabold'
               : 'text-slate-500 hover:text-slate-800'
           }`}
         >
@@ -334,7 +334,7 @@ export const AdminHubView: React.FC<AdminHubViewProps> = ({ onNavigateHome }) =>
               <span className="text-[11px] uppercase tracking-wider text-slate-400 font-bold block">
                 Total Settled Revenue (ZAR)
               </span>
-              <div className="font-mono tabular-nums text-3xl font-black text-rose-600">
+              <div className="font-mono tabular-nums text-3xl font-black text-[#65775D]">
                 {formatZAR(metrics?.totalRevenue || 0)}
               </div>
               <p className="text-[11px] text-emerald-600 font-semibold">Real authorized customer payments</p>
@@ -415,7 +415,7 @@ export const AdminHubView: React.FC<AdminHubViewProps> = ({ onNavigateHome }) =>
               <select
                 value={orderStatusFilter}
                 onChange={(e) => setOrderStatusFilter(e.target.value)}
-                className="bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 focus:outline-none focus:ring-1 focus:ring-rose-500 cursor-pointer shadow-xs"
+                className="bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 focus:outline-none focus:ring-1 focus:ring-[#87977D] cursor-pointer shadow-xs"
               >
                 <option value="all">All Statuses</option>
                 <option value="pending_payment">Pending Payment</option>
@@ -432,7 +432,7 @@ export const AdminHubView: React.FC<AdminHubViewProps> = ({ onNavigateHome }) =>
                 placeholder="Search order #, customer..."
                 value={orderSearch}
                 onChange={(e) => setOrderSearch(e.target.value)}
-                className="flex-1 bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs font-medium text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-rose-500 shadow-xs"
+                className="flex-1 bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs font-medium text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-[#87977D] shadow-xs"
               />
             </div>
 
@@ -442,7 +442,7 @@ export const AdminHubView: React.FC<AdminHubViewProps> = ({ onNavigateHome }) =>
                   key={o.id}
                   onClick={() => setSelectedOrder(o)}
                   className={`p-4 text-xs cursor-pointer transition-colors ${
-                    selectedOrder?.id === o.id ? 'bg-rose-50/60 border-l-4 border-rose-500' : 'hover:bg-slate-50'
+                    selectedOrder?.id === o.id ? 'bg-rose-50/60 border-l-4 border-[#87977D]' : 'hover:bg-slate-50'
                   }`}
                 >
                   <div className="flex items-center justify-between">
@@ -482,11 +482,11 @@ export const AdminHubView: React.FC<AdminHubViewProps> = ({ onNavigateHome }) =>
                       Order {selectedOrder.order_number}
                     </h3>
                     <span className="text-[11px] text-slate-500 font-medium">
-                      Payment Status: <strong className="text-rose-600 uppercase font-bold">{selectedOrder.payment_status}</strong>
+                      Payment Status: <strong className="text-[#65775D] uppercase font-bold">{selectedOrder.payment_status}</strong>
                     </span>
                   </div>
 
-                  <span className="font-mono tabular-nums text-lg font-black text-rose-600">
+                  <span className="font-mono tabular-nums text-lg font-black text-[#65775D]">
                     {formatZAR(selectedOrder.total_amount)}
                   </span>
                 </div>
@@ -534,7 +534,7 @@ export const AdminHubView: React.FC<AdminHubViewProps> = ({ onNavigateHome }) =>
                             handleUpdateOrderStatus(selectedOrder.id, 'refunded');
                           }
                         }}
-                        className="px-3.5 py-1.5 bg-rose-600 text-white font-bold rounded-lg hover:bg-rose-700 transition-colors cursor-pointer"
+                        className="px-3.5 py-1.5 bg-[#65775D] text-white font-bold rounded-lg hover:bg-rose-700 transition-colors cursor-pointer"
                       >
                         Execute Refund (Restocks Catalog)
                       </button>
@@ -552,7 +552,7 @@ export const AdminHubView: React.FC<AdminHubViewProps> = ({ onNavigateHome }) =>
                   </div>
                   <div>
                     <span className="text-slate-400 font-bold block">Courier Waybill:</span>
-                    <p className="font-mono font-bold text-rose-600">
+                    <p className="font-mono font-bold text-[#65775D]">
                       {selectedOrder.tracking_number || 'Pending Dispatch Scan'}
                     </p>
                     <p className="capitalize">Method: {selectedOrder.shipping_method.replace('_', ' ')}</p>
@@ -617,7 +617,7 @@ export const AdminHubView: React.FC<AdminHubViewProps> = ({ onNavigateHome }) =>
                       <td className="py-3 px-4 font-mono">{item.sku}</td>
                       <td className="py-3 px-4">{item.category_name}</td>
                       <td className="py-3 px-4">
-                        <span className={`font-mono tabular-nums font-bold text-sm ${isLow ? 'text-rose-600' : 'text-emerald-600'}`}>
+                        <span className={`font-mono tabular-nums font-bold text-sm ${isLow ? 'text-[#65775D]' : 'text-emerald-600'}`}>
                           {item.stock_quantity} units
                         </span>
                       </td>
@@ -625,7 +625,7 @@ export const AdminHubView: React.FC<AdminHubViewProps> = ({ onNavigateHome }) =>
                       <td className="py-3 px-4">
                         <button
                           onClick={() => setAdjustingVariant(item)}
-                          className="px-3 py-1.5 bg-rose-500 hover:bg-rose-600 text-white rounded-lg text-xs font-bold transition-colors cursor-pointer shadow-xs"
+                          className="px-3 py-1.5 bg-[#87977D] hover:bg-[#65775D] text-white rounded-lg text-xs font-bold transition-colors cursor-pointer shadow-xs"
                         >
                           Adjust Balance
                         </button>
@@ -658,7 +658,7 @@ export const AdminHubView: React.FC<AdminHubViewProps> = ({ onNavigateHome }) =>
                   required
                   value={adjustAmount}
                   onChange={(e) => setAdjustAmount(parseInt(e.target.value, 10) || 0)}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm font-mono focus:bg-white focus:ring-1 focus:ring-rose-500"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm font-mono focus:bg-white focus:ring-1 focus:ring-[#87977D]"
                 />
               </div>
 
@@ -689,7 +689,7 @@ export const AdminHubView: React.FC<AdminHubViewProps> = ({ onNavigateHome }) =>
               <div className="pt-2 flex gap-2">
                 <button
                   type="submit"
-                  className="flex-1 bg-rose-500 text-white py-2.5 font-bold uppercase tracking-wider rounded-xl hover:bg-rose-600 transition-colors cursor-pointer"
+                  className="flex-1 bg-[#87977D] text-white py-2.5 font-bold uppercase tracking-wider rounded-xl hover:bg-[#65775D] transition-colors cursor-pointer"
                 >
                   Commit Adjustment
                 </button>
@@ -736,7 +736,7 @@ export const AdminHubView: React.FC<AdminHubViewProps> = ({ onNavigateHome }) =>
                     <td className="py-2.5 px-4 text-slate-500">{new Date(log.created_at).toLocaleString('en-ZA')}</td>
                     <td className="py-2.5 px-4 text-slate-900 font-bold">{log.sku}</td>
                     <td className="py-2.5 px-4 font-bold">
-                      <span className={log.change_quantity > 0 ? 'text-emerald-600' : 'text-rose-600'}>
+                      <span className={log.change_quantity > 0 ? 'text-emerald-600' : 'text-[#65775D]'}>
                         {log.change_quantity > 0 ? `+${log.change_quantity}` : log.change_quantity}
                       </span>
                     </td>
@@ -762,7 +762,7 @@ export const AdminHubView: React.FC<AdminHubViewProps> = ({ onNavigateHome }) =>
               {discounts.map((d) => (
                 <div key={d.id} className="py-3 flex items-center justify-between">
                   <div>
-                    <span className="font-mono font-black text-sm text-rose-600 tracking-wider block">
+                    <span className="font-mono font-black text-sm text-[#65775D] tracking-wider block">
                       {d.code}
                     </span>
                     <span className="text-slate-500">
@@ -790,7 +790,7 @@ export const AdminHubView: React.FC<AdminHubViewProps> = ({ onNavigateHome }) =>
                   placeholder="e.g. SUMMER20"
                   value={newCode}
                   onChange={(e) => setNewCode(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 uppercase font-mono font-bold focus:bg-white focus:ring-1 focus:ring-rose-500"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 uppercase font-mono font-bold focus:bg-white focus:ring-1 focus:ring-[#87977D]"
                 />
               </div>
 
@@ -800,7 +800,7 @@ export const AdminHubView: React.FC<AdminHubViewProps> = ({ onNavigateHome }) =>
                   type="number"
                   value={newDiscountPercent}
                   onChange={(e) => setNewDiscountPercent(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 font-mono focus:bg-white focus:ring-1 focus:ring-rose-500"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 font-mono focus:bg-white focus:ring-1 focus:ring-[#87977D]"
                 />
               </div>
 
@@ -810,13 +810,13 @@ export const AdminHubView: React.FC<AdminHubViewProps> = ({ onNavigateHome }) =>
                   type="number"
                   value={newMinOrder}
                   onChange={(e) => setNewMinOrder(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 font-mono focus:bg-white focus:ring-1 focus:ring-rose-500"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 font-mono focus:bg-white focus:ring-1 focus:ring-[#87977D]"
                 />
               </div>
 
               <button
                 type="submit"
-                className="w-full bg-rose-500 hover:bg-rose-600 text-white py-3 font-bold uppercase tracking-wider rounded-xl transition-colors cursor-pointer shadow-md"
+                className="w-full bg-[#87977D] hover:bg-[#65775D] text-white py-3 font-bold uppercase tracking-wider rounded-xl transition-colors cursor-pointer shadow-md"
               >
                 Create Discount Code
               </button>
@@ -846,7 +846,7 @@ export const AdminHubView: React.FC<AdminHubViewProps> = ({ onNavigateHome }) =>
                 placeholder="e.g. AVE-2026-9042"
                 value={webhookSimOrderNum}
                 onChange={(e) => setWebhookSimOrderNum(e.target.value)}
-                className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 font-mono focus:ring-1 focus:ring-rose-500"
+                className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 font-mono focus:ring-1 focus:ring-[#87977D]"
               />
             </div>
 
@@ -855,7 +855,7 @@ export const AdminHubView: React.FC<AdminHubViewProps> = ({ onNavigateHome }) =>
               <select
                 value={webhookSimType}
                 onChange={(e) => setWebhookSimType(e.target.value)}
-                className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 font-mono text-xs focus:ring-1 focus:ring-rose-500 cursor-pointer"
+                className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 font-mono text-xs focus:ring-1 focus:ring-[#87977D] cursor-pointer"
               >
                 <option value="payment_intent.succeeded">payment_intent.succeeded (Mark Paid)</option>
                 <option value="charge.refunded">charge.refunded (Refund & Restock)</option>
@@ -865,7 +865,7 @@ export const AdminHubView: React.FC<AdminHubViewProps> = ({ onNavigateHome }) =>
             <div className="md:col-span-3">
               <button
                 type="submit"
-                className="w-full bg-rose-500 hover:bg-rose-600 text-white py-2.5 font-bold uppercase tracking-wider rounded-xl flex items-center justify-center gap-1.5 cursor-pointer shadow-md"
+                className="w-full bg-[#87977D] hover:bg-[#65775D] text-white py-2.5 font-bold uppercase tracking-wider rounded-xl flex items-center justify-center gap-1.5 cursor-pointer shadow-md"
               >
                 <Send className="w-3.5 h-3.5" />
                 <span>Simulate Dispatch</span>
