@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, ShoppingBag, User as UserIcon, Shield, X, Sparkles } from 'lucide-react';
+import { Search, ShoppingCart, User as UserIcon, Shield, X, Sparkles, Heart } from 'lucide-react';
 import { useAuth } from '../context/AuthContext.tsx';
 import { useCart } from '../context/CartContext.tsx';
 import { Logo } from './Logo.tsx';
@@ -43,9 +43,9 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate }) => {
           {/* Zone 1: Brand wordmark with Geometric Flight Logo */}
           <button
             onClick={() => onNavigate('home')}
-            className="flex items-center gap-2.5 text-2xl font-black tracking-tight text-slate-900 hover:text-rose-600 transition-colors whitespace-nowrap shrink-0 text-left cursor-pointer group"
+            className="flex items-center gap-2.5 text-2xl font-black tracking-tight text-slate-900 hover:text-emerald-700 transition-colors whitespace-nowrap shrink-0 text-left cursor-pointer group"
           >
-            <div className="w-8 h-8 rounded-xl bg-slate-900 group-hover:bg-rose-500 text-white flex items-center justify-center p-1.5 transition-all shadow-xs group-hover:scale-105">
+            <div className="w-8 h-8 rounded-xl bg-slate-900 group-hover:bg-emerald-500 text-white flex items-center justify-center p-1.5 transition-all shadow-xs group-hover:scale-105">
               <Logo className="w-full h-full text-white" />
             </div>
             <span className="tracking-tight">AVEART</span>
@@ -55,8 +55,8 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate }) => {
           <nav className="hidden md:flex items-center gap-6 text-sm font-bold text-slate-600">
             <button
               onClick={() => onNavigate('catalog_new')}
-              className={`hover:text-rose-600 transition-colors whitespace-nowrap shrink-0 cursor-pointer ${
-                currentView === 'catalog_new' ? 'text-rose-600 font-extrabold border-b-2 border-rose-500 pb-0.5' : ''
+              className={`hover:text-emerald-700 transition-colors whitespace-nowrap shrink-0 cursor-pointer ${
+                currentView === 'catalog_new' ? 'text-emerald-700 font-extrabold border-b-2 border-emerald-600 pb-0.5' : ''
               }`}
             >
               New In
@@ -85,7 +85,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate }) => {
               onClick={() => onNavigate('catalog_sale')}
               className="text-rose-600 hover:text-rose-700 font-extrabold transition-colors whitespace-nowrap shrink-0 cursor-pointer flex items-center gap-1"
             >
-              <span className="px-2 py-0.5 bg-rose-500 text-white text-xs rounded-full font-bold shadow-xs">SALE</span>
+              <span className="px-2 py-0.5 bg-emerald-600 text-white text-xs rounded-full font-bold shadow-xs">SALE</span>
             </button>
           </nav>
 
@@ -120,7 +120,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate }) => {
               onClick={() => onNavigate('account')}
               aria-label="Customer Account"
               className={`flex items-center gap-1.5 p-2 rounded-full transition-colors cursor-pointer ${
-                currentView === 'account' ? 'text-rose-600 bg-rose-50 ring-1 ring-rose-200' : 'text-slate-600 hover:text-rose-600 hover:bg-rose-50'
+                currentView === 'account' ? 'text-rose-600 bg-rose-50 ring-1 ring-emerald-200' : 'text-slate-600 hover:text-rose-600 hover:bg-rose-50'
               }`}
             >
               <UserIcon className="w-5 h-5" />
@@ -137,7 +137,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate }) => {
               aria-label="View Shopping Bag"
               className="relative p-2 text-slate-700 hover:text-rose-600 hover:bg-rose-50 rounded-full transition-colors cursor-pointer"
             >
-              <ShoppingBag className="w-5 h-5" />
+              <ShoppingCart className="w-5 h-5" />
               {totalItemCount > 0 && (
                 <span className="absolute top-1 right-0 min-w-[20px] h-[20px] px-1 text-[11px] font-extrabold bg-rose-500 text-white rounded-full flex items-center justify-center shadow-xs animate-bounce">
                   {totalItemCount}
