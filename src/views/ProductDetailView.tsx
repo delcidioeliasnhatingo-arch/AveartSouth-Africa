@@ -31,6 +31,7 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
   onBack,
   onSelectProduct,
   onNavigateToCategory,
+  onBuyNow,
 }) => {
   const [product, setProduct] = useState<Product | null>(null);
   const [selectedVariant, setSelectedVariant] = useState<ProductVariant | null>(null);
