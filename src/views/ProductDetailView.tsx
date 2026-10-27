@@ -3,7 +3,6 @@ import {
   ArrowLeft,
   ShieldCheck,
   Truck,
-  Sparkles,
   Check,
   AlertCircle,
   ShoppingBag,
@@ -317,7 +316,6 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
           {/* Fabric & Design Highlights */}
           <div className="p-6 bg-white border border-slate-200 rounded-xl space-y-3 shadow-sm">
             <div className="flex items-center gap-2 text-xs uppercase tracking-wider text-emerald-700 font-bold">
-              <Sparkles className="w-4 h-4" />
               <span>Fabric & Design Highlights</span>
             </div>
             <p className="text-sm text-slate-600 leading-relaxed font-medium">
