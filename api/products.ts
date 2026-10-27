@@ -17,8 +17,8 @@ function descriptionForProduct(product: any): string {
     [/letter print.*t.?shirt|t.?shirt/, "A versatile graphic T-shirt that brings a modern touch to everyday outfits. Pair with jeans, joggers or tailored trousers for an easy casual look."],
     [/trouser|pant/, "Contemporary trousers with a versatile silhouette for work, weekends and everyday styling. Pair with a shirt, blouse or simple T-shirt."],
   ];
-  const match = descriptions.find(([pattern]) => pattern.test(title));
-  return match?.[1] || "A versatile wardrobe piece selected by AVEART for contemporary everyday style. Easy to combine with your existing wardrobe and suitable for creating polished, effortless outfits.";
+  return descriptions.find(([pattern]) => pattern.test(title))?.[1] ||
+    "A versatile wardrobe piece selected by AVEART for contemporary everyday style. Easy to combine with your existing wardrobe and suitable for creating polished, effortless outfits.";
 }
 
 function inferGender(product: any): string {
@@ -30,45 +30,51 @@ function inferGender(product: any): string {
   if (/\b(unisex|all gender|gender neutral)\b/.test(evidence)) return "unisex";
   if (/\b(women|womens|women's|woman|female|womenswear)\b/.test(evidence)) return "women";
   if (/\b(men|mens|men's|man|male|menswear)\b/.test(evidence)) return "men";
-  // Keep unclear items available in All Fashion rather than falsely assigning them to Women.
   return "unisex";
+}
+
+function asImageList(product: any): string[] {
+  const candidates = [
+    ...(Array.isArray(product.images) ? product.images : []),
+    product.primary_image, product.imageUrl, product.image_url,
+    product.thumbnail, product.thumbnail_url,
+  ];
+  return [...new Set(candidates.filter((value) => typeof value === "string" && value.trim()))] as string[];
 }
 
 function normalizeProduct(raw: any) {
   const product = { ...raw };
+  const images = asImageList(product);
   const variants = Array.isArray(product.variants)
     ? product.variants.map((variant: any) => ({
         ...variant,
+        id: String(variant.id ?? variant.variantId ?? `${product.id}-variant`),
+        name: variant.name ?? variant.variantName ?? variant.size ?? variant.color ?? "Default",
+        size: variant.size ?? "",
+        color: variant.color ?? variant.colorName ?? "",
+        price_offset: Number(variant.price_offset ?? 0),
         stock_quantity: Number(variant.stock_quantity ?? variant.stock ?? 0),
-        price_offset: Number(
-          variant.price_offset ??
-          (variant.price != null
-            ? Number(variant.price) - Number(product.base_price ?? product.price ?? 0)
-            : 0)
-        ),
+        image_url: variant.image_url ?? variant.imageUrl ?? "",
       }))
     : [];
-
-  // The admin panel stores inventory as "stock", while the storefront reads
-  // "total_stock" and variant "stock_quantity". Normalize both schemas so
-  // available products are not incorrectly marked Sold Out.
   const variantStock = variants.reduce(
-    (sum: number, variant: any) => sum + Math.max(0, Number(variant.stock_quantity) || 0),
-    0
+    (sum: number, variant: any) => sum + Math.max(0, Number(variant.stock_quantity) || 0), 0
   );
-  const declaredTotal = Number(product.total_stock ?? 0);
-  const adminStock = Number(product.stock ?? 0);
-  const totalStock =
-    declaredTotal > 0 ? declaredTotal :
-    adminStock > 0 ? adminStock :
-    variantStock;
+  const totalStock = Number(product.total_stock ?? product.stock_quantity ?? product.stock ?? product.inventory_quantity ?? 0) || variantStock;
+  const title = String(product.title ?? product.name ?? "AVEART Product");
+  const slug = String(product.slug ?? title.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, ""));
 
   return {
     ...product,
+    id: String(product.id ?? slug),
+    title,
+    slug,
     gender: inferGender(product),
-    title: product.title ?? product.name ?? "",
+    category_name: product.category_name ?? product.category ?? "Clothing",
+    category_slug: product.category_slug ?? "clothing",
     description: descriptionForProduct(product),
-    images: Array.isArray(product.images) ? product.images : (product.imageUrl || product.image_url ? [product.imageUrl || product.image_url] : []),
+    images,
+    primary_image: product.primary_image ?? images[0] ?? "",
     base_price: Number(product.base_price ?? product.price ?? 0),
     total_stock: totalStock,
     variants,
@@ -79,24 +85,38 @@ export default async function handler(req: any, res: any) {
   try {
     const response = await fetch(PRODUCT_API, { headers: { Accept: "application/json" } });
     if (!response.ok) throw new Error(`Cloudflare product API returned ${response.status}`);
-    const data = await response.json();
+    const payload = await response.json();
+    const rawProducts = Array.isArray(payload) ? payload : Array.isArray(payload?.products) ? payload.products : Array.isArray(payload?.data) ? payload.data : [];
+    let products = rawProducts
+      .filter((product: any) => !product.status || ["active", "ativo", "published"].includes(String(product.status).toLowerCase()) || product.is_published === 1 || product.is_published === true)
+      .map(normalizeProduct);
+
     const q = req.query || {};
-    // Cloudflare API already returns active products. Do not require the legacy Medusa
-    // is_published field, which is not part of the AVEART Cloudflare product schema.
-    let products = (Array.isArray(data) ? data : []).map(normalizeProduct);
-    if (q.search) { const s = String(q.search).toLowerCase(); products = products.filter((p: any) => `${p.title || p.name || ""} ${p.description || ""} ${(p.tags || []).join(" ")}`.toLowerCase().includes(s)); }
-    if (q.category) products = products.filter((p: any) => p.category_slug === String(q.category) || p.category_id === String(q.category) || p.category === String(q.category));
+    if (q.search) {
+      const search = String(q.search).toLowerCase();
+      products = products.filter((p: any) => `${p.title} ${p.description} ${(p.tags || []).join(" ")}`.toLowerCase().includes(search));
+    }
+    if (q.category) {
+      const category = String(q.category).toLowerCase();
+      products = products.filter((p: any) => {
+        const evidence = `${p.category_slug || ""} ${p.category_id || ""} ${p.category_name || ""} ${p.category || ""} ${(p.tags || []).join(" ")}`.toLowerCase();
+        return evidence.includes(category) || (category === "accessories" && /bag|accessor|jewell?ery|belt|wallet/.test(evidence));
+      });
+    }
     if (q.gender && q.gender !== "all") products = products.filter((p: any) => p.gender === String(q.gender));
     if (q.inStockOnly === "true") products = products.filter((p: any) => Number(p.total_stock ?? 0) > 0);
     if (q.onSale === "true") products = products.filter((p: any) => p.is_on_sale === 1 || p.onSale === true);
     if (q.minPrice) products = products.filter((p: any) => Number(p.base_price ?? 0) >= Number(q.minPrice));
     if (q.maxPrice) products = products.filter((p: any) => Number(p.base_price ?? 0) <= Number(q.maxPrice));
-    if (q.sort === "price_asc") products.sort((a: any, b: any) => Number(a.base_price ?? 0) - Number(b.base_price ?? 0));
-    else if (q.sort === "price_desc") products.sort((a: any, b: any) => Number(b.base_price ?? 0) - Number(a.base_price ?? 0));
+    if (q.sort === "price_asc") products.sort((a: any, b: any) => a.base_price - b.base_price);
+    else if (q.sort === "price_desc") products.sort((a: any, b: any) => b.base_price - a.base_price);
     else products.sort((a: any, b: any) => Number(b.is_featured ?? b.featured ?? 0) - Number(a.is_featured ?? a.featured ?? 0));
-    res.setHeader("Cache-Control", "s-maxage=30, stale-while-revalidate=60");
-    res.status(200).json(products);
+
+    res.setHeader("Cache-Control", "s-maxage=120, stale-while-revalidate=600");
+    res.setHeader("CDN-Cache-Control", "public, s-maxage=120, stale-while-revalidate=600");
+    return res.status(200).json(products);
   } catch (error: any) {
-    res.status(502).json({ error: "Unable to load AVEART products.", details: process.env.NODE_ENV === "development" ? String(error?.message || error) : undefined });
+    res.setHeader("Cache-Control", "no-store");
+    return res.status(502).json({ error: "Unable to load AVEART products.", details: process.env.NODE_ENV === "development" ? String(error?.message || error) : undefined });
   }
 }
