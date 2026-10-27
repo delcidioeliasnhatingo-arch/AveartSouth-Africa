@@ -114,7 +114,7 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
       {/* Header & Market Indicator */}
       <div className="border-b border-slate-200 pb-6 flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
-          <span className="text-xs uppercase tracking-wider text-rose-600 font-extrabold flex items-center gap-1.5">
+          <span className="text-xs uppercase tracking-wider text-emerald-700 font-extrabold flex items-center gap-1.5">
             <Sparkles className="w-3.5 h-3.5" />
             <span>Fashion Catalog · South Africa (ZAR)</span>
           </span>
@@ -137,7 +137,7 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
         {/* Tabular Item Count */}
         <div className="text-xs text-slate-500 font-medium flex items-center gap-2">
           <span>Showing</span>
-          <span className="font-mono tabular-nums font-black text-rose-600 bg-rose-50 px-2.5 py-1 rounded-lg border border-rose-100">
+          <span className="font-mono tabular-nums font-black text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-lg border border-rose-100">
             {products.length} products
           </span>
         </div>
@@ -153,8 +153,8 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
           }}
           className={`px-4 py-2.5 text-xs font-bold transition-all whitespace-nowrap cursor-pointer rounded-xl ${
             selectedGender === 'all' && !onlySale
-              ? 'bg-rose-500 text-white shadow-md shadow-rose-500/25'
-              : 'bg-white border border-slate-200 text-slate-700 hover:border-rose-300'
+              ? 'bg-emerald-600 text-white shadow-md shadow-rose-500/25'
+              : 'bg-white border border-slate-200 text-slate-700 hover:border-emerald-300'
           }`}
         >
           All Departments
@@ -168,8 +168,8 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
           }}
           className={`px-4 py-2.5 text-xs font-bold transition-all whitespace-nowrap cursor-pointer rounded-xl ${
             selectedGender === 'women' && !onlySale
-              ? 'bg-rose-500 text-white shadow-md shadow-rose-500/25'
-              : 'bg-white border border-slate-200 text-slate-700 hover:border-rose-300'
+              ? 'bg-emerald-600 text-white shadow-md shadow-rose-500/25'
+              : 'bg-white border border-slate-200 text-slate-700 hover:border-emerald-300'
           }`}
         >
           Women
@@ -183,8 +183,8 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
           }}
           className={`px-4 py-2.5 text-xs font-bold transition-all whitespace-nowrap cursor-pointer rounded-xl ${
             selectedGender === 'men' && !onlySale
-              ? 'bg-rose-500 text-white shadow-md shadow-rose-500/25'
-              : 'bg-white border border-slate-200 text-slate-700 hover:border-rose-300'
+              ? 'bg-emerald-600 text-white shadow-md shadow-rose-500/25'
+              : 'bg-white border border-slate-200 text-slate-700 hover:border-emerald-300'
           }`}
         >
           Men
@@ -198,8 +198,8 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
           }}
           className={`px-4 py-2.5 text-xs font-bold transition-all whitespace-nowrap cursor-pointer rounded-xl ${
             selectedGender === 'accessories' && !onlySale
-              ? 'bg-rose-500 text-white shadow-md shadow-rose-500/25'
-              : 'bg-white border border-slate-200 text-slate-700 hover:border-rose-300'
+              ? 'bg-emerald-600 text-white shadow-md shadow-rose-500/25'
+              : 'bg-white border border-slate-200 text-slate-700 hover:border-emerald-300'
           }`}
         >
           Accessories
@@ -213,7 +213,7 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
           className={`px-4 py-2.5 text-xs font-black transition-all whitespace-nowrap cursor-pointer rounded-xl ${
             onlySale
               ? 'bg-rose-600 text-white shadow-md shadow-rose-600/30'
-              : 'bg-rose-50 text-rose-700 border border-rose-200 hover:bg-rose-100'
+              : 'bg-emerald-50 text-rose-700 border border-rose-200 hover:bg-rose-100'
           }`}
         >
           SALE %
@@ -221,7 +221,7 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
       </div>
 
       {/* Filter and Sort Toolbar */}
-      <div className="bg-white p-4 border border-slate-200 rounded-2xl flex flex-wrap items-center justify-between gap-4 shadow-sm">
+      <div className="bg-white p-4 border border-slate-200 rounded-xl flex flex-wrap items-center justify-between gap-4 shadow-sm">
         
         {/* Left: Search & Quick Filters */}
         <div className="flex flex-wrap items-center gap-3 flex-1 min-w-[280px]">
@@ -279,7 +279,7 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
           {hasActiveFilters && (
             <button
               onClick={resetFilters}
-              className="flex items-center gap-1 text-xs text-rose-600 hover:text-rose-700 font-bold cursor-pointer"
+              className="flex items-center gap-1 text-xs text-emerald-700 hover:text-rose-700 font-bold cursor-pointer"
             >
               <RotateCcw className="w-3.5 h-3.5" />
               <span>Reset</span>
@@ -293,11 +293,11 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
       {loading ? (
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
-            <div key={i} className="aspect-[3/4] bg-white border border-slate-200 rounded-2xl animate-pulse" />
+            <div key={i} className="aspect-[3/4] bg-white border border-slate-200 rounded-xl animate-pulse" />
           ))}
         </div>
       ) : products.length === 0 ? (
-        <div className="bg-white border border-slate-200 rounded-3xl p-12 text-center space-y-4 shadow-sm">
+        <div className="bg-white border border-slate-200 rounded-xl p-12 text-center space-y-4 shadow-sm">
           <SlidersHorizontal className="w-10 h-10 text-slate-300 mx-auto" />
           <h3 className="text-xl font-bold text-slate-900">
             No Products Found
@@ -307,7 +307,7 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
           </p>
           <button
             onClick={resetFilters}
-            className="px-6 py-2.5 bg-rose-500 text-white text-xs font-bold rounded-xl hover:bg-rose-600 transition-colors shadow-sm cursor-pointer"
+            className="px-6 py-2.5 bg-emerald-600 text-white text-xs font-bold rounded-xl hover:bg-emerald-700 transition-colors shadow-sm cursor-pointer"
           >
             Clear All Filters
           </button>
