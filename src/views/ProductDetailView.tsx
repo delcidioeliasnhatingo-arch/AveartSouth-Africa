@@ -369,7 +369,7 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
                       onClick={() => handleColorSelect(c.name)}
                       className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border text-xs font-bold transition-all cursor-pointer ${
                         selectedColor === c.name
-                          ? 'border-emerald-600 bg-emerald-50 text-rose-900 ring-2 ring-rose-500 shadow-xs'
+                          ? 'border-emerald-600 bg-emerald-50 text-rose-900 ring-2 ring-[#87977D] shadow-xs'
                           : 'border-slate-200 bg-white text-slate-700 hover:border-slate-300'
                       }`}
                     >
@@ -406,7 +406,7 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
                         onClick={() => handleSizeSelect(sz)}
                         className={`py-2.5 text-center text-xs font-bold rounded-xl border transition-all cursor-pointer ${
                           selectedSize === sz
-                            ? 'border-emerald-600 bg-emerald-600 text-white shadow-md shadow-rose-500/25'
+                            ? 'border-emerald-600 bg-emerald-600 text-white shadow-md shadow-[#87977D]/20'
                             : isAvailable
                             ? 'border-slate-200 bg-slate-50 text-slate-800 hover:border-emerald-300'
                             : 'border-slate-200 bg-slate-100 text-slate-400 cursor-not-allowed line-through'
@@ -576,7 +576,7 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
               onClick={() => setRecommendationType('also_like')}
               className={`px-3.5 py-2 text-xs font-bold rounded-xl transition-all whitespace-nowrap cursor-pointer ${
                 recommendationType === 'also_like'
-                  ? 'bg-emerald-600 text-white shadow-md shadow-rose-500/25'
+                  ? 'bg-emerald-600 text-white shadow-md shadow-[#87977D]/20'
                   : 'text-slate-600 hover:text-slate-900'
               }`}
             >
@@ -586,7 +586,7 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
               onClick={() => setRecommendationType('complete_look')}
               className={`px-3.5 py-2 text-xs font-bold rounded-xl transition-all whitespace-nowrap cursor-pointer ${
                 recommendationType === 'complete_look'
-                  ? 'bg-emerald-600 text-white shadow-md shadow-rose-500/25'
+                  ? 'bg-emerald-600 text-white shadow-md shadow-[#87977D]/20'
                   : 'text-slate-600 hover:text-slate-900'
               }`}
             >
@@ -596,7 +596,7 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
               onClick={() => setRecommendationType('similar')}
               className={`px-3.5 py-2 text-xs font-bold rounded-xl transition-all whitespace-nowrap cursor-pointer ${
                 recommendationType === 'similar'
-                  ? 'bg-emerald-600 text-white shadow-md shadow-rose-500/25'
+                  ? 'bg-emerald-600 text-white shadow-md shadow-[#87977D]/20'
                   : 'text-slate-600 hover:text-slate-900'
               }`}
             >
@@ -606,7 +606,7 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
               onClick={() => setRecommendationType('recent')}
               className={`px-3.5 py-2 text-xs font-bold rounded-xl transition-all whitespace-nowrap cursor-pointer ${
                 recommendationType === 'recent'
-                  ? 'bg-emerald-600 text-white shadow-md shadow-rose-500/25'
+                  ? 'bg-emerald-600 text-white shadow-md shadow-[#87977D]/20'
                   : 'text-slate-600 hover:text-slate-900'
               }`}
             >
