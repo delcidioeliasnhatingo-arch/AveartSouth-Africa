@@ -94,8 +94,8 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate }) => {
           <div className="max-w-xl lg:max-w-2xl space-y-6">
             
             {/* Announcement badge with Geometric Flight Emblem */}
-            <div className="inline-flex items-center gap-2.5 px-4 py-1.5 bg-rose-500/20 border border-rose-400/30 backdrop-blur-md rounded-full text-xs font-bold text-rose-200 shadow-xs">
-              <Logo className="w-4 h-4 text-rose-400 shrink-0" />
+            <div className="inline-flex items-center gap-2.5 px-4 py-1.5 bg-emerald-600/20 border border-emerald-300/30 backdrop-blur-md rounded-full text-xs font-bold text-rose-200 shadow-xs">
+              <Logo className="w-4 h-4 text-emerald-600 shrink-0" />
               <span>New Season 2026 · Ready to Ship</span>
             </div>
 
@@ -111,7 +111,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate }) => {
             <div className="pt-2 flex flex-wrap items-center gap-3 sm:gap-4">
               <button
                 onClick={() => onNavigate('catalog_gender', 'women')}
-                className="bg-rose-500 hover:bg-rose-600 text-white px-7 py-3.5 text-sm font-bold rounded-xl flex items-center gap-2 shadow-lg shadow-rose-500/30 hover:shadow-xl hover:shadow-rose-500/40 transition-all cursor-pointer active:scale-95"
+                className="bg-emerald-600 hover:bg-emerald-700 text-white px-7 py-3.5 text-sm font-bold rounded-xl flex items-center gap-2 shadow-lg shadow-rose-500/30 hover:shadow-xl hover:shadow-rose-500/40 transition-all cursor-pointer active:scale-95"
               >
                 <span>Women's Collection</span>
                 <ArrowRight className="w-4 h-4" />
@@ -126,7 +126,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate }) => {
 
               <button
                 onClick={() => onNavigate('catalog')}
-                className="text-xs font-extrabold uppercase tracking-wider text-rose-300 hover:text-white py-3 px-2 flex items-center gap-1.5 cursor-pointer transition-colors"
+                className="text-xs font-extrabold uppercase tracking-wider text-emerald-600 hover:text-white py-3 px-2 flex items-center gap-1.5 cursor-pointer transition-colors"
               >
                 <span>View Full Catalog</span>
                 <ArrowRight className="w-3.5 h-3.5" />
@@ -136,22 +136,22 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate }) => {
             {/* Interactive Pill: Outfit Identifier with brand emblem */}
             <div
               onClick={() => onNavigate('product', 'tailored-double-breasted-linen-blazer')}
-              className="inline-flex items-center gap-3 px-4 py-2.5 rounded-2xl bg-slate-900/80 hover:bg-slate-900 backdrop-blur-md border border-white/15 text-xs text-slate-200 shadow-lg transition-all cursor-pointer group/pill active:scale-98"
+              className="inline-flex items-center gap-3 px-4 py-2.5 rounded-xl bg-slate-900/80 hover:bg-slate-900 backdrop-blur-md border border-white/15 text-xs text-slate-200 shadow-lg transition-all cursor-pointer group/pill active:scale-98"
             >
-              <Logo className="w-3.5 h-3.5 text-rose-400 group-hover/pill:rotate-12 transition-transform" />
+              <Logo className="w-3.5 h-3.5 text-emerald-600 group-hover/pill:rotate-12 transition-transform" />
               <span>
-                Featured on model: <strong className="text-white font-extrabold">Tailored Linen Blazer in Sand</strong> · <span className="text-rose-300 font-black">R 3,450</span>
+                Featured on model: <strong className="text-white font-extrabold">Tailored Linen Blazer in Sand</strong> · <span className="text-emerald-600 font-black">R 3,450</span>
               </span>
-              <span className="px-2 py-0.5 rounded-lg bg-white/10 text-white text-[10px] font-bold uppercase tracking-wider group-hover/pill:bg-rose-500 transition-colors">
+              <span className="px-2 py-0.5 rounded-lg bg-white/10 text-white text-[10px] font-bold uppercase tracking-wider group-hover/pill:bg-emerald-600 transition-colors">
                 View Piece
               </span>
             </div>
 
             {/* Trust Highlights in Glassmorphism */}
             <div className="pt-4 border-t border-white/15 grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-slate-200">
-              <div className="p-3.5 bg-slate-900/60 backdrop-blur-md rounded-2xl border border-white/10 shadow-sm flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl bg-rose-500/20 border border-rose-400/30 flex items-center justify-center shrink-0">
-                  <Truck className="w-4 h-4 text-rose-400" />
+              <div className="p-3.5 bg-slate-900/60 backdrop-blur-md rounded-xl border border-white/10 shadow-sm flex items-center gap-3">
+                <div className="w-9 h-9 rounded-xl bg-emerald-600/20 border border-emerald-300/30 flex items-center justify-center shrink-0">
+                  <Truck className="w-4 h-4 text-emerald-600" />
                 </div>
                 <div>
                   <span className="font-extrabold text-white text-sm block">Free Express Delivery</span>
@@ -159,7 +159,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate }) => {
                 </div>
               </div>
 
-              <div className="p-3.5 bg-slate-900/60 backdrop-blur-md rounded-2xl border border-white/10 shadow-sm flex items-center gap-3">
+              <div className="p-3.5 bg-slate-900/60 backdrop-blur-md rounded-xl border border-white/10 shadow-sm flex items-center gap-3">
                 <div className="w-9 h-9 rounded-xl bg-emerald-500/20 border border-emerald-400/30 flex items-center justify-center shrink-0">
                   <ShieldCheck className="w-4 h-4 text-emerald-400" />
                 </div>
@@ -180,7 +180,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate }) => {
           ========================================================================= */}
       <section className="w-full max-w-[1920px] mx-auto px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20">
         <div className="text-center max-w-2xl mx-auto mb-10">
-          <span className="text-xs uppercase tracking-wider text-rose-600 font-extrabold block">
+          <span className="text-xs uppercase tracking-wider text-emerald-700 font-extrabold block">
             Shop by Category
           </span>
           <h2 className="text-3xl sm:text-4xl font-black text-slate-900 mt-1">
@@ -197,7 +197,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate }) => {
           {/* Card 1: Women's Fashion */}
           <div
             onClick={() => onNavigate('catalog_gender', 'women')}
-            className="group relative aspect-[3/4] bg-slate-100 rounded-3xl overflow-hidden cursor-pointer border border-slate-200 shadow-md hover:shadow-2xl transition-all duration-300"
+            className="group relative aspect-[3/4] bg-slate-100 rounded-xl overflow-hidden cursor-pointer border border-slate-200 shadow-md hover:shadow-2xl transition-all duration-300"
           >
             <img
               src="/src/assets/images/fashion_women_silk_midi_dress_1792263530827.jpg"
@@ -205,10 +205,10 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate }) => {
               className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/20 to-transparent flex flex-col justify-end p-6 text-white">
-              <span className="text-xs uppercase tracking-wider text-rose-400 font-extrabold">Women</span>
+              <span className="text-xs uppercase tracking-wider text-emerald-600 font-extrabold">Women</span>
               <h3 className="text-xl font-black mt-0.5">Dresses & Tailoring</h3>
               <p className="text-xs text-slate-200 mt-1 line-clamp-2">Pure silk dresses, relaxed blazers, and fluid trousers.</p>
-              <div className="mt-3 text-xs font-bold uppercase tracking-wider text-rose-300 group-hover:text-white flex items-center gap-1.5 transition-colors">
+              <div className="mt-3 text-xs font-bold uppercase tracking-wider text-emerald-600 group-hover:text-white flex items-center gap-1.5 transition-colors">
                 <span>Shop Women</span>
                 <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
               </div>
@@ -218,7 +218,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate }) => {
           {/* Card 2: Men's Fashion */}
           <div
             onClick={() => onNavigate('catalog_gender', 'men')}
-            className="group relative aspect-[3/4] bg-slate-100 rounded-3xl overflow-hidden cursor-pointer border border-slate-200 shadow-md hover:shadow-2xl transition-all duration-300"
+            className="group relative aspect-[3/4] bg-slate-100 rounded-xl overflow-hidden cursor-pointer border border-slate-200 shadow-md hover:shadow-2xl transition-all duration-300"
           >
             <img
               src="/src/assets/images/fashion_men_wool_overshirt_1792263531608.jpg"
@@ -239,7 +239,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate }) => {
           {/* Card 3: Selvedge Denim & Trousers */}
           <div
             onClick={() => onNavigate('catalog_category', 'pants')}
-            className="group relative aspect-[3/4] bg-slate-100 rounded-3xl overflow-hidden cursor-pointer border border-slate-200 shadow-md hover:shadow-2xl transition-all duration-300"
+            className="group relative aspect-[3/4] bg-slate-100 rounded-xl overflow-hidden cursor-pointer border border-slate-200 shadow-md hover:shadow-2xl transition-all duration-300"
           >
             <img
               src="/src/assets/images/fashion_men_selvedge_jeans_1792263532797.jpg"
@@ -260,7 +260,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate }) => {
           {/* Card 4: Bags & Accessories */}
           <div
             onClick={() => onNavigate('catalog_gender', 'accessories')}
-            className="group relative aspect-[3/4] bg-slate-100 rounded-3xl overflow-hidden cursor-pointer border border-slate-200 shadow-md hover:shadow-2xl transition-all duration-300"
+            className="group relative aspect-[3/4] bg-slate-100 rounded-xl overflow-hidden cursor-pointer border border-slate-200 shadow-md hover:shadow-2xl transition-all duration-300"
           >
             <img
               src="/src/assets/images/fashion_acc_leather_tote_1792263547555.jpg"
@@ -283,7 +283,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate }) => {
         {/* Quick Filter Chips */}
         <div className="mt-8 flex flex-wrap items-center justify-center gap-2 sm:gap-3">
           <span className="text-xs font-bold text-slate-500 mr-1 flex items-center gap-1">
-            <Tag className="w-3.5 h-3.5 text-rose-500" />
+            <Tag className="w-3.5 h-3.5 text-emerald-700" />
             <span>Quick search:</span>
           </span>
           {[
@@ -297,7 +297,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate }) => {
             <button
               key={chip.slug}
               onClick={() => onNavigate('catalog_category', chip.slug)}
-              className="px-3.5 py-1.5 bg-white hover:bg-rose-50 border border-slate-200 hover:border-rose-300 text-slate-700 hover:text-rose-600 rounded-full text-xs font-bold transition-colors cursor-pointer shadow-2xs"
+              className="px-3.5 py-1.5 bg-white hover:bg-emerald-50 border border-slate-200 hover:border-emerald-300 text-slate-700 hover:text-emerald-700 rounded-full text-xs font-bold transition-colors cursor-pointer shadow-2xs"
             >
               {chip.label}
             </button>
@@ -314,7 +314,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate }) => {
         {/* Section Header with Interactive Tabs */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 pb-4 border-b border-slate-200 gap-4">
           <div>
-            <span className="text-xs uppercase tracking-wider text-rose-600 font-extrabold block">
+            <span className="text-xs uppercase tracking-wider text-emerald-700 font-extrabold block">
               Curated Selection
             </span>
             <h2 className="text-3xl font-black text-slate-900 mt-1">
@@ -338,8 +338,8 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate }) => {
               onClick={() => setActiveTab('women')}
               className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
                 activeTab === 'women'
-                  ? 'bg-rose-500 text-white shadow-xs'
-                  : 'text-slate-600 hover:text-rose-600'
+                  ? 'bg-emerald-600 text-white shadow-xs'
+                  : 'text-slate-600 hover:text-emerald-700'
               }`}
             >
               Women
@@ -348,8 +348,8 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate }) => {
               onClick={() => setActiveTab('men')}
               className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
                 activeTab === 'men'
-                  ? 'bg-rose-500 text-white shadow-xs'
-                  : 'text-slate-600 hover:text-rose-600'
+                  ? 'bg-emerald-600 text-white shadow-xs'
+                  : 'text-slate-600 hover:text-emerald-700'
               }`}
             >
               Men
@@ -358,8 +358,8 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate }) => {
               onClick={() => setActiveTab('sale')}
               className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer flex items-center gap-1 ${
                 activeTab === 'sale'
-                  ? 'bg-rose-500 text-white shadow-xs'
-                  : 'text-rose-600 hover:text-rose-700'
+                  ? 'bg-emerald-600 text-white shadow-xs'
+                  : 'text-emerald-700 hover:text-rose-700'
               }`}
             >
               <Flame className="w-3.5 h-3.5" />
@@ -372,7 +372,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate }) => {
         {loading ? (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {[1, 2, 3, 4].map((n) => (
-              <div key={n} className="bg-white border border-slate-200 rounded-2xl aspect-[3/4] animate-pulse" />
+              <div key={n} className="bg-white border border-slate-200 rounded-xl aspect-[3/4] animate-pulse" />
             ))}
           </div>
         ) : (
@@ -388,7 +388,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate }) => {
         )}
 
         {/* Promotional Banner & Interactive Discount Code */}
-        <div className="mt-12 bg-gradient-to-r from-rose-500 via-rose-600 to-orange-500 rounded-3xl p-6 md:p-8 text-white shadow-xl shadow-rose-500/15 flex flex-col md:flex-row items-center justify-between gap-6">
+        <div className="mt-12 bg-gradient-to-r from-rose-500 via-rose-600 to-orange-500 rounded-xl p-6 md:p-8 text-white shadow-xl shadow-rose-500/15 flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="space-y-1.5 text-center md:text-left">
             <span className="px-3 py-1 bg-white/20 backdrop-blur-md text-white rounded-full text-xs font-black uppercase tracking-wider inline-block">
               Welcome Special
@@ -402,13 +402,13 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate }) => {
           </div>
 
           <div className="flex items-center gap-3 shrink-0">
-            <div className="bg-white/15 backdrop-blur-md border border-white/30 rounded-2xl px-5 py-3 text-center">
+            <div className="bg-white/15 backdrop-blur-md border border-white/30 rounded-xl px-5 py-3 text-center">
               <span className="text-[10px] text-rose-100 block font-bold uppercase tracking-wider">Promo Code</span>
               <span className="text-xl font-black font-mono tracking-wider">AVEART15</span>
             </div>
             <button
               onClick={handleCopyCoupon}
-              className="bg-white text-rose-600 hover:bg-rose-50 px-5 py-3 rounded-2xl text-xs font-black shadow-md transition-all active:scale-95 cursor-pointer flex items-center gap-1.5 whitespace-nowrap"
+              className="bg-white text-emerald-700 hover:bg-emerald-50 px-5 py-3 rounded-xl text-xs font-black shadow-md transition-all active:scale-95 cursor-pointer flex items-center gap-1.5 whitespace-nowrap"
             >
               {copiedCoupon ? (
                 <>
@@ -434,8 +434,8 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate }) => {
         
         {/* Top Block: 4 Quality Pillars */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
-          <div className="p-6 bg-white rounded-3xl border border-slate-200 shadow-xs hover:border-rose-200 hover:shadow-md transition-all">
-            <div className="w-12 h-12 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center mb-4">
+          <div className="p-6 bg-white rounded-xl border border-slate-200 shadow-xs hover:border-rose-200 hover:shadow-md transition-all">
+            <div className="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center mb-4">
               <Leaf className="w-6 h-6" />
             </div>
             <h4 className="text-base font-extrabold text-slate-900">100% Natural Fabrics</h4>
@@ -444,8 +444,8 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate }) => {
             </p>
           </div>
 
-          <div className="p-6 bg-white rounded-3xl border border-slate-200 shadow-xs hover:border-rose-200 hover:shadow-md transition-all">
-            <div className="w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center mb-4">
+          <div className="p-6 bg-white rounded-xl border border-slate-200 shadow-xs hover:border-rose-200 hover:shadow-md transition-all">
+            <div className="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center mb-4">
               <Scissors className="w-6 h-6" />
             </div>
             <h4 className="text-base font-extrabold text-slate-900">Tailored Drape</h4>
@@ -454,8 +454,8 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate }) => {
             </p>
           </div>
 
-          <div className="p-6 bg-white rounded-3xl border border-slate-200 shadow-xs hover:border-rose-200 hover:shadow-md transition-all">
-            <div className="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center mb-4">
+          <div className="p-6 bg-white rounded-xl border border-slate-200 shadow-xs hover:border-rose-200 hover:shadow-md transition-all">
+            <div className="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center mb-4">
               <Clock className="w-6 h-6" />
             </div>
             <h4 className="text-base font-extrabold text-slate-900">Express SA Delivery</h4>
@@ -464,8 +464,8 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate }) => {
             </p>
           </div>
 
-          <div className="p-6 bg-white rounded-3xl border border-slate-200 shadow-xs hover:border-rose-200 hover:shadow-md transition-all">
-            <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center mb-4">
+          <div className="p-6 bg-white rounded-xl border border-slate-200 shadow-xs hover:border-rose-200 hover:shadow-md transition-all">
+            <div className="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center mb-4">
               <RotateCcw className="w-6 h-6" />
             </div>
             <h4 className="text-base font-extrabold text-slate-900">Hassle-Free Returns</h4>
@@ -478,7 +478,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate }) => {
         {/* Middle Block: Real Customer Reviews */}
         <div className="mb-16">
           <div className="text-center max-w-xl mx-auto mb-8">
-            <span className="text-xs uppercase tracking-wider text-rose-600 font-extrabold block">
+            <span className="text-xs uppercase tracking-wider text-emerald-700 font-extrabold block">
               What Our Customers Say
             </span>
             <h3 className="text-2xl sm:text-3xl font-black text-slate-900 mt-1">
@@ -492,7 +492,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate }) => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             
             {/* Review 1 */}
-            <div className="p-6 bg-white rounded-3xl border border-slate-200 shadow-xs hover:shadow-md transition-shadow">
+            <div className="p-6 bg-white rounded-xl border border-slate-200 shadow-xs hover:shadow-md transition-shadow">
               <div className="flex items-center gap-1 text-amber-400 mb-3">
                 {[1, 2, 3, 4, 5].map((i) => (
                   <Star key={i} className="w-4 h-4 fill-amber-400" />
@@ -513,7 +513,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate }) => {
             </div>
 
             {/* Review 2 */}
-            <div className="p-6 bg-white rounded-3xl border border-slate-200 shadow-xs hover:shadow-md transition-shadow">
+            <div className="p-6 bg-white rounded-xl border border-slate-200 shadow-xs hover:shadow-md transition-shadow">
               <div className="flex items-center gap-1 text-amber-400 mb-3">
                 {[1, 2, 3, 4, 5].map((i) => (
                   <Star key={i} className="w-4 h-4 fill-amber-400" />
@@ -534,7 +534,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate }) => {
             </div>
 
             {/* Review 3 */}
-            <div className="p-6 bg-white rounded-3xl border border-slate-200 shadow-xs hover:shadow-md transition-shadow">
+            <div className="p-6 bg-white rounded-xl border border-slate-200 shadow-xs hover:shadow-md transition-shadow">
               <div className="flex items-center gap-1 text-amber-400 mb-3">
                 {[1, 2, 3, 4, 5].map((i) => (
                   <Star key={i} className="w-4 h-4 fill-amber-400" />
@@ -558,10 +558,10 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate }) => {
         </div>
 
         {/* Bottom Block: Newsletter & Community */}
-        <div className="bg-slate-900 rounded-3xl p-8 md:p-12 text-white relative overflow-hidden">
-          <div className="absolute -right-20 -bottom-20 w-80 h-80 bg-rose-500/20 rounded-full blur-3xl pointer-events-none" />
+        <div className="bg-slate-900 rounded-xl p-8 md:p-12 text-white relative overflow-hidden">
+          <div className="absolute -right-20 -bottom-20 w-80 h-80 bg-emerald-600/20 rounded-full blur-3xl pointer-events-none" />
           <div className="relative z-10 max-w-2xl mx-auto text-center space-y-4">
-            <span className="text-xs uppercase tracking-wider text-rose-400 font-extrabold block">
+            <span className="text-xs uppercase tracking-wider text-emerald-600 font-extrabold block">
               AVEART Community
             </span>
             <h3 className="text-3xl sm:text-4xl font-black">
@@ -572,7 +572,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate }) => {
             </p>
 
             {newsletterSubscribed ? (
-              <div className="bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 p-4 rounded-2xl text-sm font-bold flex items-center justify-center gap-2">
+              <div className="bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 p-4 rounded-xl text-sm font-bold flex items-center justify-center gap-2">
                 <Check className="w-5 h-5 text-emerald-400" />
                 <span>Thank you for subscribing! Check your email to confirm your 15% OFF voucher.</span>
               </div>
@@ -586,12 +586,12 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate }) => {
                     value={newsletterEmail}
                     onChange={(e) => setNewsletterEmail(e.target.value)}
                     placeholder="Enter your email address"
-                    className="w-full bg-slate-800/90 border border-slate-700 focus:border-rose-500 focus:ring-2 focus:ring-rose-500/30 text-white placeholder-slate-400 pl-11 pr-4 py-3 rounded-xl text-sm transition-all outline-hidden"
+                    className="w-full bg-slate-800/90 border border-slate-700 focus:border-emerald-600 focus:ring-2 focus:ring-rose-500/30 text-white placeholder-slate-400 pl-11 pr-4 py-3 rounded-xl text-sm transition-all outline-hidden"
                   />
                 </div>
                 <button
                   type="submit"
-                  className="bg-rose-500 hover:bg-rose-600 text-white font-bold px-6 py-3 rounded-xl text-sm transition-all cursor-pointer shadow-lg shadow-rose-500/25 active:scale-95 shrink-0"
+                  className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-6 py-3 rounded-xl text-sm transition-all cursor-pointer shadow-lg shadow-rose-500/25 active:scale-95 shrink-0"
                 >
                   Subscribe
                 </button>
