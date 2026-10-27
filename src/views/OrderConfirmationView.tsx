@@ -26,7 +26,7 @@ export const OrderConfirmationView: React.FC<OrderConfirmationViewProps> = ({
           <CheckCircle className="w-9 h-9" />
         </div>
 
-        <span className="text-xs uppercase tracking-wider text-rose-600 font-extrabold block">
+        <span className="text-xs uppercase tracking-wider text-[#65775D] font-extrabold block">
           Order Successfully Confirmed
         </span>
 
@@ -143,7 +143,7 @@ export const OrderConfirmationView: React.FC<OrderConfirmationViewProps> = ({
             </div>
             <div className="flex justify-between text-sm font-extrabold text-slate-900 pt-2 border-t border-slate-100">
               <span>Total Paid</span>
-              <span className="font-mono tabular-nums text-base text-rose-600 font-black">
+              <span className="font-mono tabular-nums text-base text-[#65775D] font-black">
                 {formatZAR(order.total_amount)}
               </span>
             </div>
@@ -210,7 +210,7 @@ export const OrderConfirmationView: React.FC<OrderConfirmationViewProps> = ({
 
           <button
             onClick={onNavigateHome}
-            className="flex items-center gap-1.5 px-6 py-3 bg-rose-500 text-white text-xs font-bold uppercase tracking-wider rounded-xl hover:bg-rose-600 transition-colors shadow-md cursor-pointer"
+            className="flex items-center gap-1.5 px-6 py-3 bg-[#87977D] text-white text-xs font-bold uppercase tracking-wider rounded-xl hover:bg-[#65775D] transition-colors shadow-md cursor-pointer"
           >
             <span>Continue Shopping</span>
             <ArrowRight className="w-4 h-4" />
