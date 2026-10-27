@@ -49,7 +49,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onNavigateToCheckout }) 
               <h2 className="text-xl font-extrabold text-slate-900">
                 Your Shopping Bag
               </h2>
-              <span className="text-xs text-rose-600 font-bold">
+              <span className="text-xs text-[#65775D] font-bold">
                 {items.length} {items.length === 1 ? 'item' : 'items'} in bag
               </span>
             </div>
@@ -80,7 +80,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onNavigateToCheckout }) 
                 </p>
                 <button
                   onClick={closeDrawer}
-                  className="px-6 py-3 bg-rose-500 text-white text-xs font-bold rounded-xl hover:bg-rose-600 transition-colors shadow-md cursor-pointer"
+                  className="px-6 py-3 bg-[#87977D] text-white text-xs font-bold rounded-xl hover:bg-[#65775D] transition-colors shadow-md cursor-pointer"
                 >
                   Start Shopping
                 </button>
@@ -114,7 +114,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onNavigateToCheckout }) 
                         <button
                           type="button"
                           onClick={() => updateQuantity(item.variantId, item.quantity - 1)}
-                          className="px-2.5 py-1 text-xs font-bold text-slate-600 hover:text-rose-600 cursor-pointer"
+                          className="px-2.5 py-1 text-xs font-bold text-slate-600 hover:text-[#65775D] cursor-pointer"
                         >
                           -
                         </button>
@@ -124,7 +124,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onNavigateToCheckout }) 
                         <button
                           type="button"
                           onClick={() => updateQuantity(item.variantId, item.quantity + 1)}
-                          className="px-2.5 py-1 text-xs font-bold text-slate-600 hover:text-rose-600 cursor-pointer"
+                          className="px-2.5 py-1 text-xs font-bold text-slate-600 hover:text-[#65775D] cursor-pointer"
                         >
                           +
                         </button>
@@ -141,7 +141,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onNavigateToCheckout }) 
                       <button
                         type="button"
                         onClick={() => removeItem(item.variantId)}
-                        className="text-slate-400 hover:text-rose-600 transition-colors p-1 cursor-pointer"
+                        className="text-slate-400 hover:text-[#65775D] transition-colors p-1 cursor-pointer"
                         aria-label="Remove item"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -164,7 +164,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onNavigateToCheckout }) 
                   placeholder="Promo Code (e.g. AVEART10)"
                   value={inputCode}
                   onChange={(e) => setInputCode(e.target.value)}
-                  className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs uppercase font-bold text-slate-900 focus:outline-none focus:ring-1 focus:ring-rose-500"
+                  className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs uppercase font-bold text-slate-900 focus:outline-none focus:ring-1 focus:ring-[#87977D]"
                 />
                 <button
                   type="submit"
@@ -215,7 +215,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onNavigateToCheckout }) 
 
                 <div className="flex justify-between text-base font-extrabold text-slate-900 pt-2 border-t border-slate-100">
                   <span>Subtotal + VAT</span>
-                  <span className="font-mono tabular-nums text-lg text-rose-600 font-extrabold">
+                  <span className="font-mono tabular-nums text-lg text-[#65775D] font-extrabold">
                     {formatZAR(calculation ? calculation.subtotal - calculation.discountAmount + calculation.taxAmount : subtotal)}
                   </span>
                 </div>
@@ -229,7 +229,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onNavigateToCheckout }) 
                   closeDrawer();
                   onNavigateToCheckout();
                 }}
-                className="w-full bg-rose-500 hover:bg-rose-600 text-white py-3.5 px-4 text-sm font-bold rounded-xl flex items-center justify-center gap-2 disabled:opacity-50 transition-all shadow-md hover:shadow-lg cursor-pointer"
+                className="w-full bg-[#87977D] hover:bg-[#65775D] text-white py-3.5 px-4 text-sm font-bold rounded-xl flex items-center justify-center gap-2 disabled:opacity-50 transition-all shadow-md hover:shadow-lg cursor-pointer"
               >
                 <span>Proceed to Checkout</span>
                 <ArrowRight className="w-4 h-4" />
