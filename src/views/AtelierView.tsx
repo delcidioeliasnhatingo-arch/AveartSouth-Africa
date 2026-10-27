@@ -1,4 +1,5 @@
 import React from 'react';
+import portraitImage from '../assets/images/Retrato urbano em tons neutros.png';
 import { Award, Compass, ShieldCheck, MapPin, ArrowRight, Sparkles, Scissors, Feather, Heart } from 'lucide-react';
 
 interface AtelierViewProps {
@@ -26,7 +27,7 @@ export const AtelierView: React.FC<AtelierViewProps> = ({ onNavigateCatalog }) =
       {/* Showcase Image */}
       <div className="relative aspect-[16/9] rounded-3xl overflow-hidden shadow-xl border border-slate-200">
         <img
-          src="/src/assets/images/fashion_women_linen_blazer_1792263530901.jpg"
+          src={portraitImage}
           alt="AVEART Cape Town fashion studio design workbench"
           className="w-full h-full object-cover"
         />
