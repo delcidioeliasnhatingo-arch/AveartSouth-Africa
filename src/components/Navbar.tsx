@@ -28,27 +28,27 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate }) => {
   return (
     <>
       {/* Top South African Market Announcement Bar - Fresh & Vibrant */}
-      <div className="bg-gradient-to-r from-rose-500 via-orange-500 to-amber-500 text-white text-xs py-2 px-4 text-center tracking-wide font-bold flex items-center justify-center gap-2 shadow-xs">
+      <div className="bg-[#78936a] text-white text-xs py-2 px-4 text-center tracking-wide font-bold flex items-center justify-center gap-2 shadow-xs">
         <span className="inline-block w-2 h-2 rounded-full bg-white animate-ping" />
-        <span>South Africa · Free Express Delivery on orders over R 1,000</span>
+        <span>Complimentary shipping on all orders · Discover the new season</span>
         <span className="hidden sm:inline bg-white/20 text-white px-2 py-0.5 rounded-full text-[10px] font-extrabold uppercase">
-          Spring/Summer Drop
+          STYLE EDITION
         </span>
       </div>
 
       {/* Top Bar: Clean, modern, accessible retail header */}
       <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 transition-all shadow-xs w-full">
-        <div className="w-full max-w-[1920px] mx-auto px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20 h-18 flex items-center justify-between gap-8">
+        <div className="w-full max-w-[1920px] mx-auto px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20 h-[68px] flex items-center justify-between gap-5">
           
           {/* Zone 1: Brand wordmark with Geometric Flight Logo */}
           <button
             onClick={() => onNavigate('home')}
-            className="flex items-center gap-2.5 text-2xl font-black tracking-tight text-slate-900 hover:text-emerald-700 transition-colors whitespace-nowrap shrink-0 text-left cursor-pointer group"
+            className="flex items-center gap-2.5 text-[23px] font-bold tracking-[0.18em] text-slate-900 hover:text-emerald-700 transition-colors whitespace-nowrap shrink-0 text-left cursor-pointer group"
           >
             <div className="w-8 h-8 rounded-xl bg-slate-900 group-hover:bg-emerald-500 text-white flex items-center justify-center p-1.5 transition-all shadow-xs group-hover:scale-105">
               <Logo className="w-full h-full text-white" />
             </div>
-            <span className="tracking-tight">AVEART</span>
+            <span className="tracking-[0.18em]">AVEART</span>
           </button>
 
           {/* Zone 2: Main Categories */}
