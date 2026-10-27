@@ -366,23 +366,6 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
               </div>
             ) : null}
           </div>
-          {galleryImages.length > 1 && (
-            <div className="flex gap-3 overflow-x-auto pb-1" aria-label="Product photos">
-              {galleryImages.map((image, index) => (
-                <button
-                  key={image}
-                  type="button"
-                  onClick={() => setActiveImageIndex(index)}
-                  aria-label={`View product photo ${index + 1}`}
-                  aria-pressed={safeImageIndex === index}
-                  className={`shrink-0 w-20 h-24 sm:w-24 sm:h-28 rounded-xl overflow-hidden border-2 transition-colors cursor-pointer ${safeImageIndex === index ? 'border-emerald-600 ring-2 ring-rose-100' : 'border-slate-200 hover:border-emerald-300'}`}
-                >
-                  <img src={image} alt={`${product.title} photo ${index + 1}`} className="w-full h-full object-cover object-top" loading="lazy" />
-                </button>
-              ))}
-            </div>
-          )}
-
           {/* Fabric & Design Highlights */}
           <div className="p-6 bg-white border border-slate-200 rounded-xl space-y-3 shadow-sm">
             <div className="flex items-center gap-2 text-xs uppercase tracking-wider text-emerald-700 font-bold">
