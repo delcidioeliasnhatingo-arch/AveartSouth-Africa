@@ -18,6 +18,22 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate }) => {
   const [activeTab, setActiveTab] = useState<'all' | 'women' | 'men' | 'accessories'>('all');
   const [newsletterEmail, setNewsletterEmail] = useState('');
   const [newsletterSubscribed, setNewsletterSubscribed] = useState(false);
+  const [activeHeroSlide, setActiveHeroSlide] = useState(0);
+
+  const heroSlides = [
+    { image: heroImage, alt: 'AVEART fashion editorial with modern streetwear' },
+    { image: womenImage, alt: "AVEART women's silk midi dress" },
+    { image: editorialImage, alt: 'AVEART contemporary womenswear tailoring' },
+    { image: menImage, alt: "AVEART men's modern wool overshirt" },
+    { image: accessoriesImage, alt: 'AVEART bags and accessories' },
+  ];
+
+  useEffect(() => {
+    const slideTimer = window.setInterval(() => {
+      setActiveHeroSlide((current) => (current + 1) % heroSlides.length);
+    }, 5000);
+    return () => window.clearInterval(slideTimer);
+  }, []);
 
   useEffect(() => {
     fetch('/api/products')
@@ -50,7 +66,10 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate }) => {
     <div className="aveart-reference-home">
       {/* 1. HERO */}
       <section className="aveart-reference-hero">
-        <img src={heroImage} alt="Contemporary AVEART fashion collection" className="aveart-reference-hero-image" />
+        <img key={heroSlides[activeHeroSlide].image} src={heroSlides[activeHeroSlide].image} alt={heroSlides[activeHeroSlide].alt} className="aveart-reference-hero-image aveart-hero-slide-fade" />
+        <div className="aveart-hero-slide-indicators" aria-label={`Slide ${activeHeroSlide + 1} of ${heroSlides.length}`}>
+          {heroSlides.map((slide, index) => <span key={slide.alt} className={index === activeHeroSlide ? "aveart-hero-dot active" : "aveart-hero-dot"} />)}
+        </div>
         <div className="aveart-reference-hero-shade" />
         <div className="aveart-reference-hero-content">
           <p className="aveart-eyebrow">Modern / Sophisticated / Minimal</p>
