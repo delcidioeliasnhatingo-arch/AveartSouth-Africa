@@ -6,7 +6,7 @@ interface LogoProps {
   color?: string;
 }
 
-/** Uses the exact original SVG emblem uploaded to public/. */
+/** Uses the AVEART logo SVG from the public directory. */
 export const Logo: React.FC<LogoProps> = ({
   className = 'w-8 h-8',
   size,
@@ -15,8 +15,8 @@ export const Logo: React.FC<LogoProps> = ({
 
   return (
     <img
-      src="/Emblema-Abstrato-de-Voo.svg"
-      alt="AVEART emblem"
+      src="/aveart-logo-transparent.svg"
+      alt="AVEART"
       className={className}
       style={{ ...style, objectFit: 'contain' }}
       draggable={false}
