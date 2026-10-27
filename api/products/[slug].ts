@@ -33,16 +33,23 @@ function normalizeProduct(raw: any) {
     price_offset: Number(variant.price_offset ?? 0),
     stock_quantity: Number(variant.stock_quantity ?? variant.stock ?? 0),
     low_stock_threshold: Number(variant.low_stock_threshold ?? 3),
-    image_url: variant.image_url ?? variant.imageUrl ?? "",
+    image_url: (variant.image_url ?? variant.imageUrl ?? "").startsWith("data:image/") ? "" : (variant.image_url ?? variant.imageUrl ?? ""),
   }));
   const variantStock = variants.reduce((sum: number, variant: any) => sum + Math.max(0, Number(variant.stock_quantity) || 0), 0);
   const declaredStock = Number(product.total_stock ?? product.stock_quantity ?? product.stock ?? product.inventory_quantity ?? 0);
   const totalStock = declaredStock > 0 ? declaredStock : variantStock;
+  const cleanProduct = { ...product };
+  delete cleanProduct.imageUrl;
+  delete cleanProduct.image_url;
+  delete cleanProduct.thumbnail;
+  delete cleanProduct.thumbnail_url;
+  delete cleanProduct.images;
+  delete cleanProduct.variants;
   const normalized = {
-    ...product,
+    ...cleanProduct,
     title: product.title ?? product.name ?? "",
     description: descriptionForProduct(product),
-    images: Array.isArray(product.images) ? product.images : (product.imageUrl || product.image_url ? [product.imageUrl || product.image_url] : []),
+    images: Array.isArray(product.images) ? product.images.filter((image: any) => typeof image === "string" && image.trim()) : (product.imageUrl || product.image_url ? [product.imageUrl || product.image_url] : []),
     slug: product.slug ?? String(product.name ?? product.title ?? product.id ?? "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, ""),
     base_price: Number(product.base_price ?? product.price ?? 0),
     primary_image: product.primary_image ?? product.imageUrl ?? product.image_url ?? (Array.isArray(product.images) ? product.images[0] : ""),
