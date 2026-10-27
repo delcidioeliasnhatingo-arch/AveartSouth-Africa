@@ -97,7 +97,7 @@ export default async function handler(req: any, res: any) {
     const detailResponse = await fetch(`${PRODUCT_API}/${encodeURIComponent(String(product.id))}`, { headers: { Accept: "application/json" } });
     if (detailResponse.ok) {
       const detailData = await detailResponse.json();
-      product = normalizeProduct(detailData);
+      product = normalizeProduct(detailData, true);
     }
 
     res.setHeader("Cache-Control", "s-maxage=120, stale-while-revalidate=600");
