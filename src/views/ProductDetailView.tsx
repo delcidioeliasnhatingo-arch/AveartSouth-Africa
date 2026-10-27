@@ -6,7 +6,7 @@ import {
   Sparkles,
   Check,
   AlertCircle,
-  ShoppingBag,
+  ShoppingBag,\n  Zap,
   RotateCcw,
   Heart,
   Share2,
@@ -19,7 +19,7 @@ interface ProductDetailViewProps {
   slug: string;
   onBack: () => void;
   onSelectProduct: (slug: string) => void;
-  onNavigateToCategory: (categorySlug: string) => void;
+  onNavigateToCategory: (categorySlug: string) => void;\n  onBuyNow: () => void;
 }
 
 const RECENTLY_VIEWED_KEY = 'aveart_recently_viewed_slugs';
@@ -201,7 +201,7 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
     });
   };
 
-  const displayedRecommendations = recommendationType === 'recent' ? recentProducts : recommendations;
+  const handleBuyNow = () => {\n    if (!selectedVariant || isOutOfStock) return;\n    handleAddToCart();\n    onBuyNow();\n  };\n\n  const displayedRecommendations = recommendationType === 'recent' ? recentProducts : recommendations;
 
   return (
     <div className="w-full max-w-[1920px] mx-auto px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20 py-8 space-y-16">
@@ -441,10 +441,19 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
                   type="button"
                   disabled={isOutOfStock}
                   onClick={handleAddToCart}
-                  className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white h-12 text-sm uppercase tracking-wider font-extrabold rounded-xl disabled:opacity-40 transition-all shadow-lg shadow-rose-500/25 hover:shadow-xl flex items-center justify-center gap-2 cursor-pointer active:scale-98"
+                  className="flex-1 bg-white hover:bg-slate-50 text-slate-900 border border-slate-300 h-12 text-xs sm:text-sm uppercase tracking-wide font-bold rounded-xl disabled:opacity-40 transition-all flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <ShoppingBag className="w-4 h-4" />
-                  <span>{isOutOfStock ? 'Sold Out' : 'Add to Bag'}</span>
+                  <span>{isOutOfStock ? 'Sold Out' : 'Add to Cart'}</span>
+                </button>
+                <button
+                  type="button"
+                  disabled={isOutOfStock}
+                  onClick={handleBuyNow}
+                  className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white h-12 text-xs sm:text-sm uppercase tracking-wide font-bold rounded-xl disabled:opacity-40 transition-all flex items-center justify-center gap-2 cursor-pointer"
+                >
+                  <Zap className="w-4 h-4" />
+                  <span>Buy Now</span>
                 </button>
               </div>
 
