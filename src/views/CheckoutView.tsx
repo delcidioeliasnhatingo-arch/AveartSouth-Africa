@@ -55,7 +55,7 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({ onBackToBag, onOrder
         <p className="text-sm text-slate-500">Please select items from the fashion collection before checkout.</p>
         <button
           onClick={onBackToBag}
-          className="px-6 py-3.5 bg-rose-500 text-white text-xs font-bold uppercase rounded-xl hover:bg-rose-600 transition-colors shadow-md cursor-pointer"
+          className="px-6 py-3.5 bg-[#87977D] text-white text-xs font-bold uppercase rounded-xl hover:bg-[#65775D] transition-colors shadow-md cursor-pointer"
         >
           Return to Fashion Collection
         </button>
@@ -156,7 +156,7 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({ onBackToBag, onOrder
       {/* Top back button */}
       <button
         onClick={onBackToBag}
-        className="flex items-center gap-1.5 text-xs text-slate-500 hover:text-rose-600 transition-colors mb-6 cursor-pointer font-bold"
+        className="flex items-center gap-1.5 text-xs text-slate-500 hover:text-[#65775D] transition-colors mb-6 cursor-pointer font-bold"
       >
         <ArrowLeft className="w-3.5 h-3.5" />
         <span>Return to Shopping Bag</span>
@@ -173,7 +173,7 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({ onBackToBag, onOrder
               <span className="text-xs uppercase tracking-wider font-extrabold text-slate-900">
                 01. Customer Contact
               </span>
-              <span className="text-xs text-rose-600 font-bold">
+              <span className="text-xs text-[#65775D] font-bold">
                 {user ? `Signed in as ${user.email}` : 'Guest checkout'}
               </span>
             </div>
@@ -186,7 +186,7 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({ onBackToBag, onOrder
                   required
                   value={customerName}
                   onChange={(e) => setCustomerName(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-900 font-medium focus:outline-none focus:ring-2 focus:ring-rose-500 focus:bg-white"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-900 font-medium focus:outline-none focus:ring-2 focus:ring-[#87977D] focus:bg-white"
                 />
               </div>
 
@@ -197,7 +197,7 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({ onBackToBag, onOrder
                   required
                   value={customerEmail}
                   onChange={(e) => setCustomerEmail(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-900 font-medium focus:outline-none focus:ring-2 focus:ring-rose-500 focus:bg-white"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-900 font-medium focus:outline-none focus:ring-2 focus:ring-[#87977D] focus:bg-white"
                 />
               </div>
 
@@ -208,7 +208,7 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({ onBackToBag, onOrder
                   required
                   value={customerPhone}
                   onChange={(e) => setCustomerPhone(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-900 font-medium focus:outline-none focus:ring-2 focus:ring-rose-500 focus:bg-white"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-900 font-medium focus:outline-none focus:ring-2 focus:ring-[#87977D] focus:bg-white"
                 />
               </div>
             </div>
@@ -231,7 +231,7 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({ onBackToBag, onOrder
                   required
                   value={shippingStreet}
                   onChange={(e) => setShippingStreet(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-900 font-medium focus:outline-none focus:ring-2 focus:ring-rose-500 focus:bg-white"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-900 font-medium focus:outline-none focus:ring-2 focus:ring-[#87977D] focus:bg-white"
                 />
               </div>
 
@@ -241,7 +241,7 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({ onBackToBag, onOrder
                   type="text"
                   value={shippingApartment}
                   onChange={(e) => setShippingApartment(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-900 font-medium focus:outline-none focus:ring-2 focus:ring-rose-500 focus:bg-white"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-900 font-medium focus:outline-none focus:ring-2 focus:ring-[#87977D] focus:bg-white"
                 />
               </div>
 
@@ -252,7 +252,7 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({ onBackToBag, onOrder
                   required
                   value={shippingCity}
                   onChange={(e) => setShippingCity(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-900 font-medium focus:outline-none focus:ring-2 focus:ring-rose-500 focus:bg-white"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-900 font-medium focus:outline-none focus:ring-2 focus:ring-[#87977D] focus:bg-white"
                 />
               </div>
 
@@ -261,7 +261,7 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({ onBackToBag, onOrder
                 <select
                   value={shippingState}
                   onChange={(e) => setShippingState(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-900 font-bold focus:outline-none focus:ring-2 focus:ring-rose-500 focus:bg-white cursor-pointer"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-900 font-bold focus:outline-none focus:ring-2 focus:ring-[#87977D] focus:bg-white cursor-pointer"
                 >
                   <option value="">Select province</option>
                   <option value="Western Cape">Western Cape</option>
@@ -283,7 +283,7 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({ onBackToBag, onOrder
                   required
                   value={shippingPostalCode}
                   onChange={(e) => setShippingPostalCode(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-900 font-medium focus:outline-none focus:ring-2 focus:ring-rose-500 focus:bg-white"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-900 font-medium focus:outline-none focus:ring-2 focus:ring-[#87977D] focus:bg-white"
                 />
               </div>
 
@@ -294,7 +294,7 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({ onBackToBag, onOrder
                   placeholder="e.g. Leave with gate reception, buzzer 402..."
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-900 font-medium focus:outline-none focus:ring-2 focus:ring-rose-500 focus:bg-white"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-900 font-medium focus:outline-none focus:ring-2 focus:ring-[#87977D] focus:bg-white"
                 />
               </div>
             </div>
@@ -316,7 +316,7 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({ onBackToBag, onOrder
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full bg-rose-500 text-white py-4 text-sm font-extrabold uppercase tracking-wider rounded-xl hover:bg-rose-600 disabled:opacity-50 transition-all shadow-lg shadow-rose-500/25 hover:shadow-xl flex items-center justify-center gap-2 cursor-pointer active:scale-98"
+            className="w-full bg-[#87977D] text-white py-4 text-sm font-extrabold uppercase tracking-wider rounded-xl hover:bg-[#65775D] disabled:opacity-50 transition-all shadow-lg shadow-[#87977D]/20 hover:shadow-xl flex items-center justify-center gap-2 cursor-pointer active:scale-98"
           >
             <Lock className="w-4 h-4" />
             <span>
@@ -335,7 +335,7 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({ onBackToBag, onOrder
         </form>
 
         {/* Right Column: Order Summary (Recalculated in ZAR) */}
-        <div className="lg:col-span-5 bg-white border border-slate-200 p-6 rounded-3xl shadow-sm space-y-6">
+        <div className="lg:col-span-5 bg-white border border-slate-200 p-6 rounded-2xl shadow-sm space-y-6">
           <h3 className="text-lg font-black text-slate-900 pb-3 border-b border-slate-100">
             Order Summary (ZAR)
           </h3>
@@ -402,7 +402,7 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({ onBackToBag, onOrder
 
             <div className="flex justify-between text-base font-black text-slate-900 pt-3 border-t border-slate-100">
               <span>Total to Pay</span>
-              <span className="font-mono tabular-nums text-xl text-rose-600 font-black">
+              <span className="font-mono tabular-nums text-xl text-[#65775D] font-black">
                 {formatZAR(calculation?.totalAmount || 0)}
               </span>
             </div>
