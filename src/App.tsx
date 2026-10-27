@@ -4,17 +4,6 @@ import { CartProvider } from './context/CartContext.tsx';
 import { Navbar } from './components/Navbar.tsx';
 import { Footer } from './components/Footer.tsx';
 import { CartDrawer } from './components/CartDrawer.tsx';
-import { HomeView } from './views/HomeView.tsx';
-import { CatalogView } from './views/CatalogView.tsx';
-import { ProductDetailView } from './views/ProductDetailView.tsx';
-import { CheckoutView } from './views/CheckoutView.tsx';
-import { OrderConfirmationView } from './views/OrderConfirmationView.tsx';
-import { PaymentReturnView } from './views/PaymentReturnView.tsx';
-import { CustomerAccountView } from './views/CustomerAccountView.tsx';
-import { OrderTrackingView } from './views/OrderTrackingView.tsx';
-import { PolicyView } from './views/PolicyView.tsx';
-import { AtelierView } from './views/AtelierView.tsx';
-import { AdminHubView } from './views/AdminHubView.tsx';
 import { Order } from './types/index.ts';
 import { CookieConsent } from './components/CookieConsent.tsx';
 
