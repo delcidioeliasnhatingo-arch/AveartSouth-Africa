@@ -32,7 +32,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate }) => {
     if (activeTab === 'women') return product.gender === 'women';
     if (activeTab === 'men') return product.gender === 'men';
     if (activeTab === 'accessories') {
-      const categoryText = String(product.category ?? '').toLowerCase();
+      const categoryText = String(product.category_name ?? '').toLowerCase();
       return categoryText.includes('accessor') || categoryText.includes('bag');
     }
     return true;
