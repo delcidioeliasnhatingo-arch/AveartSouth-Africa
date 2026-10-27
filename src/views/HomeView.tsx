@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ArrowRight, Truck, ShieldCheck, Heart, Mail } from 'lucide-react';
-import { Product, Category } from '../types/index.ts';
+import { Product } from '../types/index.ts';
 import { ProductCard } from '../components/ProductCard.tsx';
 import heroImage from '../assets/images/fashion_women_linen_blazer_1792263530901.jpg';
 import womenImage from '../assets/images/fashion_women_silk_midi_dress_1792263530827.jpg';
@@ -13,20 +13,16 @@ interface HomeViewProps {
 
 export const HomeView: React.FC<HomeViewProps> = ({ onNavigate }) => {
   const [products, setProducts] = useState<Product[]>([]);
-  const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<'all' | 'women' | 'men' | 'accessories'>('all');
   const [newsletterEmail, setNewsletterEmail] = useState('');
   const [newsletterSubscribed, setNewsletterSubscribed] = useState(false);
 
   useEffect(() => {
-    Promise.all([
-      fetch('/api/products').then((r) => r.json()),
-      fetch('/api/categories').then((r) => r.json()),
-    ])
-      .then(([productsData, categoriesData]) => {
+    fetch('/api/products')
+      .then((r) => r.json())
+      .then((productsData) => {
         setProducts(Array.isArray(productsData) ? productsData : []);
-        setCategories(Array.isArray(categoriesData) ? categoriesData : []);
       })
       .catch((err) => console.error('Error fetching home data:', err))
       .finally(() => setLoading(false));
