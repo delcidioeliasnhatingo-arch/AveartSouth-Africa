@@ -213,7 +213,7 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
   const displayedRecommendations = recommendationType === 'recent' ? recentProducts : recommendations;
 
   return (
-    <div className="w-full max-w-[1920px] mx-auto px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20 py-8 space-y-16">
+    <div className="aveart-reference-product-page w-full max-w-[1920px] mx-auto px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20 py-8 space-y-16">
       
       {/* Breadcrumb Navigation */}
       <div className="flex items-center gap-2 text-xs text-slate-500 font-medium">
