@@ -28,10 +28,10 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate }) => {
   return (
     <>
       {/* Top South African Market Announcement Bar - Fresh & Vibrant */}
-      <div className="bg-[#78936a] text-white text-xs py-2 px-4 text-center tracking-wide font-bold flex items-center justify-center gap-2 shadow-xs">
-        <span className="inline-block w-2 h-2 rounded-full bg-white animate-ping" />
-        <span>Complimentary shipping on all orders · Discover the new season</span>
-        <span className="hidden sm:inline bg-white/20 text-white px-2 py-0.5 rounded-full text-[10px] font-extrabold uppercase">
+      <div className="bg-[#f7f8f5] text-[#242824] text-xs py-2 px-4 text-center tracking-wide font-medium flex items-center justify-center gap-2 shadow-xs">
+        <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#78936a]" />
+        <span>Considered style for every day · Discover the AVEART edit</span>
+        <span className="hidden sm:inline bg-[#e8ece4] text-[#65775d] px-2 py-0.5 rounded-full text-[10px] font-bold uppercase">
           STYLE EDITION
         </span>
       </div>
@@ -51,42 +51,12 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate }) => {
             <span className="tracking-[0.18em]">AVEART</span>
           </button>
 
-          {/* Zone 2: Main Categories */}
-          <nav className="hidden md:flex items-center gap-6 text-sm font-bold text-slate-600">
-            <button
-              onClick={() => onNavigate('catalog_new')}
-              className={`hover:text-emerald-700 transition-colors whitespace-nowrap shrink-0 cursor-pointer ${
-                currentView === 'catalog_new' ? 'text-emerald-700 font-extrabold border-b-2 border-emerald-600 pb-0.5' : ''
-              }`}
-            >
-              New In
-            </button>
-            <button
-              onClick={() => onNavigate('catalog_gender', 'women')}
-              className={`hover:text-emerald-700 transition-colors whitespace-nowrap shrink-0 cursor-pointer ${
-                currentView === 'catalog_gender' ? 'text-emerald-700 font-extrabold border-b-2 border-emerald-600 pb-0.5' : ''
-              }`}
-            >
-              Women
-            </button>
-            <button
-              onClick={() => onNavigate('catalog_gender', 'men')}
-              className="hover:text-emerald-700 transition-colors whitespace-nowrap shrink-0 cursor-pointer"
-            >
-              Men
-            </button>
-            <button
-              onClick={() => onNavigate('catalog_gender', 'accessories')}
-              className="hover:text-emerald-700 transition-colors whitespace-nowrap shrink-0 cursor-pointer"
-            >
-              Bags & Accessories
-            </button>
-            <button
-              onClick={() => onNavigate('catalog_sale')}
-              className="text-emerald-700 hover:text-rose-700 font-extrabold transition-colors whitespace-nowrap shrink-0 cursor-pointer flex items-center gap-1"
-            >
-              <span className="px-2 py-0.5 bg-emerald-600 text-white text-xs rounded-full font-bold shadow-xs">SALE</span>
-            </button>
+          {/* Main navigation following the approved HTML reference */}
+          <nav className="hidden md:flex items-center gap-8 text-[11px] font-semibold tracking-wide text-[#555b53]">
+            <button onClick={() => onNavigate('home')} className={`hover:text-[#78936a] transition-colors cursor-pointer ${currentView === 'home' ? 'text-[#78936a]' : ''}`}>Home</button>
+            <button onClick={() => onNavigate('catalog')} className={`hover:text-[#78936a] transition-colors cursor-pointer ${currentView.startsWith('catalog') ? 'text-[#78936a]' : ''}`}>Shop</button>
+            <button onClick={() => onNavigate('atelier')} className={`hover:text-[#78936a] transition-colors cursor-pointer ${currentView === 'atelier' ? 'text-[#78936a]' : ''}`}>Our Story</button>
+            <button onClick={() => document.getElementById('aveart-footer')?.scrollIntoView({ behavior: 'smooth' })} className="hover:text-[#78936a] transition-colors cursor-pointer">Contact</button>
           </nav>
 
           {/* Zone 3: Primary actions (Search, Account/Admin, Bag) */}
