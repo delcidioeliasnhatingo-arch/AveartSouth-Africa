@@ -257,3 +257,64 @@ button:disabled { cursor: not-allowed; }
   .aveart-reference-footer .aveart-footer-main { grid-template-columns: 1fr; gap: 30px; }
   .aveart-reference-footer .aveart-footer-bottom { width: calc(100% - 32px); }
 }
+
+
+/* Exact typography, copy treatment and section colours from index (1).html */
+.aveart-reference-home .aveart-reference-hero-content h1 { text-transform: uppercase; font-weight: 800; letter-spacing: .2px; line-height: 1; }
+.aveart-reference-home .aveart-eyebrow { letter-spacing: 1.5px; }
+.aveart-reference-home .aveart-reference-hero-content .aveart-eyebrow { text-transform: uppercase; }
+.aveart-reference-home .aveart-primary-button { border-radius: 4px; background: #fff; color: #242824; border-color: #fff; text-transform: uppercase; letter-spacing: .3px; }
+.aveart-reference-benefits { background: #f3f6f1; border-bottom: 0; }
+.aveart-reference-benefits .aveart-benefit { color: #78936a; }
+.aveart-reference-section { padding-top: 48px; padding-bottom: 48px; }
+.aveart-reference-home .aveart-section-heading h2 { font-size: 30px; font-weight: 700; letter-spacing: 0; }
+.aveart-reference-home .aveart-section-heading .aveart-eyebrow { color: #747a72; font-size: 11px; letter-spacing: 0; }
+.aveart-reference-home .aveart-text-link { text-transform: uppercase; font-size: 12px; letter-spacing: 0; border-bottom: 1px solid; padding-bottom: 5px; }
+.aveart-reference-home .aveart-filter-row { gap: 8px; flex-wrap: wrap; margin-bottom: 20px; border: 0; }
+.aveart-reference-home .aveart-filter { border: 1px solid #e5e8e2; border-radius: 4px; background: #fff; padding: 9px 14px; font-size: 12px; color: #242824; }
+.aveart-reference-home .aveart-filter.active, .aveart-reference-home .aveart-filter:hover { background: #78936a; border-color: #78936a; color: #fff; }
+.aveart-reference-home .aveart-filter.active:after { display: none; }
+.aveart-reference-editorial { background: #edf2e9; min-height: 320px; }
+.aveart-editorial-image-wrap, .aveart-editorial-image-wrap img { min-height: 320px; }
+.aveart-editorial-copy { padding: 8% 10%; }
+.aveart-editorial-copy h2 { font-size: clamp(30px, 3.5vw, 46px); font-weight: 700; letter-spacing: 0; line-height: 1.08; }
+.aveart-editorial-copy > p:not(.aveart-eyebrow) { max-width: 340px; color: #535b50; font-size: 14px; line-height: 1.65; margin-bottom: 20px; }
+.aveart-reference-home .aveart-outline-button { border-radius: 4px; background: #78936a; color: #fff; border-color: #78936a; text-transform: uppercase; }
+.aveart-reference-home .aveart-category-section { padding-top: 48px; padding-bottom: 48px; }
+.aveart-category-card { aspect-ratio: auto; height: 270px; border-radius: 3px; }
+.aveart-category-card > img { position: absolute; inset: 0; }
+.aveart-category-overlay { background: transparent; }
+.aveart-category-copy { right: 12px; bottom: 12px; left: 12px; flex-direction: row; align-items: center; justify-content: space-between; padding: 13px 14px; border-radius: 3px; background: #ffffffed; color: #242824; }
+.aveart-category-copy strong { font-size: 18px; font-weight: 700; letter-spacing: 0; }
+.aveart-category-copy > span { margin: 0; font-size: 18px; font-weight: 400; }
+.aveart-reference-newsletter { background: #f0f4ed; border: 0; }
+.aveart-newsletter-inner { padding: 48px 20px; }
+.aveart-newsletter-inner .aveart-eyebrow { color: #747a72; font-size: 11px; letter-spacing: 0; }
+.aveart-newsletter-inner h2 { font-size: 30px; font-weight: 700; letter-spacing: 0; }
+.aveart-newsletter-inner > p:not(.aveart-eyebrow):not(.aveart-newsletter-success) { font-size: 13px; color: #666; }
+.aveart-newsletter-form { max-width: 460px; border: 0; }
+.aveart-newsletter-form input { padding: 13px; border: 1px solid #cdd5c8 !important; border-radius: 4px 0 0 4px !important; background: #fff !important; font-size: 13px; }
+.aveart-newsletter-form button { border-radius: 0 4px 4px 0; padding: 0 18px; background: #78936a; color: #fff; font-size: 12px; letter-spacing: 0; }
+.aveart-reference-footer { background: #343d32 !important; color: #fff !important; border-top: 0 !important; }
+.aveart-reference-footer .aveart-footer-main { padding: 40px 0 18px; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 26px; }
+.aveart-reference-footer .aveart-footer-wordmark, .aveart-reference-footer .aveart-footer-column h3 { color: #fff !important; }
+.aveart-reference-footer .aveart-footer-wordmark { font-size: 24px; letter-spacing: .16em; }
+.aveart-reference-footer .aveart-footer-logo { color: #fff; }
+.aveart-reference-footer .aveart-footer-brand > p, .aveart-reference-footer .aveart-footer-newsletter > p { color: #e0e5dc !important; font-size: 12px; line-height: 1.7; }
+.aveart-reference-footer .aveart-footer-column h3 { font-size: 11px; letter-spacing: 0; }
+.aveart-reference-footer .aveart-footer-column > button { color: #e0e5dc !important; font-size: 12px; margin: 0; }
+.aveart-reference-footer .aveart-footer-column > button:hover { color: #fff !important; }
+.aveart-reference-footer .aveart-footer-bottom { width: 100%; max-width: none; margin: 25px 0 0; padding: 16px max(5%, calc((100% - 1320px)/2)) 0; border-top: 1px solid #596451; color: #e0e5dc; font-size: 11px; }
+@media (max-width: 800px) {
+  .aveart-reference-section { padding: 38px 4%; }
+  .aveart-reference-home .aveart-section-heading h2 { font-size: 25px; }
+  .aveart-category-card { height: 240px; }
+  .aveart-category-copy { right: 12px; bottom: 12px; left: 12px; padding: 13px 14px; }
+  .aveart-category-copy strong { font-size: 18px; }
+  .aveart-reference-footer .aveart-footer-main { grid-template-columns: 1fr 1fr; width: 92%; }
+  .aveart-reference-footer .aveart-footer-bottom { width: 100%; }
+}
+@media (max-width: 420px) {
+  .aveart-reference-home .aveart-reference-hero-content h1 { font-size: 40px; }
+  .aveart-reference-footer .aveart-footer-main { grid-template-columns: 1fr 1fr; }
+}
