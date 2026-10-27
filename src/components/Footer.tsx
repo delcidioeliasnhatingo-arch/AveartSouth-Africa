@@ -19,12 +19,12 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
   };
 
   return (
-    <footer className="bg-slate-900 text-slate-200 pt-16 pb-12 border-t border-slate-800 mt-20 w-full">
+    <footer className="bg-white text-slate-700 pt-12 pb-10 border-t border-slate-200 mt-16 w-full">
       <div className="w-full max-w-[1920px] mx-auto px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20">
         
         {/* Value Props Row - Fresh, colorful, accessible */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 pb-12 mb-12 border-b border-slate-800">
-          <div className="flex items-center gap-3.5 p-4 rounded-2xl bg-slate-800/60 border border-slate-700/50">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 pb-12 mb-12 border-b border-slate-200">
+          <div className="flex items-center gap-3.5 p-4 rounded-xl bg-slate-800/60 border border-slate-700/50">
             <div className="w-11 h-11 rounded-xl bg-emerald-500/15 text-emerald-300 flex items-center justify-center shrink-0">
               <Truck className="w-5 h-5" />
             </div>
@@ -33,7 +33,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               <p className="text-xs text-slate-400">Free delivery on all orders</p>
             </div>
           </div>
-          <div className="flex items-center gap-3.5 p-4 rounded-2xl bg-slate-800/60 border border-slate-700/50">
+          <div className="flex items-center gap-3.5 p-4 rounded-xl bg-slate-800/60 border border-slate-700/50">
             <div className="w-11 h-11 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0">
               <RotateCcw className="w-5 h-5" />
             </div>
@@ -42,7 +42,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               <p className="text-xs text-slate-400">Hassle-free exchanges across SA</p>
             </div>
           </div>
-          <div className="flex items-center gap-3.5 p-4 rounded-2xl bg-slate-800/60 border border-slate-700/50">
+          <div className="flex items-center gap-3.5 p-4 rounded-xl bg-slate-800/60 border border-slate-700/50">
             <div className="w-11 h-11 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center shrink-0">
               <ShieldCheck className="w-5 h-5" />
             </div>
@@ -53,7 +53,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-10 pb-12 border-b border-slate-800">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-10 pb-12 border-b border-slate-200">
           
           {/* Brand & Market */}
           <div className="md:col-span-4 space-y-4">
@@ -78,7 +78,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             <h4 className="text-xs uppercase tracking-wider text-emerald-300 font-extrabold">
               Shop Fashion
             </h4>
-            <ul className="text-sm text-slate-300 space-y-2">
+            <ul className="text-sm text-slate-600 space-y-2">
               <li>
                 <button
                   onClick={() => onNavigate('catalog_gender', 'women')}
@@ -90,7 +90,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               <li>
                 <button
                   onClick={() => onNavigate('catalog_gender', 'men')}
-                  className="hover:text-rose-400 transition-colors cursor-pointer text-left"
+                  className="hover:text-emerald-600 transition-colors cursor-pointer text-left"
                 >
                   Men's Collection
                 </button>
@@ -98,7 +98,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               <li>
                 <button
                   onClick={() => onNavigate('catalog_gender', 'accessories')}
-                  className="hover:text-rose-400 transition-colors cursor-pointer text-left"
+                  className="hover:text-emerald-600 transition-colors cursor-pointer text-left"
                 >
                   Bags & Accessories
                 </button>
@@ -106,7 +106,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               <li>
                 <button
                   onClick={() => onNavigate('catalog_sale')}
-                  className="text-rose-400 hover:text-rose-300 font-bold transition-colors cursor-pointer text-left flex items-center gap-1"
+                  className="text-emerald-600 hover:text-emerald-600 font-bold transition-colors cursor-pointer text-left flex items-center gap-1"
                 >
                   <span>Sale & Specials</span>
                   <span className="px-1.5 py-0.2 bg-emerald-500/15 text-emerald-300 text-[10px] rounded font-bold">UP TO 40%</span>
@@ -115,7 +115,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               <li>
                 <button
                   onClick={() => onNavigate('catalog')}
-                  className="hover:text-rose-400 transition-colors cursor-pointer text-left"
+                  className="hover:text-emerald-600 transition-colors cursor-pointer text-left"
                 >
                   View All Products
                 </button>
@@ -128,11 +128,11 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             <h4 className="text-xs uppercase tracking-wider text-slate-400 font-bold">
               Help & Policies
             </h4>
-            <ul className="text-sm text-slate-300 space-y-2">
+            <ul className="text-sm text-slate-600 space-y-2">
               <li>
                 <button
                   onClick={() => onNavigate('policy', 'shipping')}
-                  className="hover:text-rose-400 transition-colors cursor-pointer text-left"
+                  className="hover:text-emerald-600 transition-colors cursor-pointer text-left"
                 >
                   Delivery Info
                 </button>
@@ -140,7 +140,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               <li>
                 <button
                   onClick={() => onNavigate('policy', 'returns')}
-                  className="hover:text-rose-400 transition-colors cursor-pointer text-left"
+                  className="hover:text-emerald-600 transition-colors cursor-pointer text-left"
                 >
                   Returns & Exchanges
                 </button>
@@ -148,7 +148,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               <li>
                 <button
                   onClick={() => onNavigate('policy', 'terms')}
-                  className="hover:text-rose-400 transition-colors cursor-pointer text-left"
+                  className="hover:text-emerald-600 transition-colors cursor-pointer text-left"
                 >
                   Terms of Service
                 </button>
@@ -156,7 +156,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               <li>
                 <button
                   onClick={() => onNavigate('policy', 'cookies')}
-                  className="hover:text-rose-400 transition-colors cursor-pointer text-left"
+                  className="hover:text-emerald-600 transition-colors cursor-pointer text-left"
                 >
                   Cookie Policy & Preferences
                 </button>
@@ -164,7 +164,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               <li>
                 <button
                   onClick={() => onNavigate('policy', 'privacy')}
-                  className="hover:text-rose-400 transition-colors cursor-pointer text-left"
+                  className="hover:text-emerald-600 transition-colors cursor-pointer text-left"
                 >
                   Privacy Policy
                 </button>
@@ -172,7 +172,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               <li>
                 <button
                   onClick={() => onNavigate('track')}
-                  className="hover:text-rose-400 transition-colors cursor-pointer text-left"
+                  className="hover:text-emerald-600 transition-colors cursor-pointer text-left"
                 >
                   Track Your Order
                 </button>
@@ -182,8 +182,8 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
 
           {/* Newsletter */}
           <div className="md:col-span-4 space-y-3">
-            <h4 className="text-xs uppercase tracking-wider text-rose-400 font-bold flex items-center gap-1.5">
-              <Mail className="w-3.5 h-3.5 text-rose-400" />
+            <h4 className="text-xs uppercase tracking-wider text-emerald-600 font-bold flex items-center gap-1.5">
+              <Mail className="w-3.5 h-3.5 text-emerald-600" />
               <span>Get 10% Off Your First Order</span>
             </h4>
             <p className="text-xs text-slate-400 leading-relaxed">
@@ -203,11 +203,11 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                     placeholder="Enter your email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="flex-1 bg-slate-800 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-rose-500 focus:ring-1 focus:ring-rose-500"
+                    className="flex-1 bg-slate-800 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-rose-500"
                   />
                   <button
                     type="submit"
-                    className="bg-rose-500 hover:bg-rose-600 text-white px-5 py-2.5 text-xs font-bold rounded-xl transition-colors shadow-md cursor-pointer"
+                    className="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2.5 text-xs font-bold rounded-xl transition-colors shadow-md cursor-pointer"
                   >
                     Join
                   </button>
