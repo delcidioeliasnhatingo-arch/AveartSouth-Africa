@@ -86,6 +86,7 @@ export default function App() {
                 onBack={() => setCurrentView('catalog')}
                 onSelectProduct={handleSelectProduct}
                 onNavigateToCategory={(cat) => handleNavigate('catalog_category', cat)}
+                onBuyNow={() => setCurrentView('checkout')}
               />
             )}
 
