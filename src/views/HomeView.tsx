@@ -22,7 +22,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate }) => {
 
   const heroSlides = [
     { image: heroImage, alt: 'AVEART fashion editorial with modern streetwear' },
-    { image: portraitImage, alt: 'AVEART urban portrait in neutral tones' },
+    { image: womenImage, alt: 'AVEART women’s silk midi dress from the collection' },
   ];
 
   useEffect(() => {
