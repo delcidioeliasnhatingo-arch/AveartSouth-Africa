@@ -1,7 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" fill="none">
-  <!-- Geometric Flight Emblem (Emblema Geométrico de Voo) -->
-  <polygon points="102,512 228,462 476,558 412,692" fill="#0F172A" />
-  <polygon points="412,692 476,558 580,694 780,872" fill="#0F172A" />
-  <polygon points="424,472 912,136 782,362 540,554" fill="#0F172A" />
-  <polygon points="540,554 800,434 596,672" fill="#0F172A" />
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" fill="none" role="img" aria-label="AVEART emblem">
+  <path d="M110 585C220 526 331 467 447 398L875 126L734 344L495 508L665 474L526 628L391 650L724 876L476 758L310 660L110 585Z" fill="#111111"/>
+  <path d="M312 660L494 508L526 628L391 650L312 660Z" fill="#111111"/>
+  <path d="M447 398L575 480L495 508L447 398Z" fill="#111111"/>
 </svg>
