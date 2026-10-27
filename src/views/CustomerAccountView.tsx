@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { User, Package, MapPin, Plus, LogOut, Check, AlertCircle, Sparkles } from 'lucide-react';
+import { User, Package, MapPin, Plus, LogOut, Check, AlertCircle } from 'lucide-react';
 import { useAuth } from '../context/AuthContext.tsx';
 import { Order, formatZAR } from '../types/index.ts';
 
@@ -118,7 +118,6 @@ export const CustomerAccountView: React.FC<CustomerAccountViewProps> = ({ onTrac
         {/* Header */}
         <div className="text-center space-y-2">
           <span className="text-xs uppercase tracking-wider text-[#65775D] font-extrabold flex items-center justify-center gap-1.5">
-            <Sparkles className="w-3.5 h-3.5" />
             <span>Customer Portal</span>
           </span>
           <h1 className="text-3xl font-black text-slate-900">
