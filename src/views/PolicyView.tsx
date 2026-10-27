@@ -14,7 +14,7 @@ export const PolicyView: React.FC<PolicyViewProps> = ({ initialTab = 'shipping',
       
       {/* Title */}
       <div className="text-center space-y-2">
-        <span className="text-xs uppercase tracking-wider text-rose-600 font-extrabold block">
+        <span className="text-xs uppercase tracking-wider text-[#65775D] font-extrabold block">
           Customer Care & Store Policies
         </span>
         <h1 className="text-3xl sm:text-4xl text-slate-900 font-black">
@@ -31,7 +31,7 @@ export const PolicyView: React.FC<PolicyViewProps> = ({ initialTab = 'shipping',
           onClick={() => setActiveTab('shipping')}
           className={`flex items-center gap-2 px-6 py-3.5 transition-colors cursor-pointer whitespace-nowrap ${
             activeTab === 'shipping'
-              ? 'border-b-2 border-rose-500 text-rose-600 font-extrabold'
+              ? 'border-b-2 border-[#87977D] text-[#65775D] font-extrabold'
               : 'text-slate-500 hover:text-slate-800'
           }`}
         >
@@ -43,7 +43,7 @@ export const PolicyView: React.FC<PolicyViewProps> = ({ initialTab = 'shipping',
           onClick={() => setActiveTab('returns')}
           className={`flex items-center gap-2 px-6 py-3.5 transition-colors cursor-pointer whitespace-nowrap ${
             activeTab === 'returns'
-              ? 'border-b-2 border-rose-500 text-rose-600 font-extrabold'
+              ? 'border-b-2 border-[#87977D] text-[#65775D] font-extrabold'
               : 'text-slate-500 hover:text-slate-800'
           }`}
         >
@@ -55,7 +55,7 @@ export const PolicyView: React.FC<PolicyViewProps> = ({ initialTab = 'shipping',
           onClick={() => setActiveTab('terms')}
           className={`flex items-center gap-2 px-6 py-3.5 transition-colors cursor-pointer whitespace-nowrap ${
             activeTab === 'terms'
-              ? 'border-b-2 border-rose-500 text-rose-600 font-extrabold'
+              ? 'border-b-2 border-[#87977D] text-[#65775D] font-extrabold'
               : 'text-slate-500 hover:text-slate-800'
           }`}
         >
@@ -67,7 +67,7 @@ export const PolicyView: React.FC<PolicyViewProps> = ({ initialTab = 'shipping',
           onClick={() => setActiveTab('cookies')}
           className={`flex items-center gap-2 px-6 py-3.5 transition-colors cursor-pointer whitespace-nowrap ${
             activeTab === 'cookies'
-              ? 'border-b-2 border-rose-500 text-rose-600 font-extrabold'
+              ? 'border-b-2 border-[#87977D] text-[#65775D] font-extrabold'
               : 'text-slate-500 hover:text-slate-800'
           }`}
         >
@@ -79,7 +79,7 @@ export const PolicyView: React.FC<PolicyViewProps> = ({ initialTab = 'shipping',
           onClick={() => setActiveTab('privacy')}
           className={`flex items-center gap-2 px-6 py-3.5 transition-colors cursor-pointer whitespace-nowrap ${
             activeTab === 'privacy'
-              ? 'border-b-2 border-rose-500 text-rose-600 font-extrabold'
+              ? 'border-b-2 border-[#87977D] text-[#65775D] font-extrabold'
               : 'text-slate-500 hover:text-slate-800'
           }`}
         >
@@ -100,7 +100,7 @@ export const PolicyView: React.FC<PolicyViewProps> = ({ initialTab = 'shipping',
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
               <div className="p-5 bg-rose-50/50 border border-rose-100 rounded-2xl space-y-2">
-                <strong className="text-xs uppercase tracking-wider text-rose-600 block font-bold">
+                <strong className="text-xs uppercase tracking-wider text-[#65775D] block font-bold">
                   Standard Express Courier (R 95 / Free over R 1,000)
                 </strong>
                 <p className="text-slate-600 font-medium">
@@ -109,7 +109,7 @@ export const PolicyView: React.FC<PolicyViewProps> = ({ initialTab = 'shipping',
               </div>
 
               <div className="p-5 bg-rose-50/50 border border-rose-100 rounded-2xl space-y-2">
-                <strong className="text-xs uppercase tracking-wider text-rose-600 block font-bold">
+                <strong className="text-xs uppercase tracking-wider text-[#65775D] block font-bold">
                   Priority Metro Same-Day Dispatch (R 350)
                 </strong>
                 <p className="text-slate-600 font-medium">
@@ -216,7 +216,7 @@ export const PolicyView: React.FC<PolicyViewProps> = ({ initialTab = 'shipping',
       <div className="text-center pt-4">
         <button
           onClick={onNavigateCatalog}
-          className="inline-flex items-center gap-2 px-8 py-3.5 bg-rose-500 hover:bg-rose-600 text-white text-xs uppercase tracking-wider font-bold rounded-xl transition-colors shadow-md cursor-pointer"
+          className="inline-flex items-center gap-2 px-8 py-3.5 bg-[#87977D] hover:bg-[#65775D] text-white text-xs uppercase tracking-wider font-bold rounded-xl transition-colors shadow-md cursor-pointer"
         >
           <span>Return to Fashion Collection</span>
           <ArrowRight className="w-4 h-4" />
