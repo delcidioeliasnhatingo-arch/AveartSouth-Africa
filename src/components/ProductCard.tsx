@@ -19,6 +19,15 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect }) =
   // Never use another product's photo as a fallback.
   const displayImage = product.primary_image || '';
 
+  const genderValue = String(product.gender || '').toLowerCase();
+  const audienceTag = genderValue.includes('unisex')
+    ? 'UNISEX'
+    : (genderValue.includes('women') || genderValue.includes('woman') || genderValue.includes('female'))
+      ? 'WOMEN'
+      : (genderValue.includes('men') || genderValue.includes('man') || genderValue.includes('male'))
+        ? 'MEN'
+        : '';
+
   const isLowStock = product.total_stock !== undefined && product.total_stock > 0 && product.total_stock <= 3;
   const isOutOfStock = product.total_stock !== undefined && product.total_stock <= 0;
   const hasDiscount = product.original_price && product.original_price > product.base_price;
@@ -75,6 +84,13 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect }) =
           <div className="w-full h-full flex items-center justify-center px-4 text-center text-xs text-slate-400">
             Product image unavailable
           </div>
+        )}
+
+        {/* Audience tag: separates men's and women's products visually */}
+        {audienceTag && (
+          <span className="absolute top-3 right-3 z-[1] bg-white/95 text-slate-900 border border-slate-200 px-2.5 py-1 rounded-full text-[10px] font-extrabold tracking-[0.14em] shadow-sm">
+            {audienceTag}
+          </span>
         )}
 
         {/* Status Badges */}
