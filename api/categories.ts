@@ -1,4 +1,4 @@
-const PRODUCT_API = "https://aveart-api.delcidioeliasnhatingo.workers.dev/api/products";
+const PRODUCT_API = "https://aveart-products-public.delcidioeliasnhatingo.workers.dev/api/products";
 
 export default async function handler(_req: any, res: any) {
   try {
