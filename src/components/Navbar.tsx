@@ -106,7 +106,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate }) => {
                 onClick={() => onNavigate('admin')}
                 className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg border transition-colors cursor-pointer ${
                   currentView === 'admin'
-                    ? 'bg-rose-600 text-white border-rose-600 shadow-xs'
+                    ? 'bg-[#65775D] text-white border-rose-600 shadow-xs'
                     : 'bg-slate-100 text-slate-700 border-slate-200 hover:bg-slate-200'
                 }`}
               >
@@ -172,7 +172,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate }) => {
                 placeholder="Search blazers, dresses, denim, linen, shirts, hoodies..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-rose-500 focus:bg-white text-slate-900 placeholder-slate-400 font-medium"
+                className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#87977D] focus:bg-white text-slate-900 placeholder-slate-400 font-medium"
               />
               <button
                 type="submit"
