@@ -104,7 +104,7 @@ export const OrderConfirmationView: React.FC<OrderConfirmationViewProps> = ({
           </div>
 
           <div className="pt-3 border-t border-slate-100 text-[11px] text-slate-600 flex items-center gap-1.5 font-semibold">
-            <Truck className="w-3.5 h-3.5 text-rose-500" />
+            <Truck className="w-3.5 h-3.5 text-[#65775D]" />
             <span>Courier: {order.shipping_method === 'white_glove_freight' ? 'Priority Same-Day Dispatch' : 'Express Courier Door-to-Door'}</span>
           </div>
         </div>
