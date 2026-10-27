@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Filter, SlidersHorizontal, RotateCcw, Search, Sparkles } from 'lucide-react';
+import { Filter, SlidersHorizontal, RotateCcw, Search } from 'lucide-react';
 import { Product, Category, formatZAR } from '../types/index.ts';
 import { ProductCard } from '../components/ProductCard.tsx';
 
@@ -115,7 +115,6 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
       <div className="border-b border-slate-200 pb-6 flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
           <span className="text-xs uppercase tracking-wider text-emerald-700 font-extrabold flex items-center gap-1.5">
-            <Sparkles className="w-3.5 h-3.5" />
             <span>Fashion Catalog · South Africa (ZAR)</span>
           </span>
           <h1 className="text-3xl sm:text-4xl text-slate-900 font-bold mt-1 tracking-tight">
