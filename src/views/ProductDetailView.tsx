@@ -6,7 +6,8 @@ import {
   Sparkles,
   Check,
   AlertCircle,
-  ShoppingBag,\n  Zap,
+  ShoppingBag,
+  Zap,
   RotateCcw,
   Heart,
   Share2,
@@ -19,7 +20,8 @@ interface ProductDetailViewProps {
   slug: string;
   onBack: () => void;
   onSelectProduct: (slug: string) => void;
-  onNavigateToCategory: (categorySlug: string) => void;\n  onBuyNow: () => void;
+  onNavigateToCategory: (categorySlug: string) => void;
+  onBuyNow: () => void;
 }
 
 const RECENTLY_VIEWED_KEY = 'aveart_recently_viewed_slugs';
