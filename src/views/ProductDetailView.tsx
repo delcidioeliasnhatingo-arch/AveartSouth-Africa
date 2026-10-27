@@ -178,6 +178,8 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
   const isLowStock = selectedVariant && selectedVariant.stock_quantity > 0 && selectedVariant.stock_quantity <= selectedVariant.low_stock_threshold;
   const hasDiscount = product.original_price && product.original_price > product.base_price;
 
+  // The gallery must contain only images attached to this product.
+  // Never add a site-wide fallback photo, because it may belong to another product.
   const galleryImages = Array.from(new Set([
     ...(Array.isArray((product as Product & { images?: string[] }).images)
       ? (product as Product & { images?: string[] }).images!.filter(Boolean)
@@ -185,10 +187,9 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
     product.primary_image,
     selectedVariant?.image_url,
     ...(product.variants || []).map((variant) => variant.image_url),
-    '/src/assets/images/fashion_women_silk_midi_dress_1792263530827.jpg',
   ].filter((image): image is string => Boolean(image))));
   const safeImageIndex = Math.min(activeImageIndex, Math.max(0, galleryImages.length - 1));
-  const activeGalleryImage = galleryImages[safeImageIndex] || product.primary_image || '/src/assets/images/fashion_women_linen_blazer_1792263530901.jpg';
+  const activeGalleryImage = galleryImages[safeImageIndex] || product.primary_image || '';
 
   const handleAddToCart = () => {
     if (!selectedVariant || isOutOfStock) return;
