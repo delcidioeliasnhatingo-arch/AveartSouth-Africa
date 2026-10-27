@@ -96,29 +96,29 @@ export const PolicyView: React.FC<PolicyViewProps> = ({ initialTab = 'shipping',
               South African Express Delivery
             </h2>
             <p className="font-medium text-slate-600">
-              We dispatch all orders directly from our Cape Town fulfillment center. Our trusted logistics partners (The Courier Guy and RAM Hand-to-Hand) ensure quick and secure delivery right to your door across all provinces.
+              Orders are prepared and handed to a delivery provider according to the destination, stock availability and service offered at checkout. The available delivery method, estimated timeframe and any applicable fee must be shown before the order is placed. An estimate is not a guaranteed delivery date unless expressly confirmed in writing.
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
               <div className="p-5 bg-rose-50/50 border border-rose-100 rounded-2xl space-y-2">
                 <strong className="text-xs uppercase tracking-wider text-[#65775D] block font-bold">
-                  Standard Express Courier (R 95 / Free over R 1,000)
+                  Available delivery method and fee shown at checkout
                 </strong>
                 <p className="text-slate-600 font-medium">
-                  2–4 business days delivery across Cape Town, Johannesburg, Pretoria, Durban, Gqeberha, and Bloemfontein.
+                  Delivery estimates depend on destination, fulfilment availability, courier capacity and public holidays. The estimate displayed at checkout or in the order confirmation takes precedence.
                 </p>
               </div>
 
               <div className="p-5 bg-rose-50/50 border border-rose-100 rounded-2xl space-y-2">
                 <strong className="text-xs uppercase tracking-wider text-[#65775D] block font-bold">
-                  Priority Metro Same-Day Dispatch (R 350)
+                  Express or priority delivery, where available
                 </strong>
                 <p className="text-slate-600 font-medium">
-                  Same-day courier dispatch for orders placed before 11:00 AM within Cape Town and Johannesburg metropolitan areas.
+                  Express options may be offered for selected destinations and order times. Availability and price are confirmed at checkout; same-day service is not guaranteed unless specifically shown for your order.
                 </p>
               </div>
             </div>
             <p className="text-xs text-slate-500 font-medium">
-              Every parcel includes live SMS tracking notifications and digital proof of delivery.
+              Where the delivery provider supports tracking, tracking details will be shared when available. Delivery scans and proof-of-delivery records are provided by the relevant carrier.
             </p>
           </div>
         )}
@@ -126,31 +126,31 @@ export const PolicyView: React.FC<PolicyViewProps> = ({ initialTab = 'shipping',
         {activeTab === 'returns' && (
           <div className="space-y-6">
             <h2 className="text-2xl font-black text-slate-900">
-              14-Day Hassle-Free Returns & Size Exchanges
+              Returns, Exchanges & Consumer Rights
             </h2>
             <p className="font-medium text-slate-600">
-              We want you to feel confident in every garment you choose. If the fit, size, or style isn't completely right for you, return or exchange it within 14 days of receipt.
+              If an item is unsuitable, contact AVEART through the official contact method on this website before sending it back. Return eligibility, time limits, condition requirements and any return-shipping cost will be assessed under the policy shown for your order and applicable consumer law. Nothing in this policy limits non-excludable statutory rights.
             </p>
             <div className="space-y-3 pt-2">
               <div className="flex items-start gap-3">
                 <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
                 <div>
-                  <strong className="text-slate-900 block font-bold">Free Size Exchanges:</strong>
-                  <span className="text-slate-600">We collect your item and deliver the replacement size free of charge across South Africa.</span>
+                  <strong className="text-slate-900 block font-bold">Size exchanges</strong>
+                  <span className="text-slate-600">An exchange depends on stock availability and the return method confirmed by customer care. Any collection, return-shipping or replacement-delivery charge will be disclosed before the exchange is arranged, unless applicable law requires otherwise.</span>
                 </div>
               </div>
               <div className="flex items-start gap-3">
                 <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
                 <div>
                   <strong className="text-slate-900 block font-bold">Garment Condition:</strong>
-                  <span className="text-slate-600">Items must be unworn, unwashed, and in their original packaging with tags intact.</span>
+                  <span className="text-slate-600">For change-of-mind requests, items should generally be unworn, unwashed, undamaged and returned with original tags and packaging where reasonably possible. Faulty, damaged, incorrect or misdescribed goods are handled in accordance with applicable consumer law and are not automatically denied because packaging is missing.</span>
                 </div>
               </div>
               <div className="flex items-start gap-3">
                 <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
                 <div>
                   <strong className="text-slate-900 block font-bold">Fast Refunds:</strong>
-                  <span className="text-slate-600">Refunds are credited directly to your bank account or payment card within 2–3 business days of return inspection.</span>
+                  <span className="text-slate-600">Once a return is approved, the refund method and processing timeframe will be confirmed. The time for funds to appear can depend on the payment provider and issuing bank; we will not promise a fixed settlement period that the provider has not confirmed.</span>
                 </div>
               </div>
             </div>
@@ -163,14 +163,14 @@ export const PolicyView: React.FC<PolicyViewProps> = ({ initialTab = 'shipping',
               Terms of Sale & Store Information
             </h2>
             <p className="font-medium text-slate-600">
-              AVEART South Africa operates under South African Consumer Protection Act (CPA) regulations. All transactions are billed in South African Rand (ZAR) and include 15% South African VAT.
+              AVEART aims to present clear product, price, payment and delivery information before checkout. Prices, taxes, delivery charges and the contracting seller’s details should be shown at the point of sale as applicable to the order. This page is not a substitute for mandatory disclosures or rights under the South African Consumer Protection Act, Electronic Communications and Transactions Act, POPIA or other applicable law.
             </p>
             <div className="space-y-3">
               <p>
-                <strong className="text-slate-900">Authenticity & Quality:</strong> All products featured in our catalog are original garments designed with premium organic cotton, European flax linen, and Japanese selvedge denim.
+                <strong className="text-slate-900">Authenticity & Quality:</strong> Product descriptions, images, sizing and fabric details are provided to help you choose an item. Colours can vary by screen, and measurements may have a small tolerance. We do not claim a particular fibre composition, origin, certification or design provenance unless that information is expressly verified in the individual product listing.
               </p>
               <p>
-                <strong className="text-slate-900">Pricing Transparency:</strong> The price shown at checkout is the complete amount you will pay. No surprise import duties or hidden handling charges.
+                <strong className="text-slate-900">Pricing Transparency:</strong> The checkout should show the order total and all known mandatory charges before you confirm payment. If a cross-border order may attract customs duties, import taxes or third-party charges, those charges and responsibility for paying them must be disclosed clearly before purchase where known and legally required.
               </p>
             </div>
           </div>
