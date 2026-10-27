@@ -62,7 +62,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate }) => {
     <div className="aveart-reference-home">
       {/* 1. HERO */}
       <section className="aveart-reference-hero">
-        <img key={heroSlides[activeHeroSlide].image} src={heroSlides[activeHeroSlide].image} alt={heroSlides[activeHeroSlide].alt} className="aveart-reference-hero-image aveart-hero-slide-fade" />
+        <img key={heroSlides[activeHeroSlide].image} src={heroSlides[activeHeroSlide].image} alt={heroSlides[activeHeroSlide].alt} className="aveart-reference-hero-image aveart-hero-slide-fade" loading="eager" fetchPriority="high" decoding="async" />
         <div className="aveart-hero-slide-indicators" aria-label={`Slide ${activeHeroSlide + 1} of ${heroSlides.length}`}>
           {heroSlides.map((slide, index) => <span key={slide.alt} className={index === activeHeroSlide ? "aveart-hero-dot active" : "aveart-hero-dot"} />)}
         </div>
@@ -134,7 +134,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate }) => {
       {/* 4. EDITORIAL SPLIT */}
       <section className="aveart-reference-editorial">
         <div className="aveart-editorial-image-wrap">
-          <img src={womenImage} alt="AVEART women’s silk midi dress editorial" />
+          <img src={womenImage} alt="AVEART women’s silk midi dress editorial" loading="lazy" decoding="async" />
         </div>
         <div className="aveart-editorial-copy">
           <p className="aveart-eyebrow">Style, your way</p>
@@ -154,17 +154,17 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate }) => {
         </div>
         <div className="aveart-category-grid">
           <button className="aveart-category-card" onClick={() => onNavigate('catalog_gender', 'women')}>
-            <img src={womenImage} alt="Women's fashion" />
+            <img src={womenImage} alt="Women's fashion" loading="lazy" decoding="async" />
             <span className="aveart-category-overlay" />
             <span className="aveart-category-copy"><strong>Women</strong><span>↗</span></span>
           </button>
           <button className="aveart-category-card" onClick={() => onNavigate('catalog_gender', 'men')}>
-            <img src={menImage} alt="Men's fashion" />
+            <img src={menImage} alt="Men's fashion" loading="lazy" decoding="async" />
             <span className="aveart-category-overlay" />
             <span className="aveart-category-copy"><strong>Men</strong><span>↗</span></span>
           </button>
           <button className="aveart-category-card" onClick={() => onNavigate('catalog_gender', 'accessories')}>
-            <img src={accessoriesImage} alt="Bags and accessories" />
+            <img src={accessoriesImage} alt="Bags and accessories" loading="lazy" decoding="async" />
             <span className="aveart-category-overlay" />
             <span className="aveart-category-copy"><strong>Accessories</strong><span>↗</span></span>
           </button>
