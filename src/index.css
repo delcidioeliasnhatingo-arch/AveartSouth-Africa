@@ -318,3 +318,57 @@ button:disabled { cursor: not-allowed; }
   .aveart-reference-home .aveart-reference-hero-content h1 { font-size: 40px; }
   .aveart-reference-footer .aveart-footer-main { grid-template-columns: 1fr 1fr; }
 }
+
+
+/* Product catalogue and detail pages — same AVEART reference design */
+.aveart-reference-catalog, .aveart-reference-product-page { color: #242824; font-family: Arial, Helvetica, sans-serif; }
+.aveart-reference-catalog > div:first-child { border-color: #e5e8e2 !important; padding-bottom: 22px !important; }
+.aveart-reference-catalog > div:first-child span, .aveart-reference-catalog > div:first-child .text-emerald-700 { color: #78936a !important; }
+.aveart-reference-catalog > div:first-child h1 { color: #242824 !important; font-size: clamp(28px, 3.5vw, 42px) !important; font-weight: 700 !important; letter-spacing: -.04em !important; }
+.aveart-reference-catalog > div:first-child p { color: #70756e !important; line-height: 1.7; }
+.aveart-reference-catalog button { border-radius: 3px; }
+.aveart-reference-catalog .bg-\[\#87977D\], .aveart-reference-catalog .bg-emerald-600 { background-color: #78936a !important; }
+.aveart-reference-catalog .hover\:bg-\[\#65775D\]:hover, .aveart-reference-catalog .hover\:bg-emerald-700:hover { background-color: #65775d !important; }
+.aveart-reference-catalog .text-emerald-700, .aveart-reference-catalog .text-emerald-600 { color: #65775d !important; }
+.aveart-reference-catalog .border-emerald-600 { border-color: #78936a !important; }
+.aveart-reference-catalog .rounded-xl, .aveart-reference-catalog .rounded-2xl { border-radius: 4px !important; }
+.aveart-reference-catalog .bg-slate-50 { background-color: #f7f8f5 !important; }
+.aveart-reference-catalog .border-slate-200 { border-color: #e5e8e2 !important; }
+.aveart-reference-product-card { border-color: #e5e8e2 !important; border-radius: 3px !important; box-shadow: none; }
+.aveart-reference-product-card:hover { border-color: #b7c5ad !important; box-shadow: 0 8px 24px rgb(36 40 36 / .08) !important; }
+.aveart-reference-product-card > div:first-child { background: #f7f8f5 !important; }
+.aveart-reference-product-card .rounded-full { border-radius: 3px !important; }
+.aveart-reference-product-card .bg-emerald-600, .aveart-reference-product-card .bg-\[\#87977D\] { background-color: #78936a !important; }
+.aveart-reference-product-card .hover\:bg-emerald-700:hover, .aveart-reference-product-card .hover\:bg-\[\#65775D\]:hover { background-color: #65775d !important; }
+.aveart-reference-product-card .text-emerald-700, .aveart-reference-product-card .text-emerald-600 { color: #65775d !important; }
+.aveart-reference-product-card .text-rose-600 { color: #65775d !important; }
+.aveart-reference-product-card .rounded-xl, .aveart-reference-product-card .rounded-lg { border-radius: 3px !important; }
+.aveart-reference-product-card h3, .aveart-reference-product-card h4 { color: #242824 !important; font-weight: 600 !important; letter-spacing: -.01em; }
+.aveart-reference-product-card .text-slate-500, .aveart-reference-product-card .text-slate-600 { color: #70756e !important; }
+.aveart-reference-product-page > div:first-child { color: #70756e !important; font-size: 11px; }
+.aveart-reference-product-page button { border-radius: 3px; }
+.aveart-reference-product-page .rounded-xl, .aveart-reference-product-page .rounded-2xl { border-radius: 3px !important; }
+.aveart-reference-product-page .border-slate-200, .aveart-reference-product-page .border-slate-100 { border-color: #e5e8e2 !important; }
+.aveart-reference-product-page .bg-slate-100, .aveart-reference-product-page .bg-slate-50 { background-color: #f7f8f5 !important; }
+.aveart-reference-product-page .text-slate-900, .aveart-reference-product-page .text-slate-800 { color: #242824 !important; }
+.aveart-reference-product-page .text-slate-500, .aveart-reference-product-page .text-slate-600 { color: #70756e !important; }
+.aveart-reference-product-page .text-emerald-700, .aveart-reference-product-page .text-emerald-600 { color: #65775d !important; }
+.aveart-reference-product-page .bg-emerald-600, .aveart-reference-product-page .bg-\[\#87977D\] { background-color: #78936a !important; }
+.aveart-reference-product-page .hover\:bg-emerald-700:hover, .aveart-reference-product-page .hover\:bg-\[\#65775D\]:hover { background-color: #65775d !important; }
+.aveart-reference-product-page .border-emerald-600 { border-color: #78936a !important; }
+.aveart-reference-product-page .shadow-sm, .aveart-reference-product-page .shadow-md { box-shadow: none !important; }
+.aveart-reference-product-page h1 { font-size: clamp(26px, 3vw, 38px) !important; font-weight: 700 !important; letter-spacing: -.04em; line-height: 1.12 !important; }
+.aveart-reference-product-page .font-black, .aveart-reference-product-page .font-extrabold { font-weight: 700 !important; }
+.aveart-reference-product-page .text-3xl { font-size: 28px !important; }
+.aveart-reference-product-page .aspect-\[3\/4\] { background: #f7f8f5 !important; }
+.aveart-reference-product-page input, .aveart-reference-product-page select, .aveart-reference-product-page textarea { border-radius: 3px !important; }
+.aveart-reference-product-page .ring-2 { --tw-ring-color: rgb(120 147 106 / .25) !important; }
+.aveart-reference-product-page .bg-emerald-50 { background-color: #f0f4ed !important; }
+.aveart-reference-product-page .text-rose-900, .aveart-reference-product-page .text-rose-700 { color: #65775d !important; }
+@media (max-width: 640px) {
+  .aveart-reference-product-page { padding-top: 20px !important; }
+  .aveart-reference-product-page .lg\:sticky { position: static; }
+  .aveart-reference-product-page .aspect-\[3\/4\] { border-radius: 3px !important; }
+  .aveart-reference-product-page .p-8 { padding: 20px !important; }
+  .aveart-reference-product-page .p-6 { padding: 16px !important; }
+}
