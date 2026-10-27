@@ -63,27 +63,27 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate }) => {
             </button>
             <button
               onClick={() => onNavigate('catalog_gender', 'women')}
-              className={`hover:text-rose-600 transition-colors whitespace-nowrap shrink-0 cursor-pointer ${
-                currentView === 'catalog_gender' ? 'text-rose-600 font-extrabold border-b-2 border-rose-500 pb-0.5' : ''
+              className={`hover:text-emerald-700 transition-colors whitespace-nowrap shrink-0 cursor-pointer ${
+                currentView === 'catalog_gender' ? 'text-emerald-700 font-extrabold border-b-2 border-emerald-600 pb-0.5' : ''
               }`}
             >
               Women
             </button>
             <button
               onClick={() => onNavigate('catalog_gender', 'men')}
-              className="hover:text-rose-600 transition-colors whitespace-nowrap shrink-0 cursor-pointer"
+              className="hover:text-emerald-700 transition-colors whitespace-nowrap shrink-0 cursor-pointer"
             >
               Men
             </button>
             <button
               onClick={() => onNavigate('catalog_gender', 'accessories')}
-              className="hover:text-rose-600 transition-colors whitespace-nowrap shrink-0 cursor-pointer"
+              className="hover:text-emerald-700 transition-colors whitespace-nowrap shrink-0 cursor-pointer"
             >
               Bags & Accessories
             </button>
             <button
               onClick={() => onNavigate('catalog_sale')}
-              className="text-rose-600 hover:text-rose-700 font-extrabold transition-colors whitespace-nowrap shrink-0 cursor-pointer flex items-center gap-1"
+              className="text-emerald-700 hover:text-rose-700 font-extrabold transition-colors whitespace-nowrap shrink-0 cursor-pointer flex items-center gap-1"
             >
               <span className="px-2 py-0.5 bg-emerald-600 text-white text-xs rounded-full font-bold shadow-xs">SALE</span>
             </button>
@@ -95,7 +95,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate }) => {
             <button
               onClick={() => setIsSearchOpen(true)}
               aria-label="Search catalog"
-              className="p-2 text-slate-600 hover:text-rose-600 hover:bg-rose-50 rounded-full transition-colors cursor-pointer"
+              className="p-2 text-slate-600 hover:text-emerald-700 hover:bg-emerald-50 rounded-full transition-colors cursor-pointer"
             >
               <Search className="w-5 h-5" />
             </button>
@@ -120,7 +120,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate }) => {
               onClick={() => onNavigate('account')}
               aria-label="Customer Account"
               className={`flex items-center gap-1.5 p-2 rounded-full transition-colors cursor-pointer ${
-                currentView === 'account' ? 'text-rose-600 bg-rose-50 ring-1 ring-emerald-200' : 'text-slate-600 hover:text-rose-600 hover:bg-rose-50'
+                currentView === 'account' ? 'text-emerald-700 bg-emerald-50 ring-1 ring-emerald-200' : 'text-slate-600 hover:text-emerald-700 hover:bg-emerald-50'
               }`}
             >
               <UserIcon className="w-5 h-5" />
@@ -135,11 +135,11 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate }) => {
             <button
               onClick={openDrawer}
               aria-label="View Shopping Bag"
-              className="relative p-2 text-slate-700 hover:text-rose-600 hover:bg-rose-50 rounded-full transition-colors cursor-pointer"
+              className="relative p-2 text-slate-700 hover:text-emerald-700 hover:bg-emerald-50 rounded-full transition-colors cursor-pointer"
             >
               <ShoppingCart className="w-5 h-5" />
               {totalItemCount > 0 && (
-                <span className="absolute top-1 right-0 min-w-[20px] h-[20px] px-1 text-[11px] font-extrabold bg-rose-500 text-white rounded-full flex items-center justify-center shadow-xs animate-bounce">
+                <span className="absolute top-1 right-0 min-w-[20px] h-[20px] px-1 text-[11px] font-extrabold bg-emerald-600 text-white rounded-full flex items-center justify-center shadow-xs animate-bounce">
                   {totalItemCount}
                 </span>
               )}
@@ -152,9 +152,9 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate }) => {
       {/* Search Overlay Modal */}
       {isSearchOpen && (
         <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm flex items-start justify-center pt-24 px-4 animate-in fade-in duration-150">
-          <div className="bg-white w-full max-w-2xl p-6 rounded-2xl shadow-2xl border border-slate-200">
+          <div className="bg-white w-full max-w-2xl p-6 rounded-xl shadow-2xl border border-slate-200">
             <div className="flex items-center justify-between pb-4 border-b border-slate-100">
-              <span className="text-xs font-bold uppercase tracking-wider text-rose-600 flex items-center gap-1.5">
+              <span className="text-xs font-bold uppercase tracking-wider text-emerald-700 flex items-center gap-1.5">
                 <Sparkles className="w-4 h-4" />
                 <span>Search Fashion Collection</span>
               </span>
@@ -176,7 +176,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate }) => {
               />
               <button
                 type="submit"
-                className="bg-rose-500 hover:bg-rose-600 text-white px-6 py-3 text-sm font-bold rounded-xl shadow-md transition-colors whitespace-nowrap cursor-pointer"
+                className="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 text-sm font-bold rounded-xl shadow-md transition-colors whitespace-nowrap cursor-pointer"
               >
                 Search
               </button>
@@ -192,7 +192,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate }) => {
                     onNavigate('catalog', term);
                     setIsSearchOpen(false);
                   }}
-                  className="px-2.5 py-1 bg-slate-100 hover:bg-rose-50 hover:text-rose-600 rounded-lg text-slate-700 font-medium transition-colors cursor-pointer"
+                  className="px-2.5 py-1 bg-slate-100 hover:bg-emerald-50 hover:text-emerald-700 rounded-lg text-slate-700 font-medium transition-colors cursor-pointer"
                 >
                   {term}
                 </button>
