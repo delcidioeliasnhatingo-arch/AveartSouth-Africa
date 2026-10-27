@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ArrowRight, Truck, ShieldCheck, Heart, Mail } from 'lucide-react';
+import { ArrowRight, Truck, ShieldCheck, Heart } from 'lucide-react';
 import { Product } from '../types/index.ts';
 import { ProductCard } from '../components/ProductCard.tsx';
 import heroImage from '../assets/images/fashion_women_linen_blazer_1792263530901.jpg';
