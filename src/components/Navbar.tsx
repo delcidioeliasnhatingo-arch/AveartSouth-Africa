@@ -28,7 +28,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate }) => {
   return (
     <>
       {/* Top South African Market Announcement Bar - Fresh & Vibrant */}
-      <div className="bg-[#f7f8f5] text-[#242824] text-xs py-2 px-4 text-center tracking-wide font-medium flex items-center justify-center gap-2 shadow-xs">
+      <div className="bg-[#78936a] text-white text-xs py-2 px-4 text-center tracking-wide font-medium flex items-center justify-center gap-2 shadow-xs">
         
         <span>Complimentary shipping on all orders · Discover the new season</span>
         <span className="hidden sm:inline bg-[#e8ece4] text-[#65775d] px-2 py-0.5 rounded-full text-[10px] font-bold uppercase">
