@@ -18,6 +18,18 @@ import { AdminHubView } from './views/AdminHubView.tsx';
 import { Order } from './types/index.ts';
 import { CookieConsent } from './components/CookieConsent.tsx';
 
+const HomeView = React.lazy(() => import('./views/HomeView.tsx').then((m) => ({ default: m.HomeView })));
+const CatalogView = React.lazy(() => import('./views/CatalogView.tsx').then((m) => ({ default: m.CatalogView })));
+const ProductDetailView = React.lazy(() => import('./views/ProductDetailView.tsx').then((m) => ({ default: m.ProductDetailView })));
+const CheckoutView = React.lazy(() => import('./views/CheckoutView.tsx').then((m) => ({ default: m.CheckoutView })));
+const OrderConfirmationView = React.lazy(() => import('./views/OrderConfirmationView.tsx').then((m) => ({ default: m.OrderConfirmationView })));
+const PaymentReturnView = React.lazy(() => import('./views/PaymentReturnView.tsx').then((m) => ({ default: m.PaymentReturnView })));
+const CustomerAccountView = React.lazy(() => import('./views/CustomerAccountView.tsx').then((m) => ({ default: m.CustomerAccountView })));
+const OrderTrackingView = React.lazy(() => import('./views/OrderTrackingView.tsx').then((m) => ({ default: m.OrderTrackingView })));
+const PolicyView = React.lazy(() => import('./views/PolicyView.tsx').then((m) => ({ default: m.PolicyView })));
+const AtelierView = React.lazy(() => import('./views/AtelierView.tsx').then((m) => ({ default: m.AtelierView })));
+const AdminHubView = React.lazy(() => import('./views/AdminHubView.tsx').then((m) => ({ default: m.AdminHubView })));
+
 export default function App() {
   const [currentView, setCurrentView] = useState<string>(() =>
     window.location.pathname.replace(/\/+$/, '') === '/payment-return' ? 'payment-return' : 'home'
@@ -52,6 +64,7 @@ export default function App() {
           <Navbar currentView={currentView} onNavigate={handleNavigate} />
 
           <main className="flex-1 w-full">
+            <React.Suspense fallback={<div className="min-h-[40vh] flex items-center justify-center text-sm text-slate-500">Loading collection…</div>}>
             {currentView === 'payment-return' && (
               <PaymentReturnView onNavigateHome={() => setCurrentView('home')} />
             )}
@@ -121,6 +134,7 @@ export default function App() {
             {currentView === 'admin' && (
               <AdminHubView onNavigateHome={() => setCurrentView('home')} />
             )}
+            </React.Suspense>
           </main>
 
           <CartDrawer onNavigateToCheckout={() => setCurrentView('checkout')} />
