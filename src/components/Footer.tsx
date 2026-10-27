@@ -24,31 +24,31 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
         
         {/* Value Props Row - Fresh, colorful, accessible */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 pb-12 mb-12 border-b border-slate-200">
-          <div className="flex items-center gap-3.5 p-4 rounded-xl bg-slate-800/60 border border-slate-700/50">
-            <div className="w-11 h-11 rounded-xl bg-emerald-500/15 text-emerald-300 flex items-center justify-center shrink-0">
+          <div className="flex items-center gap-3.5 p-4 rounded-xl bg-[#f3f6f1] border border-slate-200">
+            <div className="w-11 h-11 rounded-xl bg-[#e5ece1] text-[#5e7952] flex items-center justify-center shrink-0">
               <Truck className="w-5 h-5" />
             </div>
             <div>
-              <h5 className="text-sm font-bold text-white">Free SA Delivery</h5>
-              <p className="text-xs text-slate-400">Free delivery on all orders</p>
+              <h5 className="text-sm font-bold text-slate-900">Free SA Delivery</h5>
+              <p className="text-xs text-slate-500">Free delivery on all orders</p>
             </div>
           </div>
-          <div className="flex items-center gap-3.5 p-4 rounded-xl bg-slate-800/60 border border-slate-700/50">
-            <div className="w-11 h-11 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0">
+          <div className="flex items-center gap-3.5 p-4 rounded-xl bg-[#f3f6f1] border border-slate-200">
+            <div className="w-11 h-11 rounded-xl bg-[#e5ece1] text-[#5e7952] flex items-center justify-center shrink-0">
               <RotateCcw className="w-5 h-5" />
             </div>
             <div>
-              <h5 className="text-sm font-bold text-white">14-Day Free Returns</h5>
-              <p className="text-xs text-slate-400">Hassle-free exchanges across SA</p>
+              <h5 className="text-sm font-bold text-slate-900">14-Day Free Returns</h5>
+              <p className="text-xs text-slate-500">Hassle-free exchanges across SA</p>
             </div>
           </div>
-          <div className="flex items-center gap-3.5 p-4 rounded-xl bg-slate-800/60 border border-slate-700/50">
+          <div className="flex items-center gap-3.5 p-4 rounded-xl bg-[#f3f6f1] border border-slate-200">
             <div className="w-11 h-11 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center shrink-0">
               <ShieldCheck className="w-5 h-5" />
             </div>
             <div>
-              <h5 className="text-sm font-bold text-white">Secure Checkout</h5>
-              <p className="text-xs text-slate-400">Instant EFT, Debito Pay & Cards</p>
+              <h5 className="text-sm font-bold text-slate-900">Secure Checkout</h5>
+              <p className="text-xs text-slate-500">Instant EFT, Debito Pay & Cards</p>
             </div>
           </div>
         </div>
@@ -58,16 +58,16 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
           {/* Brand & Market */}
           <div className="md:col-span-4 space-y-4">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-xl bg-slate-800 border border-slate-700 text-white flex items-center justify-center p-1.5 shadow-sm">
-                <Logo className="w-full h-full text-white" />
+              <div className="w-8 h-8 rounded-xl bg-slate-800 border border-slate-700 text-slate-900 flex items-center justify-center p-1.5 shadow-sm">
+                <Logo className="w-full h-full text-slate-900" />
               </div>
-              <span className="text-2xl font-black tracking-tight text-white">AVEART</span>
+              <span className="text-2xl font-black tracking-tight text-slate-900">AVEART</span>
             </div>
-            <p className="text-sm text-slate-400 leading-relaxed max-w-sm">
+            <p className="text-sm text-slate-500 leading-relaxed max-w-sm">
               Fresh, accessible women's and men's fashion e-commerce store in South Africa. Thoughtful silhouettes, comfortable fabrics, and everyday style for all.
             </p>
-            <div className="text-xs text-slate-400 pt-1 space-y-1">
-              <p className="text-white font-bold">Cape Town Hub & Dispatch:</p>
+            <div className="text-xs text-slate-500 pt-1 space-y-1">
+              <p className="text-slate-900 font-bold">Cape Town Hub & Dispatch:</p>
               <p>14 Kloof Street, Suite 402, Tamboerskloof, Cape Town, 8001</p>
               <p>Customer Care: +27 (0) 21 424 8900 · hello@aveart.co.za</p>
             </div>
@@ -75,14 +75,14 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
 
           {/* Women & Men Categories */}
           <div className="md:col-span-2 space-y-3">
-            <h4 className="text-xs uppercase tracking-wider text-emerald-300 font-extrabold">
+            <h4 className="text-xs uppercase tracking-wider text-[#5e7952] font-extrabold">
               Shop Fashion
             </h4>
             <ul className="text-sm text-slate-600 space-y-2">
               <li>
                 <button
                   onClick={() => onNavigate('catalog_gender', 'women')}
-                  className="hover:text-emerald-300 transition-colors cursor-pointer text-left"
+                  className="hover:text-[#5e7952] transition-colors cursor-pointer text-left"
                 >
                   Women's Collection
                 </button>
@@ -109,7 +109,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                   className="text-emerald-600 hover:text-emerald-600 font-bold transition-colors cursor-pointer text-left flex items-center gap-1"
                 >
                   <span>Sale & Specials</span>
-                  <span className="px-1.5 py-0.2 bg-emerald-500/15 text-emerald-300 text-[10px] rounded font-bold">UP TO 40%</span>
+                  <span className="px-1.5 py-0.2 bg-[#e5ece1] text-[#5e7952] text-[10px] rounded font-bold">UP TO 40%</span>
                 </button>
               </li>
               <li>
@@ -125,7 +125,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
 
           {/* Customer Service */}
           <div className="md:col-span-2 space-y-3">
-            <h4 className="text-xs uppercase tracking-wider text-slate-400 font-bold">
+            <h4 className="text-xs uppercase tracking-wider text-slate-500 font-bold">
               Help & Policies
             </h4>
             <ul className="text-sm text-slate-600 space-y-2">
@@ -186,12 +186,12 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               <Mail className="w-3.5 h-3.5 text-emerald-600" />
               <span>Get 10% Off Your First Order</span>
             </h4>
-            <p className="text-xs text-slate-400 leading-relaxed">
+            <p className="text-xs text-slate-500 leading-relaxed">
               Subscribe for new drop alerts, flash sales, and subscriber perks across South Africa.
             </p>
             {isSubscribed ? (
-              <div className="flex items-center gap-2 p-3 bg-emerald-950/60 border border-emerald-500/50 rounded-xl text-xs text-emerald-300 font-semibold">
-                <Check className="w-4 h-4 text-emerald-400" />
+              <div className="flex items-center gap-2 p-3 bg-emerald-950/60 border border-emerald-500/50 rounded-xl text-xs text-[#5e7952] font-semibold">
+                <Check className="w-4 h-4 text-[#5e7952]" />
                 <span>You're subscribed! Use code <strong>AVEART10</strong> at checkout.</span>
               </div>
             ) : (
@@ -203,11 +203,11 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                     placeholder="Enter your email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="flex-1 bg-slate-800 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-rose-500"
+                    className="flex-1 bg-slate-800 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 placeholder-slate-500 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-rose-500"
                   />
                   <button
                     type="submit"
-                    className="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2.5 text-xs font-bold rounded-xl transition-colors shadow-md cursor-pointer"
+                    className="bg-emerald-600 hover:bg-emerald-700 text-slate-900 px-5 py-2.5 text-xs font-bold rounded-xl transition-colors shadow-md cursor-pointer"
                   >
                     Join
                   </button>
@@ -219,9 +219,9 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
         </div>
 
         {/* Bottom Bar: Copyright & Payment badges */}
-        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 gap-4">
+        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
           <p>© {new Date().getFullYear()} AVEART South Africa. All prices in South African Rand (ZAR).</p>
-          <div className="flex items-center gap-4 text-slate-400 font-medium">
+          <div className="flex items-center gap-4 text-slate-500 font-medium">
             <span>Debito Pay</span>
             <span>·</span>
             <span>Instant EFT</span>
