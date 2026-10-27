@@ -8,6 +8,34 @@ interface ProductCardProps {
   onSelect: (slug: string) => void;
 }
 
+function inferAudience(product: any): 'women' | 'men' | 'unisex' | '' {
+  // Prefer evidence in the actual product name, image filename, and product metadata.
+  // Do not trust a generic stored "women" value when it conflicts with those signals.
+  const images = [
+    product.primary_image, product.image_url, product.imageUrl,
+    ...(Array.isArray(product.images) ? product.images : []),
+    ...(Array.isArray(product.variants) ? product.variants.map((v: any) => v.image_url) : []),
+  ].filter(Boolean).join(' ');
+  const evidence = [
+    product.title, product.name, product.subtitle, product.category_name,
+    product.category, product.category_slug, product.gender, product.audience,
+    ...(Array.isArray(product.tags) ? product.tags : []),
+    images,
+  ].filter(Boolean).join(' ').toLowerCase().replace(/[_-]+/g, ' ');
+  if (/\b(unisex|all gender|gender neutral)\b/.test(evidence)) return 'unisex';
+
+  // Strong men's signals in product labels or image filenames take precedence.
+  if (/\b(men|mens|men's|man|male|menswear|male clothing)\b/.test(evidence)) return 'men';
+  if (/fashion men|menswear|\bmen\b/.test(images.toLowerCase())) return 'men';
+
+  // Only mark women when the name/image/category gives a positive signal.
+  if (/\b(women|womens|women's|woman|female|womenswear)\b/.test(evidence)) return 'women';
+  if (/fashion women|womenswear|\bwomen\b/.test(images.toLowerCase())) return 'women';
+
+  // Ambiguous items remain unlabelled instead of being incorrectly marked WOMEN.
+  return '';
+}
+
 export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect }) => {
   const { addItem } = useCart();
   const [selectedSize, setSelectedSize] = useState<string | null>(
@@ -19,14 +47,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect }) =
   // Never use another product's photo as a fallback.
   const displayImage = product.primary_image || '';
 
-  const genderValue = String(product.gender || '').toLowerCase();
-  const audienceTag = genderValue.includes('unisex')
-    ? 'UNISEX'
-    : (genderValue.includes('women') || genderValue.includes('woman') || genderValue.includes('female'))
-      ? 'WOMEN'
-      : (genderValue.includes('men') || genderValue.includes('man') || genderValue.includes('male'))
-        ? 'MEN'
-        : '';
+  const inferredAudience = inferAudience(product);
+  const audienceTag = inferredAudience ? inferredAudience.toUpperCase() : '';
 
   const isLowStock = product.total_stock !== undefined && product.total_stock > 0 && product.total_stock <= 3;
   const isOutOfStock = product.total_stock !== undefined && product.total_stock <= 0;
@@ -181,7 +203,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect }) =
         <div>
           {/* Metadata (Gender · Category) */}
           <div className="flex items-center gap-1.5 text-xs text-emerald-700 uppercase font-bold tracking-wider">
-            <span>{product.gender || 'Fashion'}</span>
+            <span>{inferredAudience ? inferredAudience : 'Fashion'}</span>
             <span aria-hidden="true">·</span>
             <span>{product.category_name}</span>
           </div>
