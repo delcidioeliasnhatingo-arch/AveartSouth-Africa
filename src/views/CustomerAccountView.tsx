@@ -117,7 +117,7 @@ export const CustomerAccountView: React.FC<CustomerAccountViewProps> = ({ onTrac
         
         {/* Header */}
         <div className="text-center space-y-2">
-          <span className="text-xs uppercase tracking-wider text-rose-600 font-extrabold flex items-center justify-center gap-1.5">
+          <span className="text-xs uppercase tracking-wider text-[#65775D] font-extrabold flex items-center justify-center gap-1.5">
             <Sparkles className="w-3.5 h-3.5" />
             <span>Customer Portal</span>
           </span>
@@ -144,7 +144,7 @@ export const CustomerAccountView: React.FC<CustomerAccountViewProps> = ({ onTrac
                 <strong className="text-slate-900 block font-bold text-xs">Admin Console</strong>
                 <span className="text-[11px] text-slate-500">admin@aveart.design · Full metrics & order controls</span>
               </div>
-              <span className="text-xs text-rose-600 font-bold">Sign in →</span>
+              <span className="text-xs text-[#65775D] font-bold">Sign in →</span>
             </button>
 
             <button
@@ -156,7 +156,7 @@ export const CustomerAccountView: React.FC<CustomerAccountViewProps> = ({ onTrac
                 <strong className="text-slate-900 block font-bold text-xs">Store Manager</strong>
                 <span className="text-[11px] text-slate-500">curator@aveart.design · Inventory & fulfillment</span>
               </div>
-              <span className="text-xs text-rose-600 font-bold">Sign in →</span>
+              <span className="text-xs text-[#65775D] font-bold">Sign in →</span>
             </button>
 
             <button
@@ -168,7 +168,7 @@ export const CustomerAccountView: React.FC<CustomerAccountViewProps> = ({ onTrac
                 <strong className="text-slate-900 block font-bold text-xs">Customer Account</strong>
                 <span className="text-[11px] text-slate-500">collector@aveart.design · Orders & saved addresses</span>
               </div>
-              <span className="text-xs text-rose-600 font-bold">Sign in →</span>
+              <span className="text-xs text-[#65775D] font-bold">Sign in →</span>
             </button>
           </div>
         </div>
@@ -183,7 +183,7 @@ export const CustomerAccountView: React.FC<CustomerAccountViewProps> = ({ onTrac
             }}
             className={`flex-1 py-3 transition-colors cursor-pointer ${
               authMode === 'login'
-                ? 'border-b-2 border-rose-500 text-rose-600 font-extrabold'
+                ? 'border-b-2 border-[#87977D] text-[#65775D] font-extrabold'
                 : 'text-slate-500 hover:text-slate-800'
             }`}
           >
@@ -197,7 +197,7 @@ export const CustomerAccountView: React.FC<CustomerAccountViewProps> = ({ onTrac
             }}
             className={`flex-1 py-3 transition-colors cursor-pointer ${
               authMode === 'register'
-                ? 'border-b-2 border-rose-500 text-rose-600 font-extrabold'
+                ? 'border-b-2 border-[#87977D] text-[#65775D] font-extrabold'
                 : 'text-slate-500 hover:text-slate-800'
             }`}
           >
@@ -217,7 +217,7 @@ export const CustomerAccountView: React.FC<CustomerAccountViewProps> = ({ onTrac
                   placeholder="e.g. Julian Ross"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-900 font-medium focus:bg-white focus:ring-2 focus:ring-rose-500"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-900 font-medium focus:bg-white focus:ring-2 focus:ring-[#87977D]"
                 />
               </div>
 
@@ -228,7 +228,7 @@ export const CustomerAccountView: React.FC<CustomerAccountViewProps> = ({ onTrac
                   placeholder="+27 (0) 82 555 0199"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-900 font-medium focus:bg-white focus:ring-2 focus:ring-rose-500"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-900 font-medium focus:bg-white focus:ring-2 focus:ring-[#87977D]"
                 />
               </div>
             </>
@@ -242,7 +242,7 @@ export const CustomerAccountView: React.FC<CustomerAccountViewProps> = ({ onTrac
               placeholder="customer@domain.co.za"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-900 font-medium focus:bg-white focus:ring-2 focus:ring-rose-500"
+              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-900 font-medium focus:bg-white focus:ring-2 focus:ring-[#87977D]"
             />
           </div>
 
@@ -255,7 +255,7 @@ export const CustomerAccountView: React.FC<CustomerAccountViewProps> = ({ onTrac
               placeholder="Minimum 8 characters"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-900 font-medium focus:bg-white focus:ring-2 focus:ring-rose-500"
+              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-900 font-medium focus:bg-white focus:ring-2 focus:ring-[#87977D]"
             />
           </div>
 
@@ -269,7 +269,7 @@ export const CustomerAccountView: React.FC<CustomerAccountViewProps> = ({ onTrac
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full bg-rose-500 text-white py-3.5 font-bold uppercase tracking-wider rounded-xl hover:bg-rose-600 disabled:opacity-50 transition-all shadow-md hover:shadow-lg cursor-pointer"
+            className="w-full bg-[#87977D] text-white py-3.5 font-bold uppercase tracking-wider rounded-xl hover:bg-[#65775D] disabled:opacity-50 transition-all shadow-md hover:shadow-lg cursor-pointer"
           >
             {isSubmitting ? 'Verifying...' : authMode === 'login' ? 'Sign In' : 'Create Account'}
           </button>
@@ -284,9 +284,9 @@ export const CustomerAccountView: React.FC<CustomerAccountViewProps> = ({ onTrac
     <div className="max-w-7xl mx-auto px-6 py-10 space-y-10">
       
       {/* Account Overview Header */}
-      <div className="bg-white border border-slate-200 p-8 rounded-3xl shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
+      <div className="bg-white border border-slate-200 p-8 rounded-2xl shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div className="flex items-center gap-4">
-          <div className="w-14 h-14 bg-rose-50 text-rose-600 rounded-2xl flex items-center justify-center border border-rose-100 shadow-xs">
+          <div className="w-14 h-14 bg-rose-50 text-[#65775D] rounded-2xl flex items-center justify-center border border-rose-100 shadow-xs">
             <User className="w-7 h-7" />
           </div>
           <div>
@@ -306,7 +306,7 @@ export const CustomerAccountView: React.FC<CustomerAccountViewProps> = ({ onTrac
 
         <button
           onClick={logout}
-          className="flex items-center gap-2 px-4 py-2.5 border border-slate-200 hover:border-rose-500 hover:text-rose-600 rounded-xl text-xs font-bold uppercase tracking-wider text-slate-700 transition-colors self-start md:self-auto cursor-pointer"
+          className="flex items-center gap-2 px-4 py-2.5 border border-slate-200 hover:border-[#87977D] hover:text-[#65775D] rounded-xl text-xs font-bold uppercase tracking-wider text-slate-700 transition-colors self-start md:self-auto cursor-pointer"
         >
           <LogOut className="w-4 h-4" />
           <span>Sign Out</span>
@@ -338,7 +338,7 @@ export const CustomerAccountView: React.FC<CustomerAccountViewProps> = ({ onTrac
               ))}
             </div>
           ) : orders.length === 0 ? (
-            <div className="bg-white border border-slate-200 rounded-3xl p-10 text-center space-y-3 shadow-sm">
+            <div className="bg-white border border-slate-200 rounded-2xl p-10 text-center space-y-3 shadow-sm">
               <Package className="w-8 h-8 text-slate-400 mx-auto" />
               <p className="text-base font-bold text-slate-900">No Orders Yet</p>
               <p className="text-xs text-slate-500 max-w-xs mx-auto">
@@ -379,7 +379,7 @@ export const CustomerAccountView: React.FC<CustomerAccountViewProps> = ({ onTrac
 
                       <button
                         onClick={() => onTrackOrder(ord.order_number)}
-                        className="text-xs text-rose-600 hover:text-rose-700 hover:underline font-bold cursor-pointer"
+                        className="text-xs text-[#65775D] hover:text-rose-700 hover:underline font-bold cursor-pointer"
                       >
                         Track Status →
                       </button>
@@ -418,7 +418,7 @@ export const CustomerAccountView: React.FC<CustomerAccountViewProps> = ({ onTrac
                     <span className="text-slate-500">
                       Waybill: {ord.tracking_number || 'Awaiting Dispatch Scan'}
                     </span>
-                    <span className="font-mono tabular-nums font-black text-rose-600 text-sm">
+                    <span className="font-mono tabular-nums font-black text-[#65775D] text-sm">
                       Total: {formatZAR(ord.total_amount)}
                     </span>
                   </div>
@@ -442,7 +442,7 @@ export const CustomerAccountView: React.FC<CustomerAccountViewProps> = ({ onTrac
             {!isAddingAddress && (
               <button
                 onClick={() => setIsAddingAddress(true)}
-                className="flex items-center gap-1 text-xs text-rose-600 hover:text-rose-700 hover:underline font-bold cursor-pointer"
+                className="flex items-center gap-1 text-xs text-[#65775D] hover:text-rose-700 hover:underline font-bold cursor-pointer"
               >
                 <Plus className="w-3.5 h-3.5" />
                 <span>Add</span>
@@ -463,7 +463,7 @@ export const CustomerAccountView: React.FC<CustomerAccountViewProps> = ({ onTrac
                   required
                   value={newAddr.recipientName}
                   onChange={(e) => setNewAddr({ ...newAddr, recipientName: e.target.value })}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-900 focus:bg-white focus:ring-2 focus:ring-rose-500"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-900 focus:bg-white focus:ring-2 focus:ring-[#87977D]"
                 />
               </div>
               <div>
@@ -473,7 +473,7 @@ export const CustomerAccountView: React.FC<CustomerAccountViewProps> = ({ onTrac
                   required
                   value={newAddr.street}
                   onChange={(e) => setNewAddr({ ...newAddr, street: e.target.value })}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-900 focus:bg-white focus:ring-2 focus:ring-rose-500"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-900 focus:bg-white focus:ring-2 focus:ring-[#87977D]"
                 />
               </div>
               <div className="grid grid-cols-2 gap-2">
@@ -484,7 +484,7 @@ export const CustomerAccountView: React.FC<CustomerAccountViewProps> = ({ onTrac
                     required
                     value={newAddr.city}
                     onChange={(e) => setNewAddr({ ...newAddr, city: e.target.value })}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-900 focus:bg-white focus:ring-2 focus:ring-rose-500"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-900 focus:bg-white focus:ring-2 focus:ring-[#87977D]"
                   />
                 </div>
                 <div>
@@ -494,7 +494,7 @@ export const CustomerAccountView: React.FC<CustomerAccountViewProps> = ({ onTrac
                     required
                     value={newAddr.state}
                     onChange={(e) => setNewAddr({ ...newAddr, state: e.target.value })}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-900 focus:bg-white focus:ring-2 focus:ring-rose-500"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-900 focus:bg-white focus:ring-2 focus:ring-[#87977D]"
                   />
                 </div>
               </div>
@@ -506,7 +506,7 @@ export const CustomerAccountView: React.FC<CustomerAccountViewProps> = ({ onTrac
                     required
                     value={newAddr.postalCode}
                     onChange={(e) => setNewAddr({ ...newAddr, postalCode: e.target.value })}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-900 focus:bg-white focus:ring-2 focus:ring-rose-500"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-900 focus:bg-white focus:ring-2 focus:ring-[#87977D]"
                   />
                 </div>
                 <div>
@@ -516,7 +516,7 @@ export const CustomerAccountView: React.FC<CustomerAccountViewProps> = ({ onTrac
                     required
                     value={newAddr.country}
                     onChange={(e) => setNewAddr({ ...newAddr, country: e.target.value })}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-900 focus:bg-white focus:ring-2 focus:ring-rose-500"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-900 focus:bg-white focus:ring-2 focus:ring-[#87977D]"
                   />
                 </div>
               </div>
@@ -524,7 +524,7 @@ export const CustomerAccountView: React.FC<CustomerAccountViewProps> = ({ onTrac
               <div className="pt-2 flex gap-2">
                 <button
                   type="submit"
-                  className="flex-1 bg-rose-500 text-white py-2.5 font-bold uppercase tracking-wider rounded-xl hover:bg-rose-600 transition-colors cursor-pointer"
+                  className="flex-1 bg-[#87977D] text-white py-2.5 font-bold uppercase tracking-wider rounded-xl hover:bg-[#65775D] transition-colors cursor-pointer"
                 >
                   Save Address
                 </button>
@@ -545,11 +545,11 @@ export const CustomerAccountView: React.FC<CustomerAccountViewProps> = ({ onTrac
               <div
                 key={addr.id}
                 className={`bg-white border rounded-2xl p-4 text-xs space-y-1 relative shadow-sm ${
-                  addr.is_default ? 'border-rose-500 ring-1 ring-rose-500 bg-rose-50/20' : 'border-slate-200'
+                  addr.is_default ? 'border-[#87977D] ring-1 ring-[#87977D] bg-[#F7F8F5]' : 'border-slate-200'
                 }`}
               >
                 {addr.is_default === 1 && (
-                  <span className="text-[10px] uppercase font-bold text-rose-600 tracking-wider block">
+                  <span className="text-[10px] uppercase font-bold text-[#65775D] tracking-wider block">
                     Default Delivery Address
                   </span>
                 )}
