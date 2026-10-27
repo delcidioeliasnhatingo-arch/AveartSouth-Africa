@@ -318,7 +318,7 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
             <div className="flex items-center gap-2 text-xs uppercase tracking-wider text-emerald-700 font-bold">
               <span>Fabric & Design Highlights</span>
             </div>
-            <p className="text-sm text-slate-600 leading-relaxed font-medium">
+            <p className="text-sm text-slate-600 leading-relaxed font-medium whitespace-pre-line">
               {product.description}
             </p>
             <div className="pt-3 text-xs text-slate-500 flex items-center justify-between border-t border-slate-100 font-medium">
