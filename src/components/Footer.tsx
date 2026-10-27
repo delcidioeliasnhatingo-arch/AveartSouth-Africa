@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowUpRight, Instagram, Mail } from 'lucide-react';
+import { ArrowUpRight, Instagram } from 'lucide-react';
 import { Logo } from './Logo.tsx';
 
 interface FooterProps {
