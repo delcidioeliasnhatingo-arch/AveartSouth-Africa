@@ -428,3 +428,41 @@ button:disabled { cursor: not-allowed; }
 @media (max-width: 640px) {
   .aveart-reference-product-page h1 { font-size: 32px !important; }
 }
+
+
+/* Automatic AVEART hero carousel */
+.aveart-reference-hero { position: relative; overflow: hidden; }
+.aveart-reference-hero-image { transition: opacity .7s ease; }
+.aveart-hero-slide-fade { animation: aveartHeroFadeIn .8s ease both; }
+.aveart-hero-slide-indicators {
+  position: absolute;
+  z-index: 3;
+  left: 50%;
+  bottom: 22px;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  pointer-events: none;
+}
+.aveart-hero-dot {
+  display: block;
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 55%);
+  box-shadow: 0 1px 5px rgb(0 0 0 / 20%);
+  transition: width .25s ease, background-color .25s ease;
+}
+.aveart-hero-dot.active {
+  width: 22px;
+  border-radius: 999px;
+  background: #fff;
+}
+@keyframes aveartHeroFadeIn {
+  from { opacity: .35; }
+  to { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .aveart-hero-slide-fade { animation: none; }
+}
