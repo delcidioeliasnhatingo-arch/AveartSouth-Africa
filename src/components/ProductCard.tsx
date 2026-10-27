@@ -59,7 +59,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect }) =
   return (
     <article
       onClick={() => onSelect(product.slug)}
-      className="group flex flex-col bg-white border border-slate-200 rounded-xl overflow-hidden cursor-pointer hover:shadow-lg hover:border-[#b7c5ad] transition-all duration-200"
+      className="aveart-reference-product-card group flex flex-col bg-white border border-slate-200 rounded-xl overflow-hidden cursor-pointer hover:shadow-lg hover:border-[#b7c5ad] transition-all duration-200"
     >
       {/* 3:4 Proportional Fashion Image Container */}
       <div className="relative aspect-[3/4] bg-[#f5f6f2] overflow-hidden">
