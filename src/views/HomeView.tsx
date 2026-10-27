@@ -4,6 +4,7 @@ import { Product } from '../types/index.ts';
 import { ProductCard } from '../components/ProductCard.tsx';
 import heroImage from '../assets/images/Editorial streetwear com duplas e sombras diagonais.png';
 import womenImage from '../assets/images/fashion_women_silk_midi_dress_1792263530827.jpg';
+import neutralEditorialImage from '../assets/images/Retrato urbano em tons neutros.png';
 import menImage from '../assets/images/fashion_men_wool_overshirt_1792263531608.jpg';
 import accessoriesImage from '../assets/images/fashion_acc_leather_tote_1792263547555.jpg';
 
@@ -21,7 +22,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate }) => {
 
   const heroSlides = [
     { image: heroImage, alt: 'AVEART fashion editorial with modern streetwear' },
-    { image: womenImage, alt: 'AVEART women’s silk midi dress from the collection' },
+    { image: neutralEditorialImage, alt: 'AVEART timeless neutral-toned fashion editorial' },
   ];
 
   useEffect(() => {
