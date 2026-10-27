@@ -1,7 +1,7 @@
 const PRODUCT_API = "https://aveart-products-public.delcidioeliasnhatingo.workers.dev/api/products";
 
 function descriptionForProduct(product: any): string {
-  if (typeof product.description === "string" && product.description.trim()) return product.description;
+  if (typeof product.description === "string" && product.description.trim()) return product.description.replace(/\\n/g, "\n");
   const title = String(product.title ?? product.name ?? "").toLowerCase();
   const descriptions: Array<[RegExp, string]> = [
     [/suede.*t.?shirt/, "A modern everyday T-shirt with a soft suede-inspired finish and a relaxed silhouette. Easy to style with denim, tailored trousers or layered streetwear looks."],
