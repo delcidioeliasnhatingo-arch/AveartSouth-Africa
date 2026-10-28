@@ -91,7 +91,7 @@ function normalizeProduct(raw: any, includeGallery = false) {
 
 export default async function handler(req: any, res: any) {
   try {
-    const response = await fetch(PRODUCT_API, { headers: { Accept: "application/json" } });
+    const response = await fetch(PRODUCT_API, { cache: "no-store", headers: { Accept: "application/json", "Cache-Control": "no-cache" } });
     if (!response.ok) throw new Error(`Cloudflare product API returned ${response.status}`);
     const payload = await response.json();
     const rawProducts = Array.isArray(payload) ? payload : Array.isArray(payload?.products) ? payload.products : Array.isArray(payload?.data) ? payload.data : [];
@@ -120,8 +120,8 @@ export default async function handler(req: any, res: any) {
     else if (q.sort === "price_desc") products.sort((a: any, b: any) => b.base_price - a.base_price);
     else products.sort((a: any, b: any) => Number(b.is_featured ?? b.featured ?? 0) - Number(a.is_featured ?? a.featured ?? 0));
 
-    res.setHeader("Cache-Control", "s-maxage=120, stale-while-revalidate=600");
-    res.setHeader("CDN-Cache-Control", "public, s-maxage=120, stale-while-revalidate=600");
+    res.setHeader("Cache-Control", "no-store, max-age=0, must-revalidate");
+    res.setHeader("CDN-Cache-Control", "no-store");
     return res.status(200).json(products);
   } catch (error: any) {
     console.error("AVEART products upstream request failed:", error?.message || error);
