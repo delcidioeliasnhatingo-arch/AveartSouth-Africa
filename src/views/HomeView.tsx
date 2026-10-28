@@ -33,10 +33,23 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate }) => {
   }, []);
 
   useEffect(() => {
-    fetch('/api/products')
-      .then((r) => r.json())
+    fetch('/api/products', { cache: 'no-store' })
+      .then((r) => {
+        if (!r.ok) throw new Error(`Product catalogue returned HTTP ${r.status}`);
+        return r.json();
+      })
       .then((productsData) => {
-        setProducts(Array.isArray(productsData) ? productsData : []);
+        const liveProducts = Array.isArray(productsData)
+          ? productsData
+          : Array.isArray(productsData?.products)
+          ? productsData.products
+          : Array.isArray(productsData?.data)
+          ? productsData.data
+          : [];
+        setProducts(liveProducts.filter((product: any) =>
+          product && (product.title || product.name) &&
+          Number(product.base_price ?? product.price ?? 0) > 0
+        ));
       })
       .catch((err) => console.error('Error fetching home data:', err))
       .finally(() => setLoading(false));
