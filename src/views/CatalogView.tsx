@@ -81,10 +81,20 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
       params.append('minPrice', '2500');
     }
 
-    fetch(`/api/products?${params.toString()}`)
-      .then((r) => r.json())
+    fetch(`/api/products?${params.toString()}`, { cache: 'no-store' })
+      .then((r) => {
+        if (!r.ok) throw new Error(`Product catalogue returned HTTP ${r.status}`);
+        return r.json();
+      })
       .then((data) => {
-        setProducts(data);
+        const liveProducts = Array.isArray(data)
+          ? data
+          : Array.isArray(data?.products)
+          ? data.products
+          : Array.isArray(data?.data)
+          ? data.data
+          : [];
+        setProducts(liveProducts);
       })
       .catch((err) => console.error('Failed to load products:', err))
       .finally(() => setLoading(false));
