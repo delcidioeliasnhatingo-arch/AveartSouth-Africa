@@ -99,9 +99,9 @@ export default async function handler(req: any, res: any) {
 
     // Read the public catalogue straight from PostgREST. Avoid the old RPC/Cloudflare
     // proxy path, which was timing out while serializing large base64 product images.
-    // Image blobs are deliberately excluded here so the product list stays fast.
+    // The gallery JSON is excluded to avoid sending duplicate image payloads; the primary image URL is retained.
     const query = new URLSearchParams({
-      select: "id,name,slug,description,category,price,stock,sku,status,sizes,colors,variants,created_at",
+      select: "id,name,slug,description,category,price,stock,sku,status,image_url,sizes,colors,variants,created_at",
       status: "in.(active,ativo,published)",
       order: "created_at.desc",
     });
