@@ -85,7 +85,7 @@ export default async function handler(req: any, res: any) {
     const supabaseKey = process.env.SUPABASE_ANON_KEY || process.env.VITE_SUPABASE_ANON_KEY || "";
     if (!supabaseUrl || !supabaseKey) throw new Error("Supabase public configuration is missing.");
 
-    const columns = "id,name,slug,description,category,price,stock,sku,status,sizes,colors,variants,created_at";
+    const columns = "id,name,slug,description,category,price,stock,sku,status,image_url,sizes,colors,variants,created_at";
     const query = new URLSearchParams({
       select: columns,
       status: "in.(active,ativo,published)",
