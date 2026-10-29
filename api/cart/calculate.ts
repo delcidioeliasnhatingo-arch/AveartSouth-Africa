@@ -61,7 +61,9 @@ export default async function handler(req: any, res: any) {
     // Use the same published Supabase-backed catalogue as the storefront. The old
     // Cloudflare products endpoint had a separate catalogue, so valid AVEART items
     // were not found and the checkout subtotal incorrectly became R 0,00.
-    const response = await fetch("/api/products", { headers: { Accept: "application/json" } });
+    const forwardedProto = String(req.headers?.["x-forwarded-proto"] || "https").split(",")[0].trim();
+    const host = String(req.headers?.host || "aveartgallery.store");
+    const response = await fetch(`${forwardedProto}://${host}/api/products`, { headers: { Accept: "application/json" } });
     if (!response.ok) throw new Error(`Store product API returned ${response.status}`);
     const data = await response.json();
     const products = (Array.isArray(data) ? data : []).map(normalizeProduct);
