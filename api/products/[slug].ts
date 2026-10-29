@@ -86,10 +86,11 @@ export default async function handler(req: any, res: any) {
     if (!supabaseUrl || !supabaseKey) throw new Error("Supabase public configuration is missing.");
 
     const columns = "id,name,slug,description,category,price,stock,sku,status,image_url,sizes,colors,variants,created_at";
+    const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(slug);
     const query = new URLSearchParams({
       select: columns,
       status: "in.(active,ativo,published)",
-      or: `(slug.eq.${slug},id.eq.${slug})`,
+      ...(isUuid ? { id: `eq.${slug}` } : { slug: `eq.${slug}` }),
       limit: "1",
     });
     const response = await fetch(`${supabaseUrl}/rest/v1/products?${query.toString()}`, {
