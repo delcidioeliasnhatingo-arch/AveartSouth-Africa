@@ -116,7 +116,6 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
       if (Array.isArray(parsed)) { setProducts(parsed); setLoading(false); }
     } catch {}
     const controller = new AbortController();
-    const timer = window.setTimeout(() => controller.abort(), 6500);
     fetchProductsWithFallback(requestUrl, controller.signal)
       .then((r) => {
         if (!r.ok) throw new Error(`Product catalogue returned HTTP ${r.status}`);
@@ -136,8 +135,8 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
         }
       })
       .catch((err) => { if (err?.name !== 'AbortError') console.error('Failed to load products:', err); })
-      .finally(() => { window.clearTimeout(timer); setLoading(false); });
-    return () => { window.clearTimeout(timer); controller.abort(); };
+      .finally(() => { setLoading(false); });
+    return () => { controller.abort(); };
   }, [selectedGender, selectedCategory, searchQuery, inStockOnly, onlySale, sortOption, priceRange]);
 
   const resetFilters = () => {
