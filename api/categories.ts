@@ -2,7 +2,7 @@ const PRODUCT_API = "https://aveart-products-public.delcidioeliasnhatingo.worker
 
 export default async function handler(_req: any, res: any) {
   try {
-    const response = await fetch(PRODUCT_API, { headers: { Accept: "application/json" } });
+    const response = await fetch(PRODUCT_API, { next: { revalidate: 300 }, headers: { Accept: "application/json" } } as any);
     if (!response.ok) throw new Error(`Cloudflare product API returned ${response.status}`);
     const payload = await response.json() as any;
     const products = Array.isArray(payload) ? payload : Array.isArray(payload?.products) ? payload.products : Array.isArray(payload?.data) ? payload.data : [];
