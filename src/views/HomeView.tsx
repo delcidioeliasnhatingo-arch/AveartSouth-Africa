@@ -8,6 +8,26 @@ import neutralEditorialImage from '../assets/images/Retrato urbano em tons neutr
 import menImage from '../assets/images/fashion_men_wool_overshirt_1792263531608.jpg';
 import accessoriesImage from '../assets/images/fashion_acc_leather_tote_1792263547555.jpg';
 
+const PUBLIC_PRODUCTS_URL = 'https://aveart-products-public.delcidioeliasnhatingo.workers.dev/api/products';
+
+async function fetchProductsWithFallback(url: string, signal: AbortSignal): Promise<Response> {
+  let lastError: unknown;
+  for (const endpoint of [url, PUBLIC_PRODUCTS_URL]) {
+    try {
+      const response = await fetch(endpoint, { signal, headers: { Accept: 'application/json' } });
+      if (!response.ok) { lastError = new Error(`Product API returned HTTP ${response.status}`); continue; }
+      const data = await response.clone().json();
+      const rows = Array.isArray(data) ? data : Array.isArray(data?.products) ? data.products : Array.isArray(data?.data) ? data.data : [];
+      if (rows.length) return response;
+      lastError = new Error('Product API returned an empty catalogue');
+    } catch (error: any) {
+      if (error?.name === 'AbortError') throw error;
+      lastError = error;
+    }
+  }
+  throw lastError instanceof Error ? lastError : new Error('Unable to load AVEART products');
+}
+
 interface HomeViewProps {
   onNavigate: (view: string, param?: string) => void;
 }
@@ -44,7 +64,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate }) => {
   useEffect(() => {
     const controller = new AbortController();
     const timer = window.setTimeout(() => controller.abort(), 6500);
-    fetch('/api/products', { signal: controller.signal })
+    fetchProductsWithFallback('/api/products', controller.signal)
       .then((r) => {
         if (!r.ok) throw new Error(`Product catalogue returned HTTP ${r.status}`);
         return r.json();
