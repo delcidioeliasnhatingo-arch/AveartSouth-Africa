@@ -91,7 +91,10 @@ function normalizeProduct(raw: any, includeGallery = false) {
 
 export default async function handler(req: any, res: any) {
   try {
-    const response = await fetch(PRODUCT_API, { next: { revalidate: 60 }, headers: { Accept: "application/json" } } as any);
+    const supabaseUrl = String(process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL || "").replace(/\/$/, "");
+    const supabaseKey = process.env.SUPABASE_ANON_KEY || process.env.VITE_SUPABASE_ANON_KEY || "";
+    const upstreamUrl = supabaseUrl && supabaseKey ? `${supabaseUrl}/rest/v1/rpc/get_public_products` : PRODUCT_API;
+    const response = await fetch(upstreamUrl, { next: { revalidate: 60 }, headers: { Accept: "application/json", ...(supabaseKey ? { apikey: supabaseKey, Authorization: `Bearer ${supabaseKey}` } : {}) } } as any);
     const responseText = await response.text();
     if (!response.ok) throw new Error(`Cloudflare product API returned ${response.status}: ${responseText.slice(0, 500)}`);
     const payload = JSON.parse(responseText);
