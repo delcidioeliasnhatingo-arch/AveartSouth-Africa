@@ -74,6 +74,12 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({ onBackToBag, onOrder
     setIsSubmitting(true);
 
     try {
+      if (calculation && !calculation.isValid) {
+        throw new Error(calculation.errors?.join(" ") || "Please check the items in your bag and try again.");
+      }
+      if (!calculation || !Number.isFinite(calculation.totalAmount) || calculation.totalAmount <= 0) {
+        throw new Error("The order total could not be calculated. Please refresh your bag and try again.");
+      }
       // 1. Create order on backend (recalculates server-side in ZAR & reserves inventory)
       const orderPayload = {
         items: items.map((i) => ({ variantId: i.variantId, quantity: i.quantity })),
@@ -108,7 +114,7 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({ onBackToBag, onOrder
         const rawError = await orderRes.text();
         let errorData: any = {};
         try { errorData = JSON.parse(rawError); } catch { /* API may return HTML when misconfigured */ }
-        throw new Error(errorData.error || 'Could not create your order. Please check your details and try again.');
+        throw new Error([errorData.error, errorData.details].filter(Boolean).join(": ") || 'Could not create your order. Please check your details and try again.');
       }
 
       const orderData = await orderRes.json();
@@ -323,7 +329,7 @@ export const CheckoutView: React.FC<CheckoutViewProps> = ({ onBackToBag, onOrder
               {isSubmitting
                 ? 'Processing Authorization...'
                 : paymentProvider === 'debito_pay'
-                ? `Pay with Debito Pay · ${formatZAR(Math.max(0, (calculation?.subtotal || 0) - (calculation?.discountAmount || 0) + (calculation?.taxAmount || 0)))}`
+                ? `Pay with Debito Pay · ${formatZAR(calculation?.totalAmount || 0)}`
                 : `Authorize Card · ${formatZAR(calculation?.totalAmount || 0)}`}
             </span>
           </button>
