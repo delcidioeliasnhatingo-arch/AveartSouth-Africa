@@ -41,7 +41,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate }) => {
             aria-label="AVEART home"
             className="flex items-center gap-3 text-slate-900 hover:text-emerald-700 transition-colors whitespace-nowrap shrink-0 text-left cursor-pointer group"
           >
-            <Logo size="clamp(88px, 9vw, 130px)" className="h-auto max-h-[62px] sm:max-h-[80px] object-contain" />
+            <Logo size="clamp(140px, 14vw, 210px)" className="h-auto max-h-[86px] sm:max-h-[104px] object-contain" />
             <span className="text-[20px] sm:text-[29px] font-bold tracking-[0.12em] sm:tracking-[0.18em]">AVEART</span>
           </button>
 
