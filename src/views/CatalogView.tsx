@@ -18,9 +18,16 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
   initialSale,
   onSelectProduct,
 }) => {
-  const [products, setProducts] = useState<Product[]>([]);
+  const initialProductsKey = 'aveart:catalog:v1:' + (typeof window !== 'undefined' ? window.location.search : '');
+  const [products, setProducts] = useState<Product[]>(() => {
+    try { const value = localStorage.getItem(initialProductsKey); const parsed = value ? JSON.parse(value) : []; return Array.isArray(parsed) ? parsed : []; }
+    catch { return []; }
+  });
   const [categories, setCategories] = useState<Category[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(() => {
+    try { return !Array.isArray(JSON.parse(localStorage.getItem(initialProductsKey) || 'null')); }
+    catch { return true; }
+  });
 
   // Filters state
   const [selectedGender, setSelectedGender] = useState<string>(initialGender || 'all');
@@ -81,7 +88,16 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
       params.append('minPrice', '2500');
     }
 
-    fetch(`/api/products?${params.toString()}`, { cache: 'no-store' })
+    const requestUrl = `/api/products?${params.toString()}`;
+    const cacheKey = 'aveart:catalog:v1:' + requestUrl;
+    try {
+      const cached = localStorage.getItem(cacheKey);
+      const parsed = cached ? JSON.parse(cached) : null;
+      if (Array.isArray(parsed)) { setProducts(parsed); setLoading(false); }
+    } catch {}
+    const controller = new AbortController();
+    const timer = window.setTimeout(() => controller.abort(), 6500);
+    fetch(requestUrl, { signal: controller.signal })
       .then((r) => {
         if (!r.ok) throw new Error(`Product catalogue returned HTTP ${r.status}`);
         return r.json();
@@ -94,10 +110,12 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
           : Array.isArray(data?.data)
           ? data.data
           : [];
+        try { localStorage.setItem(cacheKey, JSON.stringify(liveProducts)); } catch {}
         setProducts(liveProducts);
       })
-      .catch((err) => console.error('Failed to load products:', err))
-      .finally(() => setLoading(false));
+      .catch((err) => { if (err?.name !== 'AbortError') console.error('Failed to load products:', err); })
+      .finally(() => { window.clearTimeout(timer); setLoading(false); });
+    return () => { window.clearTimeout(timer); controller.abort(); };
   }, [selectedGender, selectedCategory, searchQuery, inStockOnly, onlySale, sortOption, priceRange]);
 
   const resetFilters = () => {
