@@ -92,8 +92,9 @@ function normalizeProduct(raw: any, includeGallery = false) {
 export default async function handler(req: any, res: any) {
   try {
     const response = await fetch(PRODUCT_API, { cache: "no-store", headers: { Accept: "application/json", "Cache-Control": "no-cache" } });
-    if (!response.ok) throw new Error(`Cloudflare product API returned ${response.status}`);
-    const payload = await response.json();
+    const responseText = await response.text();
+    if (!response.ok) throw new Error(`Cloudflare product API returned ${response.status}: ${responseText.slice(0, 500)}`);
+    const payload = JSON.parse(responseText);
     const rawProducts = Array.isArray(payload) ? payload : Array.isArray(payload?.products) ? payload.products : Array.isArray(payload?.data) ? payload.data : [];
     let products = rawProducts
       .filter((product: any) => !product.status || ["active", "ativo", "published"].includes(String(product.status).toLowerCase()) || product.is_published === 1 || product.is_published === true)
