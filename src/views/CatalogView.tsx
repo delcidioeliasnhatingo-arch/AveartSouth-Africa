@@ -3,6 +3,26 @@ import { Filter, SlidersHorizontal, RotateCcw, Search } from 'lucide-react';
 import { Product, Category, formatZAR } from '../types/index.ts';
 import { ProductCard } from '../components/ProductCard.tsx';
 
+const PUBLIC_PRODUCTS_URL = 'https://aveart-products-public.delcidioeliasnhatingo.workers.dev/api/products';
+
+async function fetchProductsWithFallback(url: string, signal: AbortSignal): Promise<Response> {
+  let lastError: unknown;
+  for (const endpoint of [url, PUBLIC_PRODUCTS_URL]) {
+    try {
+      const response = await fetch(endpoint, { signal, headers: { Accept: 'application/json' } });
+      if (!response.ok) { lastError = new Error(`Product API returned HTTP ${response.status}`); continue; }
+      const data = await response.clone().json();
+      const rows = Array.isArray(data) ? data : Array.isArray(data?.products) ? data.products : Array.isArray(data?.data) ? data.data : [];
+      if (rows.length) return response;
+      lastError = new Error('Product API returned an empty catalogue');
+    } catch (error: any) {
+      if (error?.name === 'AbortError') throw error;
+      lastError = error;
+    }
+  }
+  throw lastError instanceof Error ? lastError : new Error('Unable to load AVEART products');
+}
+
 interface CatalogViewProps {
   initialCategory?: string;
   initialGender?: 'women' | 'men' | 'accessories' | 'all';
@@ -97,7 +117,7 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
     } catch {}
     const controller = new AbortController();
     const timer = window.setTimeout(() => controller.abort(), 6500);
-    fetch(requestUrl, { signal: controller.signal })
+    fetchProductsWithFallback(requestUrl, controller.signal)
       .then((r) => {
         if (!r.ok) throw new Error(`Product catalogue returned HTTP ${r.status}`);
         return r.json();
@@ -110,8 +130,10 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
           : Array.isArray(data?.data)
           ? data.data
           : [];
-        try { localStorage.setItem(cacheKey, JSON.stringify(liveProducts)); } catch {}
-        setProducts(liveProducts);
+        if (liveProducts.length) {
+          try { localStorage.setItem(cacheKey, JSON.stringify(liveProducts)); } catch {}
+          setProducts(liveProducts);
+        }
       })
       .catch((err) => { if (err?.name !== 'AbortError') console.error('Failed to load products:', err); })
       .finally(() => { window.clearTimeout(timer); setLoading(false); });
