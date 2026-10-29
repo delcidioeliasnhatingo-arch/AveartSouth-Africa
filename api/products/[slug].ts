@@ -81,7 +81,7 @@ export default async function handler(req: any, res: any) {
     const slug = String(req.query?.slug || "");
     if (!slug) return res.status(400).json({ error: "Product slug is required." });
 
-    const response = await fetch(PRODUCT_API, { headers: { Accept: "application/json" } });
+    const response = await fetch(PRODUCT_API, { next: { revalidate: 60 }, headers: { Accept: "application/json" } } as any);
     if (!response.ok) throw new Error(`Cloudflare product API returned ${response.status}`);
 
     const data = await response.json();
@@ -94,11 +94,7 @@ export default async function handler(req: any, res: any) {
 
     if (!product) return res.status(404).json({ error: "Product not found in the AVEART catalogue." });
 
-    const detailResponse = await fetch(`${PRODUCT_API}/${encodeURIComponent(String(product.id))}`, { headers: { Accept: "application/json" } });
-    if (detailResponse.ok) {
-      const detailData = await detailResponse.json();
-      product = normalizeProduct(detailData, true);
-    }
+    // The catalogue response already includes product gallery and variants; avoid another upstream request.
 
     res.setHeader("Cache-Control", "s-maxage=120, stale-while-revalidate=600");
     return res.status(200).json(product);
