@@ -81,24 +81,33 @@ export default async function handler(req: any, res: any) {
     const slug = String(req.query?.slug || "");
     if (!slug) return res.status(400).json({ error: "Product slug is required." });
 
-    const response = await fetch(PRODUCT_API, { next: { revalidate: 60 }, headers: { Accept: "application/json" } } as any);
-    if (!response.ok) throw new Error(`Cloudflare product API returned ${response.status}`);
+    const supabaseUrl = String(process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL || "").replace(/\/$/, "");
+    const supabaseKey = process.env.SUPABASE_ANON_KEY || process.env.VITE_SUPABASE_ANON_KEY || "";
+    if (!supabaseUrl || !supabaseKey) throw new Error("Supabase public configuration is missing.");
 
-    const data = await response.json();
-    const products = (Array.isArray(data) ? data : []).map(normalizeProduct);
-    let product = products.find((p: any) =>
-      String(p.slug || "") === slug ||
-      String(p.id || "") === slug ||
-      String(p.title || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") === slug
-    );
+    const columns = "id,name,slug,description,category,price,stock,sku,status,sizes,colors,variants,created_at";
+    const query = new URLSearchParams({
+      select: columns,
+      status: "in.(active,ativo,published)",
+      or: `(slug.eq.${slug},id.eq.${slug})`,
+      limit: "1",
+    });
+    const response = await fetch(`${supabaseUrl}/rest/v1/products?${query.toString()}`, {
+      headers: { Accept: "application/json", apikey: supabaseKey, Authorization: `Bearer ${supabaseKey}` },
+      cache: "no-store",
+    });
+    const responseText = await response.text();
+    if (!response.ok) throw new Error(`Supabase product query returned ${response.status}: ${responseText.slice(0, 400)}`);
+    const rows = JSON.parse(responseText);
+    const raw = Array.isArray(rows) ? rows[0] : null;
+    if (!raw) return res.status(404).json({ error: "Product not found in the AVEART catalogue." });
 
-    if (!product) return res.status(404).json({ error: "Product not found in the AVEART catalogue." });
-
-    // The catalogue response already includes product gallery and variants; avoid another upstream request.
-
-    res.setHeader("Cache-Control", "s-maxage=120, stale-while-revalidate=600");
+    const product = normalizeProduct(raw);
+    res.setHeader("Cache-Control", "public, s-maxage=5, stale-while-revalidate=10");
     return res.status(200).json(product);
   } catch (error: any) {
+    console.error("AVEART product detail query failed:", error?.message || error);
+    res.setHeader("Cache-Control", "no-store");
     return res.status(502).json({
       error: "Unable to load the AVEART product.",
       details: process.env.NODE_ENV === "development" ? String(error?.message || error) : undefined,
