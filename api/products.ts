@@ -93,15 +93,27 @@ export default async function handler(req: any, res: any) {
   try {
     const supabaseUrl = String(process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL || "").replace(/\/$/, "");
     const supabaseKey = process.env.SUPABASE_ANON_KEY || process.env.VITE_SUPABASE_ANON_KEY || "";
-    const upstreamUrl = supabaseUrl && supabaseKey ? `${supabaseUrl}/rest/v1/rpc/get_public_products` : PRODUCT_API;
-    const response = await fetch(upstreamUrl, { next: { revalidate: 60 }, headers: { Accept: "application/json", ...(supabaseKey ? { apikey: supabaseKey, Authorization: `Bearer ${supabaseKey}` } : {}) } } as any);
+    if (!supabaseUrl || !supabaseKey) {
+      throw new Error("Supabase public configuration is missing in the production deployment.");
+    }
+
+    // Read the public catalogue straight from PostgREST. Avoid the old RPC/Cloudflare
+    // proxy path, which was timing out while serializing large base64 product images.
+    // Image blobs are deliberately excluded here so the product list stays fast.
+    const query = new URLSearchParams({
+      select: "id,name,slug,description,category,price,stock,sku,status,sizes,colors,variants,created_at",
+      status: "in.(active,ativo,published)",
+      order: "created_at.desc",
+    });
+    const response = await fetch(`${supabaseUrl}/rest/v1/products?${query.toString()}`, {
+      headers: { Accept: "application/json", apikey: supabaseKey, Authorization: `Bearer ${supabaseKey}` },
+      cache: "no-store",
+    });
     const responseText = await response.text();
-    if (!response.ok) throw new Error(`Cloudflare product API returned ${response.status}: ${responseText.slice(0, 500)}`);
+    if (!response.ok) throw new Error(`Supabase products query returned ${response.status}: ${responseText.slice(0, 400)}`);
     const payload = JSON.parse(responseText);
-    const rawProducts = Array.isArray(payload) ? payload : Array.isArray(payload?.products) ? payload.products : Array.isArray(payload?.data) ? payload.data : [];
-    let products = rawProducts
-      .filter((product: any) => !product.status || ["active", "ativo", "published"].includes(String(product.status).toLowerCase()) || product.is_published === 1 || product.is_published === true)
-      .map((product: any) => normalizeProduct(product, false));
+    const rawProducts = Array.isArray(payload) ? payload : [];
+    let products = rawProducts.map((product: any) => normalizeProduct(product, false));
 
     const q = req.query || {};
     if (q.search) {
@@ -124,11 +136,11 @@ export default async function handler(req: any, res: any) {
     else if (q.sort === "price_desc") products.sort((a: any, b: any) => b.base_price - a.base_price);
     else products.sort((a: any, b: any) => Number(b.is_featured ?? b.featured ?? 0) - Number(a.is_featured ?? a.featured ?? 0));
 
-    res.setHeader("Cache-Control", "s-maxage=60, stale-while-revalidate=300");
-    res.setHeader("CDN-Cache-Control", "public, s-maxage=60, stale-while-revalidate=300");
+    res.setHeader("Cache-Control", "public, s-maxage=5, stale-while-revalidate=10");
+    res.setHeader("CDN-Cache-Control", "public, s-maxage=5, stale-while-revalidate=10");
     return res.status(200).json(products);
   } catch (error: any) {
-    console.error("AVEART products upstream request failed:", error?.message || error);
+    console.error("AVEART products query failed:", error?.message || error);
     res.setHeader("Cache-Control", "no-store");
     return res.status(502).json({ error: "Unable to load AVEART products.", details: process.env.NODE_ENV === "development" ? String(error?.message || error) : undefined });
   }
