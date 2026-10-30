@@ -6,6 +6,7 @@ import { useCart } from '../context/CartContext.tsx';
 interface ProductCardProps {
   product: Product;
   onSelect: (slug: string) => void;
+  onBuyNow: () => void;
 }
 
 function inferAudience(product: any): 'women' | 'men' | 'unisex' | '' {
@@ -36,8 +37,8 @@ function inferAudience(product: any): 'women' | 'men' | 'unisex' | '' {
   return '';
 }
 
-export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect }) => {
-  const { addItem } = useCart();
+export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect, onBuyNow }) => {
+  const { addItem, closeDrawer } = useCart();
   const [selectedSize, setSelectedSize] = useState<string | null>(
     product.sizes && product.sizes.length > 0 ? product.sizes[0] : null
   );
@@ -54,8 +55,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect }) =
   const isOutOfStock = product.total_stock !== undefined && product.total_stock <= 0;
   const hasDiscount = product.original_price && product.original_price > product.base_price;
 
-  const handleQuickAdd = (e: React.MouseEvent) => {
-    e.stopPropagation();
+  const handleQuickAdd = (e?: React.MouseEvent, buyNow = false) => {
+    e?.stopPropagation();
     if (!product.variants || product.variants.length === 0) {
       onSelect(product.slug);
       return;
@@ -85,6 +86,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect }) =
 
     setIsAdded(true);
     setTimeout(() => setIsAdded(false), 1500);
+    if (buyNow) {
+      closeDrawer();
+      onBuyNow();
+    }
   };
 
   return (
@@ -246,6 +251,42 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect }) =
             View <span aria-hidden="true">→</span>
           </span>
         </div>
+
+        {/* Purchase actions remain visible on desktop and mobile */}
+        {!isOutOfStock && (
+          <div className="grid grid-cols-2 gap-2 pt-1">
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                if (!product.variants || product.variants.length === 0) {
+                  onSelect(product.slug);
+                } else if (product.sizes && product.sizes.length > 1) {
+                  setIsQuickAddOpen(true);
+                } else {
+                  handleQuickAdd(e);
+                }
+              }}
+              className="min-h-10 px-2 py-2 border border-[#87977D] text-[#52664A] hover:bg-[#f0f3ed] text-[10px] sm:text-xs font-extrabold uppercase tracking-wide rounded-lg transition-colors cursor-pointer"
+            >
+              Add to Cart
+            </button>
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                if (!product.variants || product.variants.length === 0) {
+                  onSelect(product.slug);
+                } else {
+                  handleQuickAdd(e, true);
+                }
+              }}
+              className="min-h-10 px-2 py-2 bg-[#87977D] hover:bg-[#65775D] text-white text-[10px] sm:text-xs font-extrabold uppercase tracking-wide rounded-lg transition-colors cursor-pointer"
+            >
+              Buy Now
+            </button>
+          </div>
+        )}
       </div>
     </article>
   );
