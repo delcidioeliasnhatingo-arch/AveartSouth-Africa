@@ -63,23 +63,23 @@ export default function App() {
             )}
 
             {currentView === 'catalog' && (
-              <CatalogView initialSearch={viewParam} onSelectProduct={handleSelectProduct} />
+              <CatalogView initialSearch={viewParam} onSelectProduct={handleSelectProduct} onBuyNow={() => setCurrentView('checkout')} />
             )}
 
             {currentView === 'catalog_new' && (
-              <CatalogView onSelectProduct={handleSelectProduct} />
+              <CatalogView onSelectProduct={handleSelectProduct} onBuyNow={() => setCurrentView('checkout')} />
             )}
 
             {currentView === 'catalog_gender' && (
-              <CatalogView initialGender={viewParam as any} onSelectProduct={handleSelectProduct} />
+              <CatalogView initialGender={viewParam as any} onSelectProduct={handleSelectProduct} onBuyNow={() => setCurrentView('checkout')} />
             )}
 
             {currentView === 'catalog_sale' && (
-              <CatalogView initialSale={true} onSelectProduct={handleSelectProduct} />
+              <CatalogView initialSale={true} onSelectProduct={handleSelectProduct} onBuyNow={() => setCurrentView('checkout')} />
             )}
 
             {currentView === 'catalog_category' && (
-              <CatalogView initialCategory={viewParam} onSelectProduct={handleSelectProduct} />
+              <CatalogView initialCategory={viewParam} onSelectProduct={handleSelectProduct} onBuyNow={() => setCurrentView('checkout')} />
             )}
 
             {currentView === 'product' && viewParam && (
