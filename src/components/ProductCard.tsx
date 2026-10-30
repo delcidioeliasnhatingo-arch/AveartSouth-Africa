@@ -202,13 +202,6 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect }) =
       {/* Product Information */}
       <div className="p-4 flex flex-col flex-1 justify-between gap-2.5">
         <div>
-          {/* Metadata (Gender · Category) */}
-          <div className="flex items-center gap-1.5 text-xs text-emerald-700 uppercase font-bold tracking-wider">
-            <span>{inferredAudience ? inferredAudience : 'Fashion'}</span>
-            <span aria-hidden="true">·</span>
-            <span>{product.category_name}</span>
-          </div>
-
           {/* Product Title */}
           <h3 className="text-base font-bold text-slate-900 group-hover:text-emerald-700 transition-colors mt-1 leading-snug line-clamp-1">
             {product.title}
