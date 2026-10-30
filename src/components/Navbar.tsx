@@ -35,14 +35,14 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate }) => {
       </div>
 
       <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 transition-all shadow-xs w-full">
-        <div className="w-full max-w-[1920px] mx-auto px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20 min-h-[88px] sm:min-h-[104px] py-3 flex items-center justify-between gap-3 sm:gap-5">
+        <div className="w-full max-w-[1920px] mx-auto px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20 min-h-[68px] sm:min-h-[76px] py-2 flex items-center justify-between gap-3 sm:gap-5">
           <button
             onClick={() => onNavigate('home')}
             aria-label="AVEART home"
-            className="flex items-center gap-3 text-slate-900 hover:text-emerald-700 transition-colors whitespace-nowrap shrink-0 text-left cursor-pointer group"
+            className="flex items-center gap-2 text-slate-900 hover:text-emerald-700 transition-colors whitespace-nowrap shrink-0 text-left cursor-pointer group"
           >
-            <Logo size="clamp(72px, 7vw, 105px)" className="h-auto max-h-[46px] sm:max-h-[56px] object-contain" />
-            <span className="text-[20px] sm:text-[29px] font-bold tracking-[0.12em] sm:tracking-[0.18em]">AVEART</span>
+            <Logo size="clamp(42px, 4.2vw, 62px)" className="h-auto max-h-[30px] sm:max-h-[38px] object-contain" />
+            <span className="text-[17px] sm:text-[23px] font-bold tracking-[0.10em] sm:tracking-[0.14em]">AVEART</span>
           </button>
 
           <nav className="hidden md:flex items-center gap-8 text-[11px] font-semibold tracking-wide text-[#555b53]">
