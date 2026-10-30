@@ -56,16 +56,31 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect, onB
 
   const handleQuickAdd = (e?: React.MouseEvent, buyNow = false) => {
     e?.stopPropagation();
-    if (!product.variants || product.variants.length === 0) {
-      onSelect(product.slug);
-      return;
-    }
+    // Products such as sunglasses, caps and wallets may be stocked as a
+    // single item without size/color variants. The API uses product.id as the
+    // stable default variant ID for these products, so use the same ID here.
+    const defaultVariant = {
+      id: product.id,
+      product_id: product.id,
+      sku: product.id,
+      name: 'Default',
+      size: '',
+      color: '',
+      price_offset: 0,
+      stock_quantity: Number(product.total_stock ?? 0),
+      low_stock_threshold: 3,
+      image_url: product.primary_image || product.images?.[0] || '',
+      created_at: '',
+    } as NonNullable<Product['variants']>[number];
+    const availableVariants = product.variants?.length
+      ? product.variants
+      : Number(product.total_stock ?? 0) > 0 ? [defaultVariant] : [];
 
-    // Match selected size or take first available
+    // Match selected size or take the first in-stock variant.
     const matchedVariant =
-      product.variants.find((v) => v.size === selectedSize && v.stock_quantity > 0) ||
-      product.variants.find((v) => v.stock_quantity > 0) ||
-      product.variants[0];
+      availableVariants.find((v) => v.size === selectedSize && v.stock_quantity > 0) ||
+      availableVariants.find((v) => v.stock_quantity > 0) ||
+      availableVariants[0];
 
     if (!matchedVariant || matchedVariant.stock_quantity <= 0) {
       onSelect(product.slug);
@@ -192,9 +207,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect, onB
               type="button"
               onClick={(e) => {
                 e.stopPropagation();
-                if (!product.variants || product.variants.length === 0) {
-                  onSelect(product.slug);
-                } else if (product.sizes && product.sizes.length > 1) {
+                if (product.variants?.length && product.sizes && product.sizes.length > 1) {
                   setQuickAddIntent('cart');
                   setIsQuickAddOpen(true);
                 } else {
@@ -209,9 +222,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect, onB
               type="button"
               onClick={(e) => {
                 e.stopPropagation();
-                if (!product.variants || product.variants.length === 0) {
-                  onSelect(product.slug);
-                } else if (product.sizes && product.sizes.length > 1) {
+                if (product.variants?.length && product.sizes && product.sizes.length > 1) {
                   setQuickAddIntent('buy');
                   setIsQuickAddOpen(true);
                 } else {
