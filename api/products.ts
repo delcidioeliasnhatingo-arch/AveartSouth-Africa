@@ -24,10 +24,13 @@ function descriptionForProduct(product: any): string {
 function inferGender(product: any): string {
   const evidence = [
     product.name, product.title, product.subtitle, product.category,
-    product.category_name, product.audience,
+    product.category_name, product.gender, product.audience,
     ...(Array.isArray(product.tags) ? product.tags : []),
   ].filter(Boolean).join(" ").toLowerCase().replace(/[_-]+/g, " ");
-  if (/\b(unisex|all gender|gender neutral)\b/.test(evidence)) return "unisex";
+  const explicitGender = String(product.gender ?? product.audience ?? "").toLowerCase().trim();
+  if (["women", "woman", "female"].includes(explicitGender)) return "women";
+  if (["men", "man", "male"].includes(explicitGender)) return "men";
+  if (["unisex", "all gender", "gender neutral"].includes(explicitGender) || /\b(unisex|all gender|gender neutral)\b/.test(evidence)) return "unisex";
   if (/\b(women|womens|women's|woman|female|womenswear)\b/.test(evidence)) return "women";
   if (/\b(men|mens|men's|man|male|menswear)\b/.test(evidence)) return "men";
   return "unisex";
@@ -101,7 +104,7 @@ export default async function handler(req: any, res: any) {
     // proxy path, which was timing out while serializing large base64 product images.
     // The gallery JSON is excluded to avoid sending duplicate image payloads; the primary image URL is retained.
     const query = new URLSearchParams({
-      select: "id,name,slug,description,category,price,stock,sku,status,image_url,sizes,colors,variants,created_at",
+      select: "id,name,slug,description,category,gender,price,stock,sku,status,image_url,sizes,colors,variants,created_at",
       status: "in.(active,ativo,published)",
       order: "created_at.desc",
     });
