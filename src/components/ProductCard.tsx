@@ -40,6 +40,7 @@ function inferAudience(product: any): 'women' | 'men' | 'unisex' | '' {
 export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect, onBuyNow }) => {
   const { addItem } = useCart();
   const [selectorOpen, setSelectorOpen] = useState(false);
+  const [selectionAction, setSelectionAction] = useState<'cart' | 'buy'>('cart');
   const [selectedSize, setSelectedSize] = useState('');
   const [selectedColor, setSelectedColor] = useState('');
   const [quantity, setQuantity] = useState(1);
@@ -71,12 +72,13 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect, onB
   const chosenVariant = hasVariantAttributes ? selectedVariant : defaultVariant;
   const maxQuantity = Number(chosenVariant?.stock_quantity || 0);
 
-  const openSelector = (e: React.MouseEvent) => {
+  const openSelector = (e: React.MouseEvent, action: 'cart' | 'buy') => {
     e.stopPropagation();
     const first = inStockVariants[0];
     setSelectedSize(first?.size || '');
     setSelectedColor(first?.color || '');
     setQuantity(1);
+    setSelectionAction(action);
     setSelectorOpen(true);
   };
 
@@ -92,8 +94,9 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect, onB
       unitPrice: product.base_price + Number(chosenVariant.price_offset || 0),
       imageUrl: chosenVariant.image_url || product.primary_image || product.images?.[0] || '',
       stockAvailable: maxQuantity,
-    }, { openDrawer: true }));
+    }, { openDrawer: selectionAction === 'cart' }));
     setSelectorOpen(false);
+    if (selectionAction === 'buy') onBuyNow();
   };
 
   return (
@@ -138,8 +141,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect, onB
 
         {!isOutOfStock && (
           <div className="grid grid-cols-2 gap-2 pt-1">
-            <button type="button" onClick={openSelector} className="min-h-10 px-2 py-2 border border-[#87977D] text-[#52664A] hover:bg-[#f0f3ed] text-[10px] sm:text-xs font-extrabold uppercase tracking-wide rounded-lg transition-colors cursor-pointer">Add to Cart</button>
-            <button type="button" onClick={openSelector} className="min-h-10 px-2 py-2 bg-[#87977D] hover:bg-[#65775D] text-white text-[10px] sm:text-xs font-extrabold uppercase tracking-wide rounded-lg transition-colors cursor-pointer">Buy Now</button>
+            <button type="button" onClick={(e) => openSelector(e, 'cart')} className="min-h-10 px-2 py-2 border border-[#87977D] text-[#52664A] hover:bg-[#f0f3ed] text-[10px] sm:text-xs font-extrabold uppercase tracking-wide rounded-lg transition-colors cursor-pointer">Add to Cart</button>
+            <button type="button" onClick={(e) => openSelector(e, 'buy')} className="min-h-10 px-2 py-2 bg-[#87977D] hover:bg-[#65775D] text-white text-[10px] sm:text-xs font-extrabold uppercase tracking-wide rounded-lg transition-colors cursor-pointer">Buy Now</button>
           </div>
         )}
 
@@ -178,7 +181,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect, onB
                   <button type="button" disabled={!chosenVariant || quantity >= maxQuantity} onClick={() => setQuantity((q) => Math.min(maxQuantity, q + 1))} className="h-9 w-9 rounded-lg border border-slate-300 text-lg disabled:opacity-30">+</button>
                 </div>
               </div>
-              <button type="button" disabled={!chosenVariant || quantity < 1 || quantity > maxQuantity} onClick={confirmAdd} className="w-full rounded-xl bg-[#87977D] py-3 text-sm font-extrabold uppercase tracking-wide text-white hover:bg-[#65775D] disabled:cursor-not-allowed disabled:opacity-40">Add {quantity} to Cart</button>
+              <button type="button" disabled={!chosenVariant || quantity < 1 || quantity > maxQuantity} onClick={confirmAdd} className="w-full rounded-xl bg-[#87977D] py-3 text-sm font-extrabold uppercase tracking-wide text-white hover:bg-[#65775D] disabled:cursor-not-allowed disabled:opacity-40">{selectionAction === 'buy' ? 'Continue to Checkout' : `Add ${quantity} to Cart`}</button>
             </section>
           </div>
         )}
