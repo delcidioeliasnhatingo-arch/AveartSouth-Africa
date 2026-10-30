@@ -102,46 +102,46 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect, onB
   return (
     <article
       onClick={() => onSelect(product.slug)}
-      className="aveart-reference-product-card group flex flex-col bg-white border border-slate-200 rounded-xl overflow-hidden cursor-pointer hover:shadow-lg hover:border-[#b7c5ad] transition-all duration-200"
+      className="aveart-reference-product-card group flex flex-col bg-white border border-slate-200 rounded-lg sm:rounded-xl overflow-hidden cursor-pointer shadow-sm hover:shadow-lg hover:border-[#b7c5ad] transition-all duration-200"
     >
-      <div className="relative aspect-[4/5] sm:aspect-[3/4] bg-[#f5f6f2] overflow-hidden">
+      <div className="relative aspect-square sm:aspect-[3/4] bg-[#f5f6f2] overflow-hidden">
         {displayImage ? (
           <img src={displayImage} alt={product.title} referrerPolicy="no-referrer" className="w-full h-full object-cover object-top group-hover:scale-[1.025] transition-transform duration-300 ease-out" loading="lazy" decoding="async" />
         ) : (
           <div className="w-full h-full flex items-center justify-center px-4 text-center text-xs text-slate-400">Product image unavailable</div>
         )}
-        {audienceTag && <span className="absolute top-3 right-3 z-[1] bg-white/95 text-slate-900 border border-slate-200 px-2.5 py-1 rounded-full text-[10px] font-extrabold tracking-[0.14em] shadow-sm">{audienceTag}</span>}
+        {audienceTag && <span className="absolute top-2 right-2 sm:top-3 sm:right-3 z-[1] bg-white/95 text-slate-900 border border-slate-200 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-[9px] sm:text-[10px] font-extrabold tracking-[0.14em] shadow-sm">{audienceTag}</span>}
         {isOutOfStock ? (
-          <div className="absolute top-3 left-3 bg-slate-800 text-white text-[11px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-md shadow-sm">Sold Out</div>
+          <div className="absolute top-2 left-2 sm:top-3 sm:left-3 bg-slate-800 text-white text-[9px] sm:text-[11px] font-bold uppercase tracking-wider px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-md shadow-sm">Sold Out</div>
         ) : hasDiscount ? (
-          <div className="absolute top-3 left-3 bg-rose-500 text-white text-[11px] font-extrabold uppercase tracking-wider px-2.5 py-1 rounded-full shadow-sm">Sale</div>
+          <div className="absolute top-3 left-3 bg-rose-500 text-white text-[9px] sm:text-[11px] font-extrabold uppercase tracking-wider px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full shadow-sm">Sale</div>
         ) : isLowStock ? (
           <div className="absolute top-3 left-3 bg-amber-500 text-white text-[11px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full shadow-sm">Only {totalStock} left</div>
         ) : null}
       </div>
 
-      <div className="p-2.5 sm:p-4 flex flex-col flex-1 justify-between gap-1.5 sm:gap-2.5">
+      <div className="p-2 sm:p-4 flex flex-col flex-1 justify-between gap-1 sm:gap-2.5">
         <div>
-          <h3 className="text-sm sm:text-base font-bold text-slate-900 group-hover:text-emerald-700 transition-colors mt-0.5 sm:mt-1 leading-snug line-clamp-2 sm:line-clamp-1">{product.title}</h3>
+          <h3 className="text-[13px] sm:text-base font-bold text-slate-900 group-hover:text-emerald-700 transition-colors mt-0.5 sm:mt-1 leading-snug line-clamp-2 sm:line-clamp-1">{product.title}</h3>
           <p className="hidden sm:block text-xs text-slate-500 line-clamp-1 mt-0.5 font-medium">{product.subtitle || product.material}</p>
           {product.colors && product.colors.length > 0 && (
-            <div className="flex items-center gap-1 mt-1.5 sm:gap-1.5 sm:mt-2.5">
-              {product.colors.map((c) => <span key={c.name} title={c.name} className="w-3 h-3 sm:w-3.5 sm:h-3.5 rounded-full border border-slate-300 shadow-xs inline-block" style={{ backgroundColor: c.hex }} />)}
+            <div className="flex items-center gap-1 mt-1 sm:gap-1.5 sm:mt-2.5">
+              {product.colors.map((c) => <span key={c.name} title={c.name} className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 rounded-full border border-slate-300 shadow-xs inline-block" style={{ backgroundColor: c.hex }} />)}
               <span className="text-[10px] sm:text-[11px] text-slate-400 font-medium ml-0.5 sm:ml-1">{product.colors.length} {product.colors.length === 1 ? 'colour' : 'colours'}</span>
             </div>
           )}
         </div>
-        <div className="pt-2 sm:pt-3 border-t border-slate-100 flex items-center justify-between gap-1">
+        <div className="pt-1.5 sm:pt-3 border-t border-slate-100 flex items-center justify-between gap-1">
           <div className="flex items-baseline gap-1.5">
             {hasDiscount && <span className="font-mono tabular-nums text-[10px] sm:text-xs text-slate-400 line-through">{formatZAR(product.original_price!)}</span>}
-            <span className={'font-mono tabular-nums text-sm sm:text-base font-extrabold ' + (hasDiscount ? 'text-[#65775D]' : 'text-slate-900')}>{formatZAR(product.base_price)}</span>
+            <span className={'font-mono tabular-nums text-[13px] sm:text-base font-extrabold ' + (hasDiscount ? 'text-[#65775D]' : 'text-slate-900')}>{formatZAR(product.base_price)}</span>
           </div>
           <span className="text-[10px] sm:text-xs font-bold text-rose-600 group-hover:text-[#52664A] flex items-center gap-1">View <span aria-hidden="true">→</span></span>
         </div>
 
         {!isOutOfStock && (
-          <div className="grid grid-cols-2 gap-1.5 sm:gap-2 pt-0.5 sm:pt-1">
-            <button type="button" onClick={(e) => openSelector(e, 'cart')} className="min-h-9 sm:min-h-10 px-1 sm:px-2 py-1.5 sm:py-2 border border-[#87977D] text-[#52664A] hover:bg-[#f0f3ed] text-[9px] sm:text-xs font-extrabold uppercase tracking-wide rounded-lg transition-colors cursor-pointer">Add to Cart</button>
+          <div className="grid grid-cols-2 gap-1 sm:gap-2 pt-0.5 sm:pt-1">
+            <button type="button" onClick={(e) => openSelector(e, 'cart')} className="min-h-8 sm:min-h-10 px-1 sm:px-2 py-1 sm:py-2 border border-[#87977D] text-[#52664A] hover:bg-[#f0f3ed] text-[8px] sm:text-xs font-extrabold uppercase tracking-normal sm:tracking-wide rounded-md sm:rounded-lg transition-colors cursor-pointer">Add to Cart</button>
             <button type="button" onClick={(e) => openSelector(e, 'buy')} className="min-h-9 sm:min-h-10 px-1 sm:px-2 py-1.5 sm:py-2 bg-[#87977D] hover:bg-[#65775D] text-white text-[9px] sm:text-xs font-extrabold uppercase tracking-wide rounded-lg transition-colors cursor-pointer">Buy Now</button>
           </div>
         )}
