@@ -466,3 +466,72 @@ button:disabled { cursor: not-allowed; }
 @media (prefers-reduced-motion: reduce) {
   .aveart-hero-slide-fade { animation: none; }
 }
+
+
+/* AVEART conversion-focused palette: ink, sage, cream, terracotta and white */
+:root {
+  --aveart-ink: #252820;
+  --aveart-sage: #A5B394;
+  --aveart-sage-dark: #65775D;
+  --aveart-cream: #F3EEE5;
+  --aveart-terracotta: #B65E4A;
+  --aveart-white: #FFFFFF;
+  --aveart-muted: #77766F;
+  --aveart-line: #E5DED3;
+  --aveart-soft: #F3EEE5;
+}
+@theme {
+  --color-canvas: #F3EEE5;
+  --color-canvas-subtle: #F3EEE5;
+  --color-brand-primary: #A5B394;
+  --color-brand-hover: #65775D;
+  --color-brand-accent: #A5B394;
+  --color-sale: #B65E4A;
+}
+html, body { background-color: var(--aveart-cream); color: var(--aveart-ink); }
+main, [role="main"] { background-color: var(--aveart-cream); }
+.aveart-reference-home, .aveart-reference-footer { background-color: var(--aveart-cream) !important; color: var(--aveart-ink) !important; }
+.aveart-reference-section, .aveart-reference-newsletter { background-color: var(--aveart-cream); }
+.aveart-reference-benefits, .aveart-reference-editorial { background-color: #E9E4D9 !important; }
+.aveart-reference-product-card, .aveart-reference-product-page, .aveart-reference-footer .aveart-footer-form { color: var(--aveart-ink); }
+.aveart-reference-product-card { background: var(--aveart-white) !important; border-color: var(--aveart-line) !important; }
+.aveart-reference-product-card .bg-rose-500,
+.aveart-reference-product-card [class~="bg-rose-500"] { background-color: var(--aveart-terracotta) !important; }
+.aveart-reference-product-card .text-rose-600 { color: var(--aveart-sage-dark) !important; }
+.aveart-reference-product-card button:last-child,
+.aveart-reference-product-page button[class*="bg-emerald-600"],
+.aveart-reference-product-page button[class*="bg-[#87977D]"] {
+  background-color: var(--aveart-sage-dark) !important;
+  border-color: var(--aveart-sage-dark) !important;
+  color: var(--aveart-white) !important;
+}
+.aveart-reference-product-card button:last-child:hover,
+.aveart-reference-product-page button[class*="bg-emerald-600"]:hover {
+  background-color: var(--aveart-ink) !important;
+  border-color: var(--aveart-ink) !important;
+}
+.aveart-reference-product-card button:first-child {
+  border-color: var(--aveart-sage-dark) !important;
+  color: var(--aveart-sage-dark) !important;
+  background: var(--aveart-white) !important;
+}
+.aveart-reference-product-card button:first-child:hover { background: var(--aveart-cream) !important; }
+.aveart-primary-button { background: var(--aveart-sage-dark) !important; border-color: var(--aveart-sage-dark) !important; color: #fff !important; }
+.aveart-primary-button:hover { background: var(--aveart-ink) !important; border-color: var(--aveart-ink) !important; }
+.aveart-reference-home .aveart-filter.active,
+.aveart-reference-home .aveart-filter:hover { background: var(--aveart-sage-dark) !important; border-color: var(--aveart-sage-dark) !important; color: #fff !important; }
+.aveart-reference-home .aveart-eyebrow,
+.aveart-reference-home .aveart-benefit,
+.aveart-reference-footer .aveart-footer-tagline { color: var(--aveart-sage-dark) !important; }
+.aveart-reference-footer { border-color: var(--aveart-line) !important; }
+.aveart-reference-footer .aveart-footer-bottom { border-color: var(--aveart-line) !important; }
+.aveart-reference-footer .aveart-footer-column > button:hover,
+.aveart-reference-footer .aveart-footer-form button:hover { color: var(--aveart-sage-dark) !important; }
+.aveart-reference-product-page .bg-emerald-600,
+.aveart-reference-product-page .bg-\\[\\#87977D\\] { background-color: var(--aveart-sage-dark) !important; }
+.aveart-reference-product-page .hover\\:bg-emerald-700:hover { background-color: var(--aveart-ink) !important; }
+.aveart-reference-product-page .border-emerald-600 { border-color: var(--aveart-sage-dark) !important; }
+.aveart-reference-product-page .text-emerald-600,
+.aveart-reference-product-page .text-rose-700 { color: var(--aveart-sage-dark) !important; }
+input:focus, select:focus, textarea:focus { outline-color: #D8DFCF !important; border-color: var(--aveart-sage-dark) !important; }
+::selection { background: #DCE4D3; color: var(--aveart-ink); }
