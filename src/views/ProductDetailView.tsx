@@ -87,6 +87,29 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
           setSelectedVariant(first);
           setSelectedSize(first.size || (data.sizes && data.sizes[0]) || '');
           setSelectedColor(first.color || (data.colors && data.colors[0]?.name) || '');
+        } else if (Number(data.total_stock ?? 0) > 0) {
+          // Accessories and other one-size products may be stocked directly on
+          // the product record without separate variant rows. The cart API and
+          // order Worker both resolve the product ID as their default variant ID.
+          setSelectedVariant({
+            id: String(data.id),
+            product_id: String(data.id),
+            sku: String(data.sku || data.id),
+            name: 'Default',
+            size: '',
+            color: '',
+            price_offset: 0,
+            stock_quantity: Number(data.total_stock),
+            low_stock_threshold: 3,
+            image_url: data.primary_image || data.images?.[0] || '',
+            created_at: data.created_at || new Date(0).toISOString(),
+          });
+          setSelectedSize('');
+          setSelectedColor('');
+        } else {
+          setSelectedVariant(null);
+          setSelectedSize('');
+          setSelectedColor('');
         }
 
         // Add to Recently Viewed in localStorage
