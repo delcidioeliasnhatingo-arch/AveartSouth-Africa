@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { flushSync } from 'react-dom';
 import { Product, formatZAR } from '../types/index.ts';
 import { useCart } from '../context/CartContext.tsx';
 
@@ -50,8 +51,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect, onB
   const inferredAudience = inferAudience(product);
   const audienceTag = inferredAudience ? inferredAudience.toUpperCase() : '';
 
-  const isLowStock = product.total_stock !== undefined && product.total_stock > 0 && product.total_stock <= 3;
-  const isOutOfStock = product.total_stock !== undefined && product.total_stock <= 0;
+  const availableStock = product.total_stock !== undefined
+    ? Number(product.total_stock)
+    : (product.variants || []).reduce((total, variant) => total + Number(variant.stock_quantity || 0), 0);
+  const isLowStock = availableStock > 0 && availableStock <= 3;
+  const isOutOfStock = availableStock <= 0;
   const hasDiscount = product.original_price && product.original_price > product.base_price;
 
   const handleQuickAdd = (e?: React.MouseEvent, buyNow = false) => {
@@ -67,14 +71,14 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect, onB
       size: '',
       color: '',
       price_offset: 0,
-      stock_quantity: Number(product.total_stock ?? 0),
+      stock_quantity: availableStock,
       low_stock_threshold: 3,
       image_url: product.primary_image || product.images?.[0] || '',
       created_at: '',
     } as NonNullable<Product['variants']>[number];
     const availableVariants = product.variants?.length
       ? product.variants
-      : Number(product.total_stock ?? 0) > 0 ? [defaultVariant] : [];
+      : availableStock > 0 ? [defaultVariant] : [];
 
     // Match selected size or take the first in-stock variant.
     const matchedVariant =
@@ -87,16 +91,20 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect, onB
       return;
     }
 
-    addItem(matchedVariant.id, 1, {
-      productTitle: product.title,
-      variantName: matchedVariant.name,
-      size: matchedVariant.size,
-      color: matchedVariant.color,
-      productSlug: product.slug,
-      unitPrice: product.base_price + matchedVariant.price_offset,
-      imageUrl: matchedVariant.image_url || product.primary_image,
-      stockAvailable: matchedVariant.stock_quantity,
-    }, { openDrawer: !buyNow });
+    // Commit the cart update before navigating. This prevents CheckoutView
+    // from mounting with the previous (empty) cart when Buy Now is clicked.
+    flushSync(() => {
+      addItem(matchedVariant.id, 1, {
+        productTitle: product.title,
+        variantName: matchedVariant.name,
+        size: matchedVariant.size,
+        color: matchedVariant.color,
+        productSlug: product.slug,
+        unitPrice: product.base_price + matchedVariant.price_offset,
+        imageUrl: matchedVariant.image_url || product.primary_image,
+        stockAvailable: matchedVariant.stock_quantity,
+      }, { openDrawer: !buyNow });
+    });
 
     if (buyNow) {
       closeDrawer();
