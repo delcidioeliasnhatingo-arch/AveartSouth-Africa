@@ -665,3 +665,79 @@ input:focus, select:focus, textarea:focus {
 .aveart-reference-footer .aveart-footer-form input::placeholder { color: #BBBBBB !important; }
 .aveart-reference-footer .aveart-footer-column > button:hover,
 .aveart-reference-footer .aveart-footer-form button:hover { color: #CCCCCC !important; }
+
+
+/* Final high-specificity monochrome overrides for hard-coded storefront utility classes */
+.aveart-reference-home [class*="87977D"],
+.aveart-reference-home [class*="65775D"],
+.aveart-reference-home [class*="52664A"],
+.aveart-reference-home [class*="78936a"],
+.aveart-reference-home [class*="65775d"],
+.aveart-reference-catalog [class*="87977D"],
+.aveart-reference-catalog [class*="65775D"],
+.aveart-reference-catalog [class*="52664A"],
+.aveart-reference-catalog [class*="78936a"],
+.aveart-reference-catalog [class*="65775d"],
+.aveart-reference-product-card [class*="87977D"],
+.aveart-reference-product-card [class*="65775D"],
+.aveart-reference-product-card [class*="52664A"],
+.aveart-reference-product-page [class*="87977D"],
+.aveart-reference-product-page [class*="65775D"],
+.aveart-reference-product-page [class*="52664A"] {
+  border-color: #000000 !important;
+}
+.aveart-reference-home [class*="87977D"],
+.aveart-reference-home [class*="65775D"],
+.aveart-reference-catalog [class*="87977D"],
+.aveart-reference-catalog [class*="65775D"],
+.aveart-reference-product-card [class*="87977D"],
+.aveart-reference-product-card [class*="65775D"],
+.aveart-reference-product-page [class*="87977D"],
+.aveart-reference-product-page [class*="65775D"] {
+  background-color: #000000 !important;
+  color: #FFFFFF !important;
+}
+.aveart-reference-home [class*="52664A"],
+.aveart-reference-catalog [class*="52664A"],
+.aveart-reference-product-card [class*="52664A"],
+.aveart-reference-product-page [class*="52664A"],
+.aveart-reference-home [class*="78936a"],
+.aveart-reference-catalog [class*="78936a"],
+.aveart-reference-product-card [class*="78936a"],
+.aveart-reference-product-page [class*="78936a"],
+.aveart-reference-home [class*="65775d"],
+.aveart-reference-catalog [class*="65775d"],
+.aveart-reference-product-card [class*="65775d"],
+.aveart-reference-product-page [class*="65775d"] {
+  color: #000000 !important;
+}
+.aveart-reference-home [class*="hover"][class*="emerald"]:hover,
+.aveart-reference-catalog [class*="hover"][class*="emerald"]:hover,
+.aveart-reference-product-card [class*="hover"][class*="emerald"]:hover,
+.aveart-reference-product-page [class*="hover"][class*="emerald"]:hover {
+  background-color: #222222 !important;
+  color: #FFFFFF !important;
+}
+#aveart-footer,
+footer.aveart-reference-footer {
+  background: #000000 !important;
+  background-color: #000000 !important;
+  color: #FFFFFF !important;
+  border-color: #333333 !important;
+}
+#aveart-footer,
+#aveart-footer * {
+  color: #FFFFFF !important;
+}
+#aveart-footer .aveart-footer-logo {
+  filter: brightness(0) invert(1) !important;
+}
+#aveart-footer .aveart-footer-bottom,
+#aveart-footer .aveart-footer-form {
+  border-color: #444444 !important;
+}
+#aveart-footer .aveart-footer-form input {
+  color: #FFFFFF !important;
+  background-color: transparent !important;
+}
+#aveart-footer .aveart-footer-form input::placeholder { color: #BBBBBB !important; }
