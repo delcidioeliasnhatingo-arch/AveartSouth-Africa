@@ -30,9 +30,10 @@ async function fetchProductsWithFallback(url: string, signal: AbortSignal): Prom
 
 interface HomeViewProps {
   onNavigate: (view: string, param?: string) => void;
+  onBuyNow: () => void;
 }
 
-export const HomeView: React.FC<HomeViewProps> = ({ onNavigate }) => {
+export const HomeView: React.FC<HomeViewProps> = ({ onNavigate, onBuyNow }) => {
   const [products, setProducts] = useState<Product[]>(() => {
     try {
       const cached = localStorage.getItem('aveart:products:v1');
@@ -175,7 +176,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate }) => {
         ) : filteredProducts.length ? (
           <div className="aveart-product-grid">
             {filteredProducts.slice(0, 8).map((product) => (
-              <ProductCard key={product.id} product={product} onSelect={(slug) => onNavigate('product', slug)} />
+              <ProductCard key={product.id} product={product} onSelect={(slug) => onNavigate('product', slug)} onBuyNow={onBuyNow} />
             ))}
           </div>
         ) : (
