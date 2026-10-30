@@ -3,181 +3,535 @@
 @theme {
   --font-sans: Arial, Helvetica, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-serif: Arial, Helvetica, sans-serif;
-  --color-canvas: #F7F0E9;
-  --color-canvas-subtle: #F1E4E2;
-  --color-brand-primary: #641F32;
-  --color-brand-hover: #4D1726;
-  --color-brand-accent: #D9A6AA;
-  --color-sale: #641F32;
+  --color-canvas: #FFFFFF;
+  --color-canvas-subtle: #F7F8F5;
+  --color-brand-primary: #87977D;
+  --color-brand-hover: #718568;
+  --color-brand-accent: #87977D;
+  --color-sale: #C94F4F;
 }
 
 :root {
   color-scheme: light;
-  --aveart-ink: #292326;
-  --aveart-burgundy: #641F32;
-  --aveart-burgundy-dark: #4D1726;
-  --aveart-blush: #D9A6AA;
-  --aveart-blush-light: #F1E4E2;
-  --aveart-cream: #F7F0E9;
-  --aveart-white: #FFFFFF;
-  --aveart-muted: #756B6D;
-  --aveart-line: #E8DCD8;
-  --aveart-soft: #F7F0E9;
+  --aveart-sage: #87977D;
+  --aveart-sage-dark: #65775D;
+  --aveart-ink: #20231F;
+  --aveart-muted: #6B7069;
+  --aveart-line: #E7E9E3;
+  --aveart-soft: #F7F8F5;
 }
 
-html { scroll-behavior: smooth; background: var(--aveart-cream); }
+html { scroll-behavior: smooth; }
 body {
   font-family: Arial, Helvetica, system-ui, sans-serif;
-  background-color: var(--aveart-cream);
+  background-color: #FFFFFF;
   color: var(--aveart-ink);
   -webkit-font-smoothing: antialiased;
 }
 button, a { -webkit-tap-highlight-color: transparent; }
 button { transition: background-color .18s ease, color .18s ease, border-color .18s ease, transform .18s ease; }
 .font-serif { font-family: Arial, Helvetica, sans-serif; font-weight: 700; letter-spacing: -0.02em; }
-::selection { background: var(--aveart-blush); color: var(--aveart-ink); }
+::selection { background: #DCE4D7; color: #20231F; }
 ::-webkit-scrollbar { width: 7px; height: 7px; }
-::-webkit-scrollbar-track { background: var(--aveart-cream); }
-::-webkit-scrollbar-thumb { background: #C99A9F; border-radius: 9999px; }
-::-webkit-scrollbar-thumb:hover { background: var(--aveart-burgundy); }
+::-webkit-scrollbar-track { background: #F5F6F2; }
+::-webkit-scrollbar-thumb { background: #C7CEC1; border-radius: 9999px; }
+::-webkit-scrollbar-thumb:hover { background: #87977D; }
 
-main, [role="main"] { background-color: var(--aveart-cream); color: var(--aveart-ink); }
+/* AVEART storefront: clean, accessible retail styling */
+.bg-rose-500, .bg-rose-600 { background-color: var(--aveart-sage) !important; }
+.hover\\:bg-rose-600:hover, .hover\\:bg-rose-500:hover { background-color: var(--aveart-sage-dark) !important; }
+.text-rose-600, .text-rose-500, .text-rose-400, .text-rose-300 { color: var(--aveart-sage-dark) !important; }
+.border-rose-500, .border-rose-400, .border-rose-300 { border-color: var(--aveart-sage) !important; }
+.bg-rose-50, .bg-rose-100 { background-color: #F0F3ED !important; }
+.ring-rose-200, .ring-rose-300 { --tw-ring-color: #DCE4D7 !important; }
+
+
+/* Finish the clean storefront treatment across legacy utility classes */
+footer { background: #FFFFFF !important; color: #374151 !important; border-color: #E5E7EB !important; }
+footer .text-white, footer .text-slate-200, footer .text-slate-300 { color: #374151 !important; }
+footer .text-slate-400, footer .text-slate-500 { color: #6B7280 !important; }
+footer .border-slate-800, footer .border-slate-700 { border-color: #E5E7EB !important; }
+footer .bg-slate-900, footer .bg-slate-800 { background: #F7F8F5 !important; }
+footer .text-emerald-300, footer .text-emerald-400 { color: #65775D !important; }
+
+
+/* Consistent approved AVEART storefront system across every view */
+:root {
+  --aveart-sage: #87977D;
+  --aveart-sage-dark: #65775D;
+  --aveart-ink: #20231F;
+  --aveart-muted: #6B7069;
+  --aveart-line: #E7E9E3;
+  --aveart-soft: #F7F8F5;
+}
+body { background: #fff; color: var(--aveart-ink); }
+main, [role="main"] { background-color: #fff; }
 input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
 select, textarea {
-  border-color: var(--aveart-line);
-  border-radius: 8px;
+  border-color: #DDE1D8;
+  border-radius: 10px;
   color: var(--aveart-ink);
-  background: var(--aveart-white);
+  background: #fff;
 }
 input:focus, select:focus, textarea:focus {
-  outline: 2px solid var(--aveart-blush-light);
+  outline: 2px solid #DCE4D7;
   outline-offset: 1px;
-  border-color: var(--aveart-burgundy) !important;
+  border-color: var(--aveart-sage) !important;
 }
 button:disabled { cursor: not-allowed; }
-[class~="rounded-2xl"], [class~="rounded-3xl"] { border-radius: 12px; }
+[class~="rounded-2xl"], [class~="rounded-3xl"] { border-radius: 14px; }
 [class~="shadow-md"], [class~="shadow-lg"], [class~="shadow-xl"] {
-  --tw-shadow: 0 3px 12px 0 rgb(41 35 38 / 0.07);
+  --tw-shadow: 0 3px 12px 0 rgb(32 35 31 / 0.06);
   box-shadow: var(--tw-shadow);
 }
+[class~="bg-rose-500"], [class~="bg-rose-600"] { background-color: var(--aveart-sage) !important; }
+[class~="hover:bg-rose-600"]:hover, [class~="hover:bg-rose-500"]:hover { background-color: var(--aveart-sage-dark) !important; }
+[class~="text-rose-600"], [class~="text-rose-500"], [class~="text-rose-400"] { color: var(--aveart-sage-dark) !important; }
+[class~="border-rose-500"], [class~="border-rose-400"] { border-color: var(--aveart-sage) !important; }
 
-/* AVEART — Burgundy, blush and cream identity */
-.aveart-reference-home, .aveart-reference-footer {
-  background-color: var(--aveart-cream) !important;
-  color: var(--aveart-ink) !important;
-}
-.aveart-reference-section, .aveart-reference-newsletter { background-color: var(--aveart-cream) !important; }
-.aveart-reference-benefits, .aveart-reference-editorial { background-color: var(--aveart-blush-light) !important; }
-.aveart-reference-product-card {
-  background: var(--aveart-white) !important;
-  color: var(--aveart-ink) !important;
-  border: 1px solid var(--aveart-line) !important;
-}
-.aveart-reference-product-card > div:first-child { background: #F4EBE7 !important; }
-.aveart-reference-product-card h3, .aveart-reference-product-card h4,
-.aveart-reference-product-page h1, .aveart-reference-product-page h2,
-.aveart-reference-product-page h3 { color: var(--aveart-ink) !important; }
-.aveart-reference-product-card .text-slate-500,
-.aveart-reference-product-card .text-slate-600,
-.aveart-reference-product-page .text-slate-500,
-.aveart-reference-product-page .text-slate-600 { color: var(--aveart-muted) !important; }
 
-/* Main purchase actions */
-.aveart-primary-button,
-.aveart-reference-home .aveart-outline-button,
-.aveart-reference-home .aveart-newsletter-form button,
-.aveart-reference-product-card button:last-child,
-.aveart-reference-product-page button[class*="bg-emerald-600"],
-.aveart-reference-product-page button[class*="bg-[#87977D]"],
-.aveart-reference-catalog .bg-emerald-600,
-.aveart-reference-catalog .bg-\[\#87977D\],
-.aveart-reference-product-card .bg-emerald-600,
-.aveart-reference-product-card .bg-\[\#87977D\] {
-  background-color: var(--aveart-burgundy) !important;
-  border-color: var(--aveart-burgundy) !important;
-  color: var(--aveart-white) !important;
+/* AVEART HTML reference — homepage layout and styling */
+.aveart-reference-home {
+  --ref-paper: #f7f8f5;
+  --ref-ink: #242824;
+  --ref-muted: #70756e;
+  --ref-line: #e5e8e2;
+  --ref-olive: #78936a;
+  color: var(--ref-ink);
+  background: #fff;
+  padding-bottom: 0;
 }
-.aveart-primary-button:hover,
-.aveart-reference-home .aveart-outline-button:hover,
-.aveart-reference-home .aveart-newsletter-form button:hover,
-.aveart-reference-product-card button:last-child:hover,
-.aveart-reference-product-page button[class*="bg-emerald-600"]:hover,
-.aveart-reference-catalog .hover\:bg-emerald-700:hover {
-  background-color: var(--aveart-burgundy-dark) !important;
-  border-color: var(--aveart-burgundy-dark) !important;
-  color: var(--aveart-white) !important;
+.aveart-reference-home button { cursor: pointer; }
+.aveart-reference-home .aveart-reference-hero {
+  min-height: clamp(470px, 51vw, 650px);
+  position: relative;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  background: #d8d9d0;
 }
-.aveart-reference-product-card button:first-child {
-  color: var(--aveart-burgundy) !important;
-  border-color: var(--aveart-burgundy) !important;
-  background: var(--aveart-white) !important;
+.aveart-reference-hero-image, .aveart-reference-hero-shade {
+  position: absolute; inset: 0; width: 100%; height: 100%;
 }
-.aveart-reference-product-card button:first-child:hover { background: var(--aveart-blush-light) !important; }
+.aveart-reference-hero-image { object-fit: cover; object-position: 62% 35%; }
+.aveart-reference-hero-shade { background: linear-gradient(90deg, rgb(24 28 23 / .68) 0%, rgb(24 28 23 / .35) 42%, rgb(24 28 23 / .02) 100%); }
+.aveart-reference-hero-content {
+  position: relative; z-index: 1; width: min(100% - 48px, 1320px);
+  margin: 0 auto; padding: 76px 0; color: #fff;
+}
+.aveart-reference-home .aveart-eyebrow {
+  margin: 0 0 16px; color: var(--ref-olive); font-size: 10px;
+  line-height: 1.5; font-weight: 700; letter-spacing: .2em; text-transform: uppercase;
+}
+.aveart-reference-hero-content .aveart-eyebrow { color: #f0f1ec; }
+.aveart-reference-hero-content h1 {
+  margin: 0; max-width: 680px; font-size: clamp(54px, 7.5vw, 100px);
+  font-weight: 500; line-height: .91; letter-spacing: -.065em;
+}
+.aveart-hero-copy { max-width: 390px; margin: 24px 0 0; color: rgb(255 255 255 / .9); font-size: 14px; line-height: 1.9; }
+.aveart-primary-button, .aveart-outline-button, .aveart-text-link {
+  display: inline-flex; align-items: center; justify-content: center; gap: 12px;
+  font-size: 10px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase;
+}
+.aveart-primary-button { margin-top: 28px; min-height: 48px; padding: 0 23px; border: 1px solid #fff; background: #fff; color: var(--ref-ink); }
+.aveart-primary-button:hover { background: var(--ref-olive); border-color: var(--ref-olive); color: #fff; }
+.aveart-reference-benefits {
+  width: min(100% - 48px, 1320px); margin: 0 auto; padding: 26px 0;
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px;
+  border-bottom: 1px solid var(--ref-line);
+}
+.aveart-benefit { display: flex; align-items: center; justify-content: center; gap: 13px; color: var(--ref-olive); }
+.aveart-benefit div { display: grid; gap: 4px; color: var(--ref-ink); }
+.aveart-benefit strong { font-size: 12px; font-weight: 600; }
+.aveart-benefit span { color: var(--ref-muted); font-size: 11px; }
+.aveart-reference-section { width: min(100% - 48px, 1320px); margin: 0 auto; padding: 86px 0; }
+.aveart-section-heading { display: flex; justify-content: space-between; align-items: end; gap: 24px; margin-bottom: 28px; }
+.aveart-section-heading h2, .aveart-editorial-copy h2, .aveart-newsletter-inner h2 {
+  margin: 0; font-size: clamp(34px, 4vw, 48px); font-weight: 500; letter-spacing: -.055em; line-height: 1.05;
+}
+.aveart-section-intro { margin: 12px 0 0; color: var(--ref-muted); font-size: 13px; line-height: 1.7; }
+.aveart-text-link { flex-shrink: 0; padding: 10px 0; color: var(--ref-ink); background: transparent; border-bottom: 1px solid #9da39a; }
+.aveart-text-link:hover { color: var(--ref-olive); border-color: var(--ref-olive); }
+.aveart-filter-row { display: flex; gap: 22px; align-items: center; margin: 0 0 24px; border-bottom: 1px solid var(--ref-line); }
+.aveart-filter { position: relative; padding: 0 0 13px; border: 0; background: transparent; color: var(--ref-muted); font-size: 11px; }
+.aveart-filter.active { color: var(--ref-ink); }
+.aveart-filter.active:after { content: ''; position: absolute; right: 0; bottom: -1px; left: 0; height: 2px; background: var(--ref-olive); }
+.aveart-product-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 22px; }
+.aveart-product-skeleton { min-height: 280px; background: linear-gradient(100deg, #f0f1ed 20%, #fafbf9 40%, #f0f1ed 60%); background-size: 200% 100%; animation: aveart-skeleton 1.3s infinite; }
+.aveart-empty-products { padding: 40px 0; color: var(--ref-muted); text-align: center; font-size: 13px; }
+.aveart-empty-products .aveart-text-link { margin: 0 auto; }
+@keyframes aveart-skeleton { to { background-position-x: -200%; } }
+.aveart-reference-editorial { display: grid; grid-template-columns: 1fr 1fr; min-height: 500px; background: var(--ref-paper); }
+.aveart-editorial-image-wrap { min-height: 440px; overflow: hidden; }
+.aveart-editorial-image-wrap img { width: 100%; height: 100%; min-height: 440px; display: block; object-fit: cover; object-position: center 35%; }
+.aveart-editorial-copy { display: flex; flex-direction: column; align-items: flex-start; justify-content: center; padding: clamp(40px, 7vw, 110px); }
+.aveart-editorial-copy h2 { font-size: clamp(38px, 4.4vw, 58px); }
+.aveart-editorial-copy > p:not(.aveart-eyebrow) { max-width: 400px; margin: 22px 0 0; color: var(--ref-muted); font-size: 13px; line-height: 1.9; }
+.aveart-outline-button { margin-top: 28px; min-height: 45px; padding: 0 18px; border: 1px solid #aeb4aa; background: transparent; color: var(--ref-ink); }
+.aveart-outline-button:hover { border-color: var(--ref-olive); color: var(--ref-olive); }
+.aveart-category-section { padding-top: 82px; padding-bottom: 92px; }
+.aveart-section-heading.centered { justify-content: center; text-align: center; }
+.aveart-category-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+.aveart-category-card { position: relative; display: block; width: 100%; padding: 0; border: 0; overflow: hidden; text-align: left; aspect-ratio: 3 / 4; background: #e8e9e3; color: #fff; }
+.aveart-category-card > img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform .55s ease; }
+.aveart-category-card:hover > img { transform: scale(1.04); }
+.aveart-category-overlay { position: absolute; inset: 0; background: linear-gradient(0deg, rgb(20 24 20 / .72), rgb(20 24 20 / .04) 62%); }
+.aveart-category-copy { position: absolute; right: 22px; bottom: 24px; left: 22px; display: flex; flex-direction: column; align-items: flex-start; }
+.aveart-category-copy small { margin-bottom: 8px; font-size: 9px; letter-spacing: .16em; text-transform: uppercase; }
+.aveart-category-copy strong { font-size: clamp(22px, 2.6vw, 32px); font-weight: 500; letter-spacing: -.04em; line-height: 1.1; }
+.aveart-category-copy > span { display: inline-flex; align-items: center; gap: 8px; margin-top: 14px; font-size: 10px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; }
+.aveart-reference-newsletter { background: var(--ref-paper); border-top: 1px solid var(--ref-line); border-bottom: 1px solid var(--ref-line); }
+.aveart-newsletter-inner { width: min(100% - 48px, 660px); margin: 0 auto; padding: 76px 0 82px; text-align: center; }
+.aveart-newsletter-inner .aveart-eyebrow { margin-bottom: 15px; }
+.aveart-newsletter-inner h2 { font-size: clamp(38px, 5vw, 54px); }
+.aveart-newsletter-inner > p:not(.aveart-eyebrow):not(.aveart-newsletter-success) { max-width: 420px; margin: 18px auto 0; color: var(--ref-muted); font-size: 13px; line-height: 1.8; }
+.aveart-newsletter-form { display: flex; max-width: 490px; margin: 28px auto 0; border-bottom: 1px solid #9da39a; }
+.aveart-newsletter-form input { flex: 1; min-width: 0; padding: 14px 4px; border: 0 !important; border-radius: 0 !important; background: transparent !important; outline: none; font-size: 12px; box-shadow: none !important; }
+.aveart-newsletter-form input:focus { outline: none; }
+.aveart-newsletter-form button { display: inline-flex; align-items: center; gap: 9px; padding: 0 4px 0 16px; border: 0; background: transparent; color: var(--ref-ink); font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; }
+.aveart-newsletter-form button:hover { color: var(--ref-olive); }
+.aveart-newsletter-inner > small { display: flex; justify-content: center; align-items: center; gap: 7px; margin-top: 16px; color: var(--ref-muted); font-size: 10px; }
+.aveart-newsletter-success { margin: 24px 0 0; color: var(--ref-olive); font-size: 13px; }
+@media (max-width: 800px) {
+  .aveart-reference-home .aveart-reference-hero { min-height: 530px; }
+  .aveart-reference-hero-content { width: calc(100% - 40px); padding: 64px 0; }
+  .aveart-reference-benefits { width: calc(100% - 40px); grid-template-columns: 1fr; gap: 18px; padding: 23px 0; }
+  .aveart-benefit { justify-content: flex-start; }
+  .aveart-reference-section { width: calc(100% - 40px); padding: 62px 0; }
+  .aveart-section-heading { align-items: flex-start; flex-direction: column; gap: 10px; }
+  .aveart-product-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+  .aveart-reference-editorial { grid-template-columns: 1fr; }
+  .aveart-editorial-image-wrap, .aveart-editorial-image-wrap img { min-height: 340px; max-height: 440px; }
+  .aveart-editorial-copy { padding: 42px 24px 48px; }
+  .aveart-category-grid { gap: 10px; }
+  .aveart-category-copy { right: 12px; bottom: 15px; left: 12px; }
+  .aveart-category-copy strong { font-size: 20px; }
+  .aveart-category-copy small { font-size: 8px; }
+  .aveart-category-copy > span { font-size: 8px; }
+  .aveart-newsletter-inner { width: calc(100% - 40px); padding: 60px 0; }
+}
+@media (max-width: 520px) {
+  .aveart-reference-home .aveart-reference-hero { min-height: 490px; }
+  .aveart-reference-hero-image { object-position: 62% center; }
+  .aveart-reference-hero-shade { background: linear-gradient(90deg, rgb(24 28 23 / .68), rgb(24 28 23 / .28)); }
+  .aveart-reference-hero-content h1 { font-size: 58px; }
+  .aveart-reference-section { width: calc(100% - 32px); }
+  .aveart-reference-benefits { width: calc(100% - 32px); }
+  .aveart-filter-row { gap: 17px; overflow-x: auto; }
+  .aveart-category-grid { grid-template-columns: 1fr; gap: 14px; }
+  .aveart-category-card { aspect-ratio: 4 / 3; }
+  .aveart-category-copy { right: 20px; bottom: 20px; left: 20px; }
+  .aveart-category-copy strong { font-size: 29px; }
+  .aveart-newsletter-inner { width: calc(100% - 32px); }
+  .aveart-newsletter-form { align-items: stretch; }
+  .aveart-newsletter-form button { padding-left: 10px; font-size: 9px; }
+}
 
-/* Accent, selected filters and promotion labels */
-.aveart-reference-home .aveart-filter.active,
-.aveart-reference-home .aveart-filter:hover,
-.aveart-reference-catalog .bg-rose-500,
-.aveart-reference-catalog .bg-rose-600,
-.aveart-reference-product-card .bg-rose-500,
-.aveart-reference-product-card [class~="bg-rose-500"] {
-  background-color: var(--aveart-burgundy) !important;
-  border-color: var(--aveart-burgundy) !important;
-  color: var(--aveart-white) !important;
-}
-.aveart-reference-home .aveart-eyebrow,
-.aveart-reference-home .aveart-benefit,
-.aveart-reference-footer .aveart-footer-tagline,
-.aveart-reference-catalog .text-emerald-700,
-.aveart-reference-catalog .text-emerald-600,
-.aveart-reference-product-page .text-emerald-700,
-.aveart-reference-product-page .text-emerald-600 {
-  color: var(--aveart-burgundy) !important;
-}
-.aveart-reference-home .aveart-filter { border-color: var(--aveart-line); }
-.aveart-reference-home .aveart-filter.active:after { background: var(--aveart-burgundy); }
-.aveart-reference-product-page .border-emerald-600,
-.aveart-reference-catalog .border-emerald-600 { border-color: var(--aveart-burgundy) !important; }
-.aveart-reference-product-page .bg-emerald-50,
-.aveart-reference-catalog .bg-slate-50 { background-color: var(--aveart-blush-light) !important; }
 
-/* Hero, editorial and newsletter */
-.aveart-reference-hero { background-color: #7A4B55; }
-.aveart-reference-hero-content .aveart-eyebrow { color: #F1E4E2 !important; }
-.aveart-reference-home .aveart-primary-button { border-radius: 4px; }
-.aveart-reference-home .aveart-text-link { color: var(--aveart-burgundy); border-color: var(--aveart-blush); }
-.aveart-reference-home .aveart-text-link:hover { color: var(--aveart-burgundy-dark); border-color: var(--aveart-burgundy); }
-.aveart-reference-newsletter { border-color: var(--aveart-line) !important; }
-.aveart-newsletter-form { border-color: var(--aveart-blush) !important; }
-.aveart-newsletter-form input { background: var(--aveart-white) !important; border-color: var(--aveart-line) !important; }
-.aveart-newsletter-inner .aveart-eyebrow { color: var(--aveart-burgundy) !important; }
-.aveart-newsletter-success, .aveart-reference-footer .aveart-footer-success { color: var(--aveart-burgundy) !important; }
+/* Footer matching the AVEART HTML reference */
+.aveart-reference-footer { margin-top: 0 !important; padding: 0 !important; background: #fff !important; color: var(--aveart-ink) !important; border-top: 1px solid var(--ref-line, #e5e8e2) !important; }
+.aveart-reference-footer .aveart-footer-main {
+  width: min(100% - 48px, 1320px); margin: 0 auto; padding: 58px 0 50px;
+  display: grid; grid-template-columns: 1.35fr .75fr .9fr 1.2fr; gap: clamp(26px, 4vw, 66px);
+}
+.aveart-reference-footer .aveart-footer-wordmark { display: inline-flex; align-items: center; gap: 11px; padding: 0; border: 0; background: transparent; color: var(--aveart-ink); font-size: 20px; font-weight: 700; letter-spacing: .16em; }
+.aveart-reference-footer .aveart-footer-logo { width: 26px; height: 26px; color: var(--aveart-ink); }
+.aveart-reference-footer .aveart-footer-brand > p, .aveart-reference-footer .aveart-footer-newsletter > p { max-width: 290px; margin: 18px 0 0; color: #70756e !important; font-size: 12px; line-height: 1.9; }
+.aveart-reference-footer .aveart-footer-tagline { display: inline-block; margin-top: 18px; color: #78936a; font-size: 9px; font-weight: 700; letter-spacing: .2em; }
+.aveart-reference-footer .aveart-footer-column { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; }
+.aveart-reference-footer .aveart-footer-column h3 { margin: 3px 0 8px; color: var(--aveart-ink) !important; font-size: 10px; font-weight: 700; letter-spacing: .15em; text-transform: uppercase; }
+.aveart-reference-footer .aveart-footer-column > button { padding: 0; border: 0; background: transparent; color: #70756e !important; font-size: 12px; text-align: left; }
+.aveart-reference-footer .aveart-footer-column > button:hover { color: #78936a !important; }
+.aveart-reference-footer .aveart-footer-newsletter > p { margin: 0; }
+.aveart-reference-footer .aveart-footer-form { display: flex; width: 100%; margin-top: 7px; border-bottom: 1px solid #aeb4aa; }
+.aveart-reference-footer .aveart-footer-form input { min-width: 0; flex: 1; padding: 11px 0; border: 0 !important; border-radius: 0 !important; background: transparent !important; box-shadow: none !important; font-size: 11px; }
+.aveart-reference-footer .aveart-footer-form button { display: grid; place-items: center; padding: 0 2px 0 12px; border: 0; background: transparent; color: var(--aveart-ink); }
+.aveart-reference-footer .aveart-footer-social { display: inline-flex; align-items: center; gap: 8px; margin-top: 10px; padding: 0; border: 0; background: transparent; color: #70756e; font-size: 10px; }
+.aveart-reference-footer .aveart-footer-success { color: #65775d !important; }
+.aveart-reference-footer .aveart-footer-bottom { display: flex; justify-content: space-between; gap: 18px; width: min(100% - 48px, 1320px); margin: 0 auto; padding: 20px 0 25px; border-top: 1px solid var(--ref-line, #e5e8e2); color: #777d75; font-size: 10px; }
+@media (max-width: 800px) {
+  .aveart-reference-footer .aveart-footer-main { grid-template-columns: repeat(2, minmax(0, 1fr)); width: calc(100% - 40px); gap: 38px 28px; padding: 45px 0 38px; }
+  .aveart-reference-footer .aveart-footer-bottom { width: calc(100% - 40px); flex-direction: column; }
+}
+@media (max-width: 480px) {
+  .aveart-reference-footer .aveart-footer-main { grid-template-columns: 1fr; gap: 30px; }
+  .aveart-reference-footer .aveart-footer-bottom { width: calc(100% - 32px); }
+}
 
-/* Footer and catalogue consistency */
-.aveart-reference-footer { border-color: var(--aveart-line) !important; }
-.aveart-reference-footer .aveart-footer-bottom { border-color: var(--aveart-line) !important; }
-.aveart-reference-footer .aveart-footer-wordmark,
-.aveart-reference-footer .aveart-footer-column h3 { color: var(--aveart-ink) !important; }
-.aveart-reference-footer .aveart-footer-logo { color: var(--aveart-burgundy); }
-.aveart-reference-footer .aveart-footer-brand > p,
-.aveart-reference-footer .aveart-footer-newsletter > p,
-.aveart-reference-footer .aveart-footer-column > button,
-.aveart-reference-footer .aveart-footer-bottom { color: var(--aveart-muted) !important; }
-.aveart-reference-footer .aveart-footer-column > button:hover,
-.aveart-reference-footer .aveart-footer-form button:hover { color: var(--aveart-burgundy) !important; }
-.aveart-reference-footer .aveart-footer-form { border-color: var(--aveart-blush) !important; }
-.aveart-reference-footer .aveart-footer-form button { color: var(--aveart-burgundy) !important; }
-.aveart-reference-catalog, .aveart-reference-product-page { color: var(--aveart-ink); }
-.aveart-reference-catalog > div:first-child { border-color: var(--aveart-line) !important; }
-.aveart-reference-catalog > div:first-child h1 { color: var(--aveart-ink) !important; }
-.aveart-reference-product-card:hover { border-color: var(--aveart-blush) !important; box-shadow: 0 8px 24px rgb(100 31 50 / .09) !important; }
-.aveart-reference-product-page .bg-slate-100,
-.aveart-reference-product-page .bg-slate-50 { background-color: var(--aveart-blush-light) !important; }
-.aveart-reference-product-page .text-rose-900,
-.aveart-reference-product-page .text-rose-700,
-.aveart-reference-product-page .text-rose-600 { color: var(--aveart-burgundy) !important; }
-.aveart-reference-product-page .ring-2 { --tw-ring-color: rgb(100 31 50 / .22) !important; }
+
+/* Exact typography, copy treatment and section colours from index (1).html */
+.aveart-reference-home .aveart-reference-hero-content h1 { text-transform: uppercase; font-weight: 800; letter-spacing: .2px; line-height: 1; }
+.aveart-reference-home .aveart-eyebrow { letter-spacing: 1.5px; }
+.aveart-reference-home .aveart-reference-hero-content .aveart-eyebrow { text-transform: uppercase; }
+.aveart-reference-home .aveart-primary-button { border-radius: 4px; background: #fff; color: #242824; border-color: #fff; text-transform: uppercase; letter-spacing: .3px; }
+.aveart-reference-benefits { background: #f3f6f1; border-bottom: 0; }
+.aveart-reference-benefits .aveart-benefit { color: #78936a; }
+.aveart-reference-section { padding-top: 48px; padding-bottom: 48px; }
+.aveart-reference-home .aveart-section-heading h2 { font-size: 30px; font-weight: 700; letter-spacing: 0; }
+.aveart-reference-home .aveart-section-heading .aveart-eyebrow { color: #747a72; font-size: 11px; letter-spacing: 0; }
+.aveart-reference-home .aveart-text-link { text-transform: uppercase; font-size: 12px; letter-spacing: 0; border-bottom: 1px solid; padding-bottom: 5px; }
+.aveart-reference-home .aveart-filter-row { gap: 8px; flex-wrap: wrap; margin-bottom: 20px; border: 0; }
+.aveart-reference-home .aveart-filter { border: 1px solid #e5e8e2; border-radius: 4px; background: #fff; padding: 9px 14px; font-size: 12px; color: #242824; }
+.aveart-reference-home .aveart-filter.active, .aveart-reference-home .aveart-filter:hover { background: #78936a; border-color: #78936a; color: #fff; }
+.aveart-reference-home .aveart-filter.active:after { display: none; }
+.aveart-reference-editorial { background: #edf2e9; min-height: 320px; }
+.aveart-editorial-image-wrap, .aveart-editorial-image-wrap img { min-height: 320px; }
+.aveart-editorial-copy { padding: 8% 10%; }
+.aveart-editorial-copy h2 { font-size: clamp(30px, 3.5vw, 46px); font-weight: 700; letter-spacing: 0; line-height: 1.08; }
+.aveart-editorial-copy > p:not(.aveart-eyebrow) { max-width: 340px; color: #535b50; font-size: 14px; line-height: 1.65; margin-bottom: 20px; }
+.aveart-reference-home .aveart-outline-button { border-radius: 4px; background: #78936a; color: #fff; border-color: #78936a; text-transform: uppercase; }
+.aveart-reference-home .aveart-category-section { padding-top: 48px; padding-bottom: 48px; }
+.aveart-category-card { aspect-ratio: auto; height: 270px; border-radius: 3px; }
+.aveart-category-card > img { position: absolute; inset: 0; }
+.aveart-category-overlay { background: transparent; }
+.aveart-category-copy { right: 12px; bottom: 12px; left: 12px; flex-direction: row; align-items: center; justify-content: space-between; padding: 13px 14px; border-radius: 3px; background: #ffffffed; color: #242824; }
+.aveart-category-copy strong { font-size: 18px; font-weight: 700; letter-spacing: 0; }
+.aveart-category-copy > span { margin: 0; font-size: 18px; font-weight: 400; }
+.aveart-reference-newsletter { background: #f0f4ed; border: 0; }
+.aveart-newsletter-inner { padding: 48px 20px; }
+.aveart-newsletter-inner .aveart-eyebrow { color: #747a72; font-size: 11px; letter-spacing: 0; }
+.aveart-newsletter-inner h2 { font-size: 30px; font-weight: 700; letter-spacing: 0; }
+.aveart-newsletter-inner > p:not(.aveart-eyebrow):not(.aveart-newsletter-success) { font-size: 13px; color: #666; }
+.aveart-newsletter-form { max-width: 460px; border: 0; }
+.aveart-newsletter-form input { padding: 13px; border: 1px solid #cdd5c8 !important; border-radius: 4px 0 0 4px !important; background: #fff !important; font-size: 13px; }
+.aveart-newsletter-form button { border-radius: 0 4px 4px 0; padding: 0 18px; background: #78936a; color: #fff; font-size: 12px; letter-spacing: 0; }
+.aveart-reference-footer { background: #343d32 !important; color: #fff !important; border-top: 0 !important; }
+.aveart-reference-footer .aveart-footer-main { padding: 40px 0 18px; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 26px; }
+.aveart-reference-footer .aveart-footer-wordmark, .aveart-reference-footer .aveart-footer-column h3 { color: #fff !important; }
+.aveart-reference-footer .aveart-footer-wordmark { font-size: 24px; letter-spacing: .16em; }
+.aveart-reference-footer .aveart-footer-logo { color: #fff; }
+.aveart-reference-footer .aveart-footer-brand > p, .aveart-reference-footer .aveart-footer-newsletter > p { color: #e0e5dc !important; font-size: 12px; line-height: 1.7; }
+.aveart-reference-footer .aveart-footer-column h3 { font-size: 11px; letter-spacing: 0; }
+.aveart-reference-footer .aveart-footer-column > button { color: #e0e5dc !important; font-size: 12px; margin: 0; }
+.aveart-reference-footer .aveart-footer-column > button:hover { color: #fff !important; }
+.aveart-reference-footer .aveart-footer-bottom { width: 100%; max-width: none; margin: 25px 0 0; padding: 16px max(5%, calc((100% - 1320px)/2)) 0; border-top: 1px solid #596451; color: #e0e5dc; font-size: 11px; }
+@media (max-width: 800px) {
+  .aveart-reference-section { padding: 38px 4%; }
+  .aveart-reference-home .aveart-section-heading h2 { font-size: 25px; }
+  .aveart-category-card { height: 240px; }
+  .aveart-category-copy { right: 12px; bottom: 12px; left: 12px; padding: 13px 14px; }
+  .aveart-category-copy strong { font-size: 18px; }
+  .aveart-reference-footer .aveart-footer-main { grid-template-columns: 1fr 1fr; width: 92%; }
+  .aveart-reference-footer .aveart-footer-bottom { width: 100%; }
+}
+@media (max-width: 420px) {
+  .aveart-reference-home .aveart-reference-hero-content h1 { font-size: 40px; }
+  .aveart-reference-footer .aveart-footer-main { grid-template-columns: 1fr 1fr; }
+}
+
+
+/* Product catalogue and detail pages — same AVEART reference design */
+.aveart-reference-catalog, .aveart-reference-product-page { color: #242824; font-family: Arial, Helvetica, sans-serif; }
+.aveart-reference-catalog > div:first-child { border-color: #e5e8e2 !important; padding-bottom: 22px !important; }
+.aveart-reference-catalog > div:first-child span, .aveart-reference-catalog > div:first-child .text-emerald-700 { color: #78936a !important; }
+.aveart-reference-catalog > div:first-child h1 { color: #242824 !important; font-size: clamp(28px, 3.5vw, 42px) !important; font-weight: 700 !important; letter-spacing: -.04em !important; }
+.aveart-reference-catalog > div:first-child p { color: #70756e !important; line-height: 1.7; }
+.aveart-reference-catalog button { border-radius: 3px; }
+.aveart-reference-catalog .bg-\[\#87977D\], .aveart-reference-catalog .bg-emerald-600 { background-color: #78936a !important; }
+.aveart-reference-catalog .hover\:bg-\[\#65775D\]:hover, .aveart-reference-catalog .hover\:bg-emerald-700:hover { background-color: #65775d !important; }
+.aveart-reference-catalog .text-emerald-700, .aveart-reference-catalog .text-emerald-600 { color: #65775d !important; }
+.aveart-reference-catalog .border-emerald-600 { border-color: #78936a !important; }
+.aveart-reference-catalog .rounded-xl, .aveart-reference-catalog .rounded-2xl { border-radius: 4px !important; }
+.aveart-reference-catalog .bg-slate-50 { background-color: #f7f8f5 !important; }
+.aveart-reference-catalog .border-slate-200 { border-color: #e5e8e2 !important; }
+.aveart-reference-product-card { border-color: #e5e8e2 !important; border-radius: 3px !important; box-shadow: none; }
+.aveart-reference-product-card:hover { border-color: #b7c5ad !important; box-shadow: 0 8px 24px rgb(36 40 36 / .08) !important; }
+.aveart-reference-product-card > div:first-child { background: #f7f8f5 !important; }
+.aveart-reference-product-card .rounded-full { border-radius: 3px !important; }
+.aveart-reference-product-card .bg-emerald-600, .aveart-reference-product-card .bg-\[\#87977D\] { background-color: #78936a !important; }
+.aveart-reference-product-card .hover\:bg-emerald-700:hover, .aveart-reference-product-card .hover\:bg-\[\#65775D\]:hover { background-color: #65775d !important; }
+.aveart-reference-product-card .text-emerald-700, .aveart-reference-product-card .text-emerald-600 { color: #65775d !important; }
+.aveart-reference-product-card .text-rose-600 { color: #65775d !important; }
+.aveart-reference-product-card .rounded-xl, .aveart-reference-product-card .rounded-lg { border-radius: 3px !important; }
+.aveart-reference-product-card h3, .aveart-reference-product-card h4 { color: #242824 !important; font-weight: 600 !important; letter-spacing: -.01em; }
+.aveart-reference-product-card .text-slate-500, .aveart-reference-product-card .text-slate-600 { color: #70756e !important; }
+.aveart-reference-product-page > div:first-child { color: #70756e !important; font-size: 11px; }
+.aveart-reference-product-page button { border-radius: 3px; }
+.aveart-reference-product-page .rounded-xl, .aveart-reference-product-page .rounded-2xl { border-radius: 3px !important; }
+.aveart-reference-product-page .border-slate-200, .aveart-reference-product-page .border-slate-100 { border-color: #e5e8e2 !important; }
+.aveart-reference-product-page .bg-slate-100, .aveart-reference-product-page .bg-slate-50 { background-color: #f7f8f5 !important; }
+.aveart-reference-product-page .text-slate-900, .aveart-reference-product-page .text-slate-800 { color: #242824 !important; }
+.aveart-reference-product-page .text-slate-500, .aveart-reference-product-page .text-slate-600 { color: #70756e !important; }
+.aveart-reference-product-page .text-emerald-700, .aveart-reference-product-page .text-emerald-600 { color: #65775d !important; }
+.aveart-reference-product-page .bg-emerald-600, .aveart-reference-product-page .bg-\[\#87977D\] { background-color: #78936a !important; }
+.aveart-reference-product-page .hover\:bg-emerald-700:hover, .aveart-reference-product-page .hover\:bg-\[\#65775D\]:hover { background-color: #65775d !important; }
+.aveart-reference-product-page .border-emerald-600 { border-color: #78936a !important; }
+.aveart-reference-product-page .shadow-sm, .aveart-reference-product-page .shadow-md { box-shadow: none !important; }
+.aveart-reference-product-page h1 { font-size: clamp(26px, 3vw, 38px) !important; font-weight: 700 !important; letter-spacing: -.04em; line-height: 1.12 !important; }
+.aveart-reference-product-page .font-black, .aveart-reference-product-page .font-extrabold { font-weight: 700 !important; }
+.aveart-reference-product-page .text-3xl { font-size: 28px !important; }
+.aveart-reference-product-page .aspect-\[3\/4\] { background: #f7f8f5 !important; }
+.aveart-reference-product-page input, .aveart-reference-product-page select, .aveart-reference-product-page textarea { border-radius: 3px !important; }
+.aveart-reference-product-page .ring-2 { --tw-ring-color: rgb(120 147 106 / .25) !important; }
+.aveart-reference-product-page .bg-emerald-50 { background-color: #f0f4ed !important; }
+.aveart-reference-product-page .text-rose-900, .aveart-reference-product-page .text-rose-700 { color: #65775d !important; }
 @media (max-width: 640px) {
   .aveart-reference-product-page { padding-top: 20px !important; }
   .aveart-reference-product-page .lg\:sticky { position: static; }
+  .aveart-reference-product-page .aspect-\[3\/4\] { border-radius: 3px !important; }
+  .aveart-reference-product-page .p-8 { padding: 20px !important; }
+  .aveart-reference-product-page .p-6 { padding: 16px !important; }
 }
+
+
+/* Editorial typography for the full product detail page */
+.aveart-reference-product-page {
+  font-family: Arial, Helvetica, sans-serif !important;
+  font-size: 14px;
+  letter-spacing: .005em;
+  -webkit-font-smoothing: antialiased;
+}
+.aveart-reference-product-page h1,
+.aveart-reference-product-page h2,
+.aveart-reference-product-page h3,
+.aveart-reference-product-page h4 {
+  font-family: Georgia, "Times New Roman", serif !important;
+  font-weight: 400 !important;
+  letter-spacing: -.035em !important;
+}
+.aveart-reference-product-page h1 {
+  font-size: clamp(30px, 3.2vw, 43px) !important;
+  line-height: 1.08 !important;
+  text-transform: none !important;
+}
+.aveart-reference-product-page .text-2xl,
+.aveart-reference-product-page .text-3xl {
+  font-family: Georgia, "Times New Roman", serif !important;
+  font-weight: 400 !important;
+  letter-spacing: -.035em !important;
+}
+.aveart-reference-product-page .font-black,
+.aveart-reference-product-page .font-extrabold,
+.aveart-reference-product-page .font-bold {
+  font-weight: 600 !important;
+}
+.aveart-reference-product-page .uppercase {
+  font-family: Arial, Helvetica, sans-serif !important;
+  letter-spacing: .11em !important;
+  font-size: .72rem;
+}
+.aveart-reference-product-page p,
+.aveart-reference-product-page label,
+.aveart-reference-product-page input,
+.aveart-reference-product-page select,
+.aveart-reference-product-page textarea,
+.aveart-reference-product-page button {
+  font-family: Arial, Helvetica, sans-serif !important;
+}
+.aveart-reference-product-page .font-mono {
+  font-family: Arial, Helvetica, sans-serif !important;
+  letter-spacing: -.025em;
+}
+.aveart-reference-product-page .text-sm { line-height: 1.7; }
+.aveart-reference-product-page .text-xs { letter-spacing: .025em; }
+.aveart-reference-product-page .text-slate-900 { color: #242824 !important; }
+@media (max-width: 640px) {
+  .aveart-reference-product-page h1 { font-size: 32px !important; }
+}
+
+
+/* Automatic AVEART hero carousel */
+.aveart-reference-hero { position: relative; overflow: hidden; }
+.aveart-reference-hero-image { transition: opacity .7s ease; }
+.aveart-hero-slide-fade { animation: aveartHeroFadeIn .8s ease both; }
+.aveart-hero-slide-indicators {
+  position: absolute;
+  z-index: 3;
+  left: 50%;
+  bottom: 22px;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  pointer-events: none;
+}
+.aveart-hero-dot {
+  display: block;
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 55%);
+  box-shadow: 0 1px 5px rgb(0 0 0 / 20%);
+  transition: width .25s ease, background-color .25s ease;
+}
+.aveart-hero-dot.active {
+  width: 22px;
+  border-radius: 999px;
+  background: #fff;
+}
+@keyframes aveartHeroFadeIn {
+  from { opacity: .35; }
+  to { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .aveart-hero-slide-fade { animation: none; }
+}
+
+
+/* AVEART conversion-focused palette: ink, sage, cream, terracotta and white */
+:root {
+  --aveart-ink: #252820;
+  --aveart-sage: #A5B394;
+  --aveart-sage-dark: #65775D;
+  --aveart-cream: #F3EEE5;
+  --aveart-terracotta: #B65E4A;
+  --aveart-white: #FFFFFF;
+  --aveart-muted: #77766F;
+  --aveart-line: #E5DED3;
+  --aveart-soft: #F3EEE5;
+}
+@theme {
+  --color-canvas: #F3EEE5;
+  --color-canvas-subtle: #F3EEE5;
+  --color-brand-primary: #A5B394;
+  --color-brand-hover: #65775D;
+  --color-brand-accent: #A5B394;
+  --color-sale: #B65E4A;
+}
+html, body { background-color: var(--aveart-cream); color: var(--aveart-ink); }
+main, [role="main"] { background-color: var(--aveart-cream); }
+.aveart-reference-home, .aveart-reference-footer { background-color: var(--aveart-cream) !important; color: var(--aveart-ink) !important; }
+.aveart-reference-section, .aveart-reference-newsletter { background-color: var(--aveart-cream); }
+.aveart-reference-benefits, .aveart-reference-editorial { background-color: #E9E4D9 !important; }
+.aveart-reference-product-card, .aveart-reference-product-page, .aveart-reference-footer .aveart-footer-form { color: var(--aveart-ink); }
+.aveart-reference-product-card { background: var(--aveart-white) !important; border-color: var(--aveart-line) !important; }
+.aveart-reference-product-card .bg-rose-500,
+.aveart-reference-product-card [class~="bg-rose-500"] { background-color: var(--aveart-terracotta) !important; }
+.aveart-reference-product-card .text-rose-600 { color: var(--aveart-sage-dark) !important; }
+.aveart-reference-product-card button:last-child,
+.aveart-reference-product-page button[class*="bg-emerald-600"],
+.aveart-reference-product-page button[class*="bg-[#87977D]"] {
+  background-color: var(--aveart-sage-dark) !important;
+  border-color: var(--aveart-sage-dark) !important;
+  color: var(--aveart-white) !important;
+}
+.aveart-reference-product-card button:last-child:hover,
+.aveart-reference-product-page button[class*="bg-emerald-600"]:hover {
+  background-color: var(--aveart-ink) !important;
+  border-color: var(--aveart-ink) !important;
+}
+.aveart-reference-product-card button:first-child {
+  border-color: var(--aveart-sage-dark) !important;
+  color: var(--aveart-sage-dark) !important;
+  background: var(--aveart-white) !important;
+}
+.aveart-reference-product-card button:first-child:hover { background: var(--aveart-cream) !important; }
+.aveart-primary-button { background: var(--aveart-sage-dark) !important; border-color: var(--aveart-sage-dark) !important; color: #fff !important; }
+.aveart-primary-button:hover { background: var(--aveart-ink) !important; border-color: var(--aveart-ink) !important; }
+.aveart-reference-home .aveart-filter.active,
+.aveart-reference-home .aveart-filter:hover { background: var(--aveart-sage-dark) !important; border-color: var(--aveart-sage-dark) !important; color: #fff !important; }
+.aveart-reference-home .aveart-eyebrow,
+.aveart-reference-home .aveart-benefit,
+.aveart-reference-footer .aveart-footer-tagline { color: var(--aveart-sage-dark) !important; }
+.aveart-reference-footer { border-color: var(--aveart-line) !important; }
+.aveart-reference-footer .aveart-footer-bottom { border-color: var(--aveart-line) !important; }
+.aveart-reference-footer .aveart-footer-column > button:hover,
+.aveart-reference-footer .aveart-footer-form button:hover { color: var(--aveart-sage-dark) !important; }
+.aveart-reference-product-page .bg-emerald-600,
+.aveart-reference-product-page .bg-\\[\\#87977D\\] { background-color: var(--aveart-sage-dark) !important; }
+.aveart-reference-product-page .hover\\:bg-emerald-700:hover { background-color: var(--aveart-ink) !important; }
+.aveart-reference-product-page .border-emerald-600 { border-color: var(--aveart-sage-dark) !important; }
+.aveart-reference-product-page .text-emerald-600,
+.aveart-reference-product-page .text-rose-700 { color: var(--aveart-sage-dark) !important; }
+input:focus, select:focus, textarea:focus { outline-color: #D8DFCF !important; border-color: var(--aveart-sage-dark) !important; }
+::selection { background: #DCE4D3; color: var(--aveart-ink); }
