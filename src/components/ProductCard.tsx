@@ -81,10 +81,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect, onB
       unitPrice: product.base_price + matchedVariant.price_offset,
       imageUrl: matchedVariant.image_url || product.primary_image,
       stockAvailable: matchedVariant.stock_quantity,
-    });
+    }, { openDrawer: !buyNow });
 
     if (buyNow) {
       closeDrawer();
+      setIsQuickAddOpen(false);
       onBuyNow();
     }
   };
