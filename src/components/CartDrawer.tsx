@@ -223,7 +223,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onNavigateToCheckout }) 
                 <div className="flex justify-between text-base font-extrabold text-slate-900 pt-2 border-t border-slate-100">
                   <span>Subtotal + VAT</span>
                   <span className="font-mono tabular-nums text-lg text-[#65775D] font-extrabold">
-                    {formatZAR(calculation ? calculation.subtotal - calculation.discountAmount + calculation.taxAmount : subtotal)}
+                    {formatZAR(calculation ? calculation.totalAmount : subtotal)}
                   </span>
                 </div>
               </div>
