@@ -43,6 +43,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect, onB
     product.sizes && product.sizes.length > 0 ? product.sizes[0] : null
   );
   const [isQuickAddOpen, setIsQuickAddOpen] = useState(false);
+  const [quickAddIntent, setQuickAddIntent] = useState<'cart' | 'buy'>('cart');
   const [isAdded, setIsAdded] = useState(false);
 
   // Never use another product's photo as a fallback.
@@ -140,7 +141,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect, onB
         {!isOutOfStock && (
           <div
             onClick={(e) => e.stopPropagation()}
-            className="absolute inset-x-3 bottom-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+            className={`absolute inset-x-3 bottom-3 transition-opacity duration-200 ${isQuickAddOpen ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}
           >
             {isQuickAddOpen ? (
               <div className="bg-white/95 backdrop-blur-md p-3.5 rounded-xl shadow-xl border border-slate-200 space-y-2.5">
@@ -169,10 +170,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect, onB
                   ))}
                 </div>
                 <button
-                  onClick={handleQuickAdd}
+                  onClick={() => handleQuickAdd(undefined, quickAddIntent === 'buy')}
                   className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2 text-xs font-bold rounded-lg transition-colors shadow-xs cursor-pointer"
                 >
-                  Confirm Size · Add to Cart
+                  {quickAddIntent === 'buy' ? 'Confirm Size · Buy Now' : 'Confirm Size · Add to Cart'}
                 </button>
               </div>
             ) : (
@@ -262,6 +263,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect, onB
                 if (!product.variants || product.variants.length === 0) {
                   onSelect(product.slug);
                 } else if (product.sizes && product.sizes.length > 1) {
+                  setQuickAddIntent('cart');
                   setIsQuickAddOpen(true);
                 } else {
                   handleQuickAdd(e);
@@ -277,6 +279,9 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect, onB
                 e.stopPropagation();
                 if (!product.variants || product.variants.length === 0) {
                   onSelect(product.slug);
+                } else if (product.sizes && product.sizes.length > 1) {
+                  setQuickAddIntent('buy');
+                  setIsQuickAddOpen(true);
                 } else {
                   handleQuickAdd(e, true);
                 }
