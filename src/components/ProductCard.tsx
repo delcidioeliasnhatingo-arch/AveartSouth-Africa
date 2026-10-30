@@ -94,7 +94,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect, onB
       unitPrice: product.base_price + Number(chosenVariant.price_offset || 0),
       imageUrl: chosenVariant.image_url || product.primary_image || product.images?.[0] || '',
       stockAvailable: maxQuantity,
-    }, { openDrawer: selectionAction === 'cart' }));
+    }, { openDrawer: false }));
     setSelectorOpen(false);
     if (selectionAction === 'buy') onBuyNow();
   };
