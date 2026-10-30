@@ -13,8 +13,8 @@ async function fetchProductsWithFallback(url: string, signal: AbortSignal): Prom
       if (!response.ok) { lastError = new Error(`Product API returned HTTP ${response.status}`); continue; }
       const data = await response.clone().json();
       const rows = Array.isArray(data) ? data : Array.isArray(data?.products) ? data.products : Array.isArray(data?.data) ? data.data : [];
-      if (rows.length) return response;
-      lastError = new Error('Product API returned an empty catalogue');
+      if (Array.isArray(data) || Array.isArray(data?.products) || Array.isArray(data?.data)) return response;
+      lastError = new Error('Product API returned an invalid catalogue response');
     } catch (error: any) {
       if (error?.name === 'AbortError') throw error;
       lastError = error;
