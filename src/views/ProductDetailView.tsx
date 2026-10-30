@@ -83,7 +83,7 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
       .then((data) => {
         setProduct(data);
         if (data.variants && data.variants.length > 0) {
-          const first = data.variants[0];
+          const first = data.variants.find((variant: ProductVariant) => variant.stock_quantity > 0) || data.variants[0];
           setSelectedVariant(first);
           setSelectedSize(first.size || (data.sizes && data.sizes[0]) || '');
           setSelectedColor(first.color || (data.colors && data.colors[0]?.name) || '');
@@ -225,7 +225,7 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
       unitPrice: currentPrice,
       imageUrl: selectedVariant.image_url || product.primary_image,
       stockAvailable: selectedVariant.stock_quantity,
-    });
+    }, { openDrawer: false });
   };
 
   const handleBuyNow = () => {
@@ -722,6 +722,7 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
               <ProductCard
                 key={rec.id}
                 product={rec}
+                onBuyNow={onBuyNow}
                 onSelect={(newSlug) => {
                   onSelectProduct(newSlug);
                   window.scrollTo({ top: 0, behavior: 'smooth' });
