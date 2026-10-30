@@ -59,7 +59,7 @@ export default function App() {
             )}
 
             {currentView === 'home' && (
-              <HomeView onNavigate={handleNavigate} />
+              <HomeView onNavigate={handleNavigate} onBuyNow={() => setCurrentView('checkout')} />
             )}
 
             {currentView === 'catalog' && (
