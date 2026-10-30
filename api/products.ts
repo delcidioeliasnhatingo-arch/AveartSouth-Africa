@@ -130,7 +130,7 @@ export default async function handler(req: any, res: any) {
         return evidence.includes(category) || (category === "accessories" && /bag|accessor|jewell?ery|belt|wallet/.test(evidence));
       });
     }
-    if (q.gender && q.gender !== "all") products = products.filter((p: any) => p.gender === String(q.gender));
+    if (q.gender && q.gender !== "all") products = products.filter((p: any) => p.gender === String(q.gender) || p.gender === "unisex");
     if (q.inStockOnly === "true") products = products.filter((p: any) => Number(p.total_stock ?? 0) > 0);
     if (q.onSale === "true") products = products.filter((p: any) => p.is_on_sale === 1 || p.onSale === true);
     if (q.minPrice) products = products.filter((p: any) => Number(p.base_price ?? 0) >= Number(q.minPrice));
