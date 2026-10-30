@@ -133,22 +133,6 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate, onBuyNow }) => {
         </div>
       </section>
 
-      {/* 2. BENEFITS STRIP */}
-      <section className="aveart-reference-benefits" aria-label="Shopping benefits">
-        <div className="aveart-benefit">
-          <Truck size={23} strokeWidth={1.6} />
-          <div><strong>Thoughtful delivery</strong><span>Clear shipping updates</span></div>
-        </div>
-        <div className="aveart-benefit">
-          <ShieldCheck size={23} strokeWidth={1.6} />
-          <div><strong>Secure checkout</strong><span>Your details stay protected</span></div>
-        </div>
-        <div className="aveart-benefit">
-          <Heart size={23} strokeWidth={1.6} />
-          <div><strong>Here to help</strong><span>Customer support when you need it</span></div>
-        </div>
-      </section>
-
       {/* 3. BEST SELLERS — live products remain connected to the existing API */}
       <section className="aveart-reference-section" id="best-sellers">
         <div className="aveart-section-heading">
@@ -243,6 +227,23 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate, onBuyNow }) => {
             </form>
           )}
           
+        </div>
+      </section>
+
+      {/* 7. SHOPPING ASSURANCE — placed directly above the footer */}
+      {/* 2. BENEFITS STRIP */}
+      <section className="aveart-reference-benefits" aria-label="Shopping benefits">
+        <div className="aveart-benefit">
+          <Truck size={23} strokeWidth={1.6} />
+          <div><strong>Thoughtful delivery</strong><span>Clear shipping updates</span></div>
+        </div>
+        <div className="aveart-benefit">
+          <ShieldCheck size={23} strokeWidth={1.6} />
+          <div><strong>Secure checkout</strong><span>Your details stay protected</span></div>
+        </div>
+        <div className="aveart-benefit">
+          <Heart size={23} strokeWidth={1.6} />
+          <div><strong>Here to help</strong><span>Customer support when you need it</span></div>
         </div>
       </section>
     </div>
