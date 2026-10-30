@@ -535,3 +535,42 @@ main, [role="main"] { background-color: var(--aveart-cream); }
 .aveart-reference-product-page .text-rose-700 { color: var(--aveart-sage-dark) !important; }
 input:focus, select:focus, textarea:focus { outline-color: #D8DFCF !important; border-color: var(--aveart-sage-dark) !important; }
 ::selection { background: #DCE4D3; color: var(--aveart-ink); }
+
+
+/* Compact editorial banner: keep the homepage story section proportional */
+.aveart-reference-editorial {
+  min-height: 0 !important;
+  grid-template-columns: 1fr 1fr;
+}
+.aveart-editorial-image-wrap,
+.aveart-editorial-image-wrap img {
+  min-height: 250px !important;
+  height: 250px;
+}
+.aveart-editorial-copy {
+  padding: 30px clamp(24px, 4vw, 64px) !important;
+}
+.aveart-editorial-copy h2 {
+  font-size: clamp(25px, 2.8vw, 36px) !important;
+  line-height: 1.08 !important;
+}
+.aveart-editorial-copy > p:not(.aveart-eyebrow) {
+  margin-top: 12px !important;
+  font-size: 12px !important;
+  line-height: 1.65 !important;
+}
+.aveart-editorial-copy .aveart-outline-button {
+  margin-top: 16px !important;
+  min-height: 40px !important;
+}
+@media (max-width: 800px) {
+  .aveart-reference-editorial { grid-template-columns: 1fr; }
+  .aveart-editorial-image-wrap,
+  .aveart-editorial-image-wrap img {
+    min-height: 210px !important;
+    height: 210px !important;
+    max-height: 210px !important;
+  }
+  .aveart-editorial-copy { padding: 24px 22px 28px !important; }
+  .aveart-editorial-copy h2 { font-size: 29px !important; }
+}
