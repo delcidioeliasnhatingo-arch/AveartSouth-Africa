@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { ShoppingCart, Check, Zap } from 'lucide-react';
 import { Product, formatZAR } from '../types/index.ts';
 import { useCart } from '../context/CartContext.tsx';
 
@@ -44,7 +43,6 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect, onB
   );
   const [isQuickAddOpen, setIsQuickAddOpen] = useState(false);
   const [quickAddIntent, setQuickAddIntent] = useState<'cart' | 'buy'>('cart');
-  const [isAdded, setIsAdded] = useState(false);
 
   // Never use another product's photo as a fallback.
   const displayImage = product.primary_image || product.images?.[0] || product.variants?.find((variant) => variant.image_url)?.image_url || '';
@@ -85,8 +83,6 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect, onB
       stockAvailable: matchedVariant.stock_quantity,
     });
 
-    setIsAdded(true);
-    setTimeout(() => setIsAdded(false), 1500);
     if (buyNow) {
       closeDrawer();
       onBuyNow();
@@ -137,72 +133,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect, onB
           </div>
         ) : null}
 
-        {/* Add to Cart Overlay on Hover */}
-        {!isOutOfStock && (
-          <div
-            onClick={(e) => e.stopPropagation()}
-            className={`absolute inset-x-3 bottom-3 transition-opacity duration-200 ${isQuickAddOpen ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}
-          >
-            {isQuickAddOpen ? (
-              <div className="bg-white/95 backdrop-blur-md p-3.5 rounded-xl shadow-xl border border-slate-200 space-y-2.5">
-                <div className="flex items-center justify-between text-xs text-slate-600">
-                  <span className="font-bold text-slate-900">Select Size</span>
-                  <button
-                    onClick={() => setIsQuickAddOpen(false)}
-                    className="text-slate-400 hover:text-slate-700 p-0.5 cursor-pointer"
-                  >
-                    ✕
-                  </button>
-                </div>
-                <div className="flex flex-wrap gap-1.5">
-                  {(product.sizes || ['XS', 'S', 'M', 'L']).map((sz) => (
-                    <button
-                      key={sz}
-                      onClick={() => setSelectedSize(sz)}
-                      className={`px-2.5 py-1 text-xs font-bold rounded-lg border transition-colors cursor-pointer ${
-                        selectedSize === sz
-                          ? 'border-emerald-600 bg-emerald-600 text-white shadow-xs'
-                          : 'border-slate-200 bg-slate-50 text-slate-800 hover:border-emerald-400'
-                      }`}
-                    >
-                      {sz}
-                    </button>
-                  ))}
-                </div>
-                <button
-                  onClick={() => handleQuickAdd(undefined, quickAddIntent === 'buy')}
-                  className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2 text-xs font-bold rounded-lg transition-colors shadow-xs cursor-pointer"
-                >
-                  {quickAddIntent === 'buy' ? 'Confirm Size · Buy Now' : 'Confirm Size · Add to Cart'}
-                </button>
-              </div>
-            ) : (
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  if (product.sizes && product.sizes.length > 1) {
-                    setIsQuickAddOpen(true);
-                  } else {
-                    handleQuickAdd(e);
-                  }
-                }}
-                className="w-full bg-[#87977D] hover:bg-[#65775D] text-white py-2.5 px-3 text-xs font-bold rounded-md shadow-sm flex items-center justify-center gap-1.5 transition-colors cursor-pointer active:scale-95"
-              >
-                {isAdded ? (
-                  <>
-                    <Check className="w-4 h-4 text-white" />
-                    <span>Added to Cart</span>
-                  </>
-                ) : (
-                  <>
-                    <ShoppingCart className="w-4 h-4" />
-                    <span>Quick Add</span>
-                  </>
-                )}
-              </button>
-            )}
-          </div>
-        )}
+
       </div>
 
       {/* Product Information */}
@@ -289,6 +220,48 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect, onB
               className="min-h-10 px-2 py-2 bg-[#87977D] hover:bg-[#65775D] text-white text-[10px] sm:text-xs font-extrabold uppercase tracking-wide rounded-lg transition-colors cursor-pointer"
             >
               Buy Now
+            </button>
+          </div>
+        )}
+
+        {isQuickAddOpen && !isOutOfStock && (
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="mt-2 bg-white p-3 rounded-xl border border-slate-200 space-y-2"
+          >
+            <div className="flex items-center justify-between text-xs text-slate-600">
+              <span className="font-bold text-slate-900">Select Size</span>
+              <button
+                type="button"
+                onClick={() => setIsQuickAddOpen(false)}
+                className="text-slate-400 hover:text-slate-700 px-2 py-1 cursor-pointer"
+                aria-label="Close size selection"
+              >
+                ✕
+              </button>
+            </div>
+            <div className="flex flex-wrap gap-1.5">
+              {(product.sizes || ['One Size']).map((sz) => (
+                <button
+                  type="button"
+                  key={sz}
+                  onClick={() => setSelectedSize(sz)}
+                  className={`px-2.5 py-1 text-xs font-bold rounded-lg border transition-colors cursor-pointer ${
+                    selectedSize === sz
+                      ? 'border-emerald-600 bg-emerald-600 text-white'
+                      : 'border-slate-200 bg-slate-50 text-slate-800 hover:border-emerald-400'
+                  }`}
+                >
+                  {sz}
+                </button>
+              ))}
+            </div>
+            <button
+              type="button"
+              onClick={() => handleQuickAdd(undefined, quickAddIntent === 'buy')}
+              className="w-full bg-[#87977D] hover:bg-[#65775D] text-white py-2 text-xs font-bold rounded-lg cursor-pointer"
+            >
+              {quickAddIntent === 'buy' ? 'Confirm Size · Buy Now' : 'Confirm Size · Add to Cart'}
             </button>
           </div>
         )}
