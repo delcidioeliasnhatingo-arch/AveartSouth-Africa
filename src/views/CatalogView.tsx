@@ -29,6 +29,7 @@ interface CatalogViewProps {
   initialSearch?: string;
   initialSale?: boolean;
   onSelectProduct: (slug: string) => void;
+  onBuyNow: () => void;
 }
 
 export const CatalogView: React.FC<CatalogViewProps> = ({
@@ -37,6 +38,7 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
   initialSearch,
   initialSale,
   onSelectProduct,
+  onBuyNow,
 }) => {
   const initialProductsKey = 'aveart:catalog:v1:' + (typeof window !== 'undefined' ? window.location.search : '');
   const [products, setProducts] = useState<Product[]>(() => {
@@ -367,6 +369,7 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
               key={product.id}
               product={product}
               onSelect={onSelectProduct}
+              onBuyNow={onBuyNow}
             />
           ))}
         </div>
