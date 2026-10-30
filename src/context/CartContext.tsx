@@ -6,7 +6,7 @@ interface CartContextType {
   isDrawerOpen: boolean;
   openDrawer: () => void;
   closeDrawer: () => void;
-  addItem: (variantId: string, quantity?: number, meta?: Partial<CartItem>) => void;
+  addItem: (variantId: string, quantity?: number, meta?: Partial<CartItem>, options?: { openDrawer?: boolean }) => void;
   removeItem: (variantId: string) => void;
   updateQuantity: (variantId: string, quantity: number) => void;
   clearCart: () => void;
@@ -83,7 +83,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     recalculate();
   }, [recalculate]);
 
-  const addItem = (variantId: string, quantity: number = 1, meta?: Partial<CartItem>) => {
+  const addItem = (variantId: string, quantity: number = 1, meta?: Partial<CartItem>, options: { openDrawer?: boolean } = {}) => {
     setItems((prev) => {
       const existing = prev.find((i) => i.variantId === variantId);
       if (existing) {
@@ -93,7 +93,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
       return [...prev, { variantId, quantity, ...meta }];
     });
-    setIsDrawerOpen(true);
+    if (options.openDrawer !== false) setIsDrawerOpen(true);
   };
 
   const removeItem = (variantId: string) => {
