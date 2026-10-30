@@ -106,15 +106,23 @@ export default async function handler(req: any, res: any) {
       });
     }
 
-    const discountCode = String(body.discountCode || "").trim();
-    if (discountCode) errors.push("Discount validation is not configured; remove the code to continue.");
+    const discountCode = String(body.discountCode || "").trim().toUpperCase();
+    let discountAmount = 0;
+    let appliedDiscount: { code: string; type: string; value: number } | null = null;
+    if (discountCode) {
+      if (discountCode === "AVEART10") {
+        discountAmount = Number((subtotal * 0.10).toFixed(2));
+        appliedDiscount = { code: "AVEART10", type: "percentage", value: 10 };
+      } else {
+        errors.push("Invalid discount code. Please check the code and try again.");
+      }
+    }
     const shippingAmount = 0;
-    const discountAmount = 0;
-    // Prices are VAT-inclusive. Display the VAT component without adding it again.
+    // Prices are VAT-inclusive. Discount is deducted from the VAT-inclusive subtotal.
     const totalAmount = Math.max(0, subtotal - discountAmount + shippingAmount);
     const taxAmount = totalAmount > 0 ? Number((totalAmount * 15 / 115).toFixed(2)) : 0;
     return res.status(200).json({
-      lineItems, subtotal, discountAmount, appliedDiscount: null,
+      lineItems, subtotal, discountAmount, appliedDiscount,
       shippingMethod: body.shippingMethod || "", shippingAmount, taxAmount,
       totalAmount, errors, isValid: errors.length === 0
     });
