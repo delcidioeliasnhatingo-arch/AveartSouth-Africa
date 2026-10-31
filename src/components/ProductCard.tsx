@@ -106,7 +106,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect, onB
     >
       <div className="relative aspect-square sm:aspect-[3/4] bg-[#f5f6f2] overflow-hidden">
         {displayImage ? (
-          <img src={displayImage} alt={product.title} referrerPolicy="no-referrer" className="w-full h-full object-cover object-top group-hover:scale-[1.025] transition-transform duration-300 ease-out" loading="lazy" decoding="async" />
+          <img src={displayImage} alt={product.title} referrerPolicy="no-referrer" className="w-full h-full object-cover object-center scale-[1.08] group-hover:scale-[1.12] transition-transform duration-300 ease-out" loading="lazy" decoding="async" />
         ) : (
           <div className="w-full h-full flex items-center justify-center px-4 text-center text-xs text-slate-400">Product image unavailable</div>
         )}
