@@ -116,7 +116,8 @@ export default async function handler(req: any, res: any) {
     if (!response.ok) throw new Error(`Supabase products query returned ${response.status}: ${responseText.slice(0, 400)}`);
     const payload = JSON.parse(responseText);
     const rawProducts = Array.isArray(payload) ? payload : [];
-    let products = rawProducts.map((product: any) => normalizeProduct(product, false));
+    let products = rawProducts.map((product: any) => normalizeProduct(product, false))
+      .filter((product: any) => Boolean(String(product.primary_image ?? "").trim()));
 
     const q = req.query || {};
     if (q.search) {
