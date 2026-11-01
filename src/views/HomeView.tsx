@@ -107,10 +107,10 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate, onBuyNow }) => {
   ].join(' ').toLowerCase();
 
   const isShoe = (product: Product) =>
-    /\\b(shoes?|footwear|sneakers?|trainers?|boots?|sandals?|heels?)\\b/.test(describeProduct(product));
+    /\b(shoes?|footwear|sneakers?|trainers?|boots?|sandals?|heels?)\b/.test(describeProduct(product));
 
   const isAccessory = (product: Product) =>
-    /\\b(accessories|accessory|bags?|handbags?|totes?|backpacks?|wallets?|jewellery|jewelry|watches|belts|caps|hats|sunglasses|eyewear)\\b/.test(describeProduct(product));
+    /\b(accessories|accessory|bags?|handbags?|totes?|backpacks?|wallets?|jewellery|jewelry|watches|belts|caps|hats|sunglasses|eyewear)\b/.test(describeProduct(product));
 
   const availableProducts = products.filter((product) =>
     hasProductImage(product) && Number(product.base_price ?? 0) > 0
