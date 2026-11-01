@@ -5,6 +5,10 @@ import { ProductCard } from '../components/ProductCard.tsx';
 
 const PUBLIC_PRODUCTS_URL = 'https://aveart-products-public.delcidioeliasnhatingo.workers.dev/api/products';
 
+function hasProductImage(product: any): boolean {
+  return Boolean([product?.primary_image, product?.image_url, product?.imageUrl, product?.thumbnail_url, product?.thumbnail, ...(Array.isArray(product?.images) ? product.images : []), ...(Array.isArray(product?.variants) ? product.variants.map((variant: any) => variant?.image_url ?? variant?.imageUrl) : [])].some((image) => typeof image === 'string' && image.trim()));
+}
+
 async function fetchProductsWithFallback(url: string, signal: AbortSignal): Promise<Response> {
   let lastError: unknown;
   for (const endpoint of [url, PUBLIC_PRODUCTS_URL]) {
@@ -42,7 +46,7 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
 }) => {
   const initialProductsKey = 'aveart:catalog:v1:' + (typeof window !== 'undefined' ? window.location.search : '');
   const [products, setProducts] = useState<Product[]>(() => {
-    try { const value = localStorage.getItem(initialProductsKey); const parsed = value ? JSON.parse(value) : []; return Array.isArray(parsed) ? parsed : []; }
+    try { const value = localStorage.getItem(initialProductsKey); const parsed = value ? JSON.parse(value) : []; return Array.isArray(parsed) ? parsed.filter((product: any) => hasProductImage(product)) : []; }
     catch { return []; }
   });
   const [categories, setCategories] = useState<Category[]>([]);
@@ -115,7 +119,7 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
     try {
       const cached = localStorage.getItem(cacheKey);
       const parsed = cached ? JSON.parse(cached) : null;
-      if (Array.isArray(parsed)) { setProducts(parsed); setLoading(false); }
+      if (Array.isArray(parsed)) { setProducts(parsed.filter((product: any) => hasProductImage(product))); setLoading(false); }
     } catch {}
     const controller = new AbortController();
     fetchProductsWithFallback(requestUrl, controller.signal)
@@ -131,10 +135,9 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
           : Array.isArray(data?.data)
           ? data.data
           : [];
-        if (liveProducts.length) {
-          try { localStorage.setItem(cacheKey, JSON.stringify(liveProducts)); } catch {}
-          setProducts(liveProducts);
-        }
+        const productsWithImages = liveProducts.filter((product: any) => hasProductImage(product));
+        try { localStorage.setItem(cacheKey, JSON.stringify(productsWithImages)); } catch {}
+        setProducts(productsWithImages);
       })
       .catch((err) => { if (err?.name !== 'AbortError') console.error('Failed to load products:', err); })
       .finally(() => { setLoading(false); });
