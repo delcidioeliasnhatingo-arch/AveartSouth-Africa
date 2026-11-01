@@ -98,10 +98,12 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate, onBuyNow }) => {
           : Array.isArray(productsData?.data)
           ? productsData.data
           : [];
-        const validProducts = liveProducts.filter((product: any) =>
-          product && (product.title || product.name) && hasProductImage(product) &&
-          Number(product.base_price ?? product.price ?? 0) > 0
-        );
+        const validProducts = liveProducts
+          .map((product: any) => normalizeProduct(product))
+          .filter((product: any) =>
+            product && (product.title || product.name) && hasProductImage(product) &&
+            Number(product.base_price ?? product.price ?? 0) > 0
+          );
         try { localStorage.setItem('aveart:products:v1', JSON.stringify(validProducts)); } catch {}
         setProducts(validProducts);
       })
@@ -118,7 +120,9 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate, onBuyNow }) => {
   const describeProduct = (product: Product) => [
     product.category_name,
     product.category_slug,
+    (product as any).category,
     product.title,
+    (product as any).name,
     ...(Array.isArray(product.tags) ? product.tags : []),
   ].join(' ').toLowerCase();
 
