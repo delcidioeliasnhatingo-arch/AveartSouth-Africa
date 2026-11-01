@@ -10,6 +10,10 @@ import accessoriesImage from '../assets/images/fashion_acc_leather_tote_17922635
 
 const PUBLIC_PRODUCTS_URL = 'https://aveart-products-public.delcidioeliasnhatingo.workers.dev/api/products';
 
+function hasProductImage(product: any): boolean {
+  return Boolean([product?.primary_image, product?.image_url, product?.imageUrl, product?.thumbnail_url, product?.thumbnail, ...(Array.isArray(product?.images) ? product.images : []), ...(Array.isArray(product?.variants) ? product.variants.map((variant: any) => variant?.image_url ?? variant?.imageUrl) : [])].some((image) => typeof image === 'string' && image.trim()));
+}
+
 async function fetchProductsWithFallback(url: string, signal: AbortSignal): Promise<Response> {
   let lastError: unknown;
   for (const endpoint of [url, PUBLIC_PRODUCTS_URL]) {
@@ -38,7 +42,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate, onBuyNow }) => {
     try {
       const cached = localStorage.getItem('aveart:products:v1');
       const parsed = cached ? JSON.parse(cached) : [];
-      return Array.isArray(parsed) ? parsed : [];
+      return Array.isArray(parsed) ? parsed.filter((product: any) => hasProductImage(product)) : [];
     } catch { return []; }
   });
   const [loading, setLoading] = useState(() => {
@@ -79,13 +83,11 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate, onBuyNow }) => {
           ? productsData.data
           : [];
         const validProducts = liveProducts.filter((product: any) =>
-          product && (product.title || product.name) &&
+          product && (product.title || product.name) && hasProductImage(product) &&
           Number(product.base_price ?? product.price ?? 0) > 0
         );
-        if (validProducts.length) {
-          try { localStorage.setItem('aveart:products:v1', JSON.stringify(validProducts)); } catch {}
-          setProducts(validProducts);
-        }
+        try { localStorage.setItem('aveart:products:v1', JSON.stringify(validProducts)); } catch {}
+        setProducts(validProducts);
       })
       .catch((err) => {
         if (err?.name !== 'AbortError') console.error('Error fetching home data:', err);
@@ -97,7 +99,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate, onBuyNow }) => {
     return () => { window.clearTimeout(timer); controller.abort(); };
   }, []);
 
-  const filteredProducts = products.filter((product) => {
+  const filteredProducts = products.filter((product) => hasProductImage(product)).filter((product) => {
     if (activeTab === 'women') return product.gender === 'women';
     if (activeTab === 'men') return product.gender === 'men';
     if (activeTab === 'accessories') {
