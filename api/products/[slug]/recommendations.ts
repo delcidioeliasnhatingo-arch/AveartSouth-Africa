@@ -10,7 +10,8 @@ export default async function handler(req: any, res: any) {
     const products = (Array.isArray(data) ? data : Array.isArray(data?.products) ? data.products : Array.isArray(data?.data) ? data.data : [])
       .filter((p: any) => {
         const active = !p.status || ["active", "ativo", "published"].includes(String(p.status).toLowerCase()) || p.is_published === 1 || p.is_published === true;
-        return active && String(p.slug || "") !== slug;
+        const hasImage = [p.primary_image, p.image_url, p.imageUrl, p.thumbnail_url, p.thumbnail, ...(Array.isArray(p.images) ? p.images : [])].some((image: any) => typeof image === "string" && image.trim());
+        return active && hasImage && String(p.slug || "") !== slug;
       })
       .slice(0, 4);
 
