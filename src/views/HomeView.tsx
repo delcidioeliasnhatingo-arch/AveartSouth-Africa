@@ -99,15 +99,41 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate, onBuyNow }) => {
     return () => { window.clearTimeout(timer); controller.abort(); };
   }, []);
 
-  const filteredProducts = products.filter((product) => hasProductImage(product)).filter((product) => {
-    if (activeTab === 'women') return product.gender === 'women';
-    if (activeTab === 'men') return product.gender === 'men';
-    if (activeTab === 'accessories') {
-      const categoryText = String(product.category_name ?? '').toLowerCase();
-      return categoryText.includes('accessor') || categoryText.includes('bag');
-    }
-    return true;
-  });
+  const describeProduct = (product: Product) => [
+    product.category_name,
+    product.category_slug,
+    product.title,
+    ...(Array.isArray(product.tags) ? product.tags : []),
+  ].join(' ').toLowerCase();
+
+  const isShoe = (product: Product) =>
+    /\\b(shoes?|footwear|sneakers?|trainers?|boots?|sandals?|heels?)\\b/.test(describeProduct(product));
+
+  const isAccessory = (product: Product) =>
+    /\\b(accessories|accessory|bags?|handbags?|totes?|backpacks?|wallets?|jewellery|jewelry|watches|belts|caps|hats|sunglasses|eyewear)\\b/.test(describeProduct(product));
+
+  const availableProducts = products.filter((product) =>
+    hasProductImage(product) && Number(product.base_price ?? 0) > 0
+  );
+
+  // The homepage's first eight cards follow the requested editorial sequence:
+  // 2 women's pieces, 2 men's pieces, men's shoes, women's shoes, 2 accessories.
+  const homepageFeaturedProducts = [
+    ...availableProducts.filter((product) => product.gender === 'women' && !isShoe(product) && !isAccessory(product)).slice(0, 2),
+    ...availableProducts.filter((product) => product.gender === 'men' && !isShoe(product) && !isAccessory(product)).slice(0, 2),
+    ...availableProducts.filter((product) => product.gender === 'men' && isShoe(product)).slice(0, 1),
+    ...availableProducts.filter((product) => product.gender === 'women' && isShoe(product)).slice(0, 1),
+    ...availableProducts.filter((product) => isAccessory(product)).slice(0, 2),
+  ];
+
+  const filteredProducts = activeTab === 'all'
+    ? homepageFeaturedProducts
+    : availableProducts.filter((product) => {
+        if (activeTab === 'women') return product.gender === 'women';
+        if (activeTab === 'men') return product.gender === 'men';
+        if (activeTab === 'accessories') return isAccessory(product);
+        return true;
+      });
 
   const handleNewsletterSubmit = (event: React.FormEvent) => {
     event.preventDefault();
