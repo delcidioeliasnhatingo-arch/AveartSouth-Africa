@@ -10,13 +10,13 @@ import accessoriesImage from '../assets/images/fashion_acc_leather_tote_17922635
 
 const PUBLIC_PRODUCTS_URL = 'https://aveart-products-public.delcidioeliasnhatingo.workers.dev/api/products';
 
-function hasProductImage(product: any): boolean {
+function normalizeProduct(product: any): any {\n  const image = product?.primary_image || product?.image_url || product?.imageUrl || product?.thumbnail_url || product?.thumbnail || (Array.isArray(product?.images) ? product.images[0] : '') || '';\n  return {\n    ...product,\n    title: product?.title || product?.name || '',\n    name: product?.name || product?.title || '',\n    base_price: Number(product?.base_price ?? product?.price ?? 0),\n    primary_image: image,\n    images: Array.isArray(product?.images) ? product.images : (image ? [image] : []),\n    category_name: product?.category_name || product?.category || '',\n    category_slug: product?.category_slug || String(product?.category || '').toLowerCase().replace(/[^a-z0-9]+/g, '-'),\n    gender: product?.gender || 'unisex',\n  };\n}\n\nfunction hasProductImage(product: any): boolean {
   return Boolean([product?.primary_image, product?.image_url, product?.imageUrl, product?.thumbnail_url, product?.thumbnail, ...(Array.isArray(product?.images) ? product.images : []), ...(Array.isArray(product?.variants) ? product.variants.map((variant: any) => variant?.image_url ?? variant?.imageUrl) : [])].some((image) => typeof image === 'string' && image.trim()));
 }
 
 async function fetchProductsWithFallback(url: string, signal: AbortSignal): Promise<Response> {
   let lastError: unknown;
-  for (const endpoint of [url, PUBLIC_PRODUCTS_URL]) {
+  // Prefer the dedicated public Worker: the legacy /api/products route can return a partial catalogue.\n  for (const endpoint of [PUBLIC_PRODUCTS_URL, url]) {
     try {
       const response = await fetch(endpoint, { signal, headers: { Accept: 'application/json' } });
       if (!response.ok) { lastError = new Error(`Product API returned HTTP ${response.status}`); continue; }
@@ -113,7 +113,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate, onBuyNow }) => {
     /\b(accessories|accessory|bags?|handbags?|totes?|backpacks?|wallets?|jewellery|jewelry|watches|belts|caps|hats|sunglasses|eyewear)\b/.test(describeProduct(product));
 
   const availableProducts = products.filter((product) =>
-    hasProductImage(product) && Number(product.base_price ?? 0) > 0
+    hasProductImage(product) && Number(product.base_price ?? (product as any).price ?? 0) > 0
   );
 
   // The homepage's first eight cards follow the requested editorial sequence:
