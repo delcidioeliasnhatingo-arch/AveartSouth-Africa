@@ -10,29 +10,13 @@ import accessoriesImage from '../assets/images/fashion_acc_leather_tote_17922635
 
 const PUBLIC_PRODUCTS_URL = 'https://aveart-products-public.delcidioeliasnhatingo.workers.dev/api/products';
 
-function normalizeProduct(product: any): any {
-  const image = product?.primary_image || product?.image_url || product?.imageUrl || product?.thumbnail_url || product?.thumbnail || (Array.isArray(product?.images) ? product.images[0] : '') || '';
-  return {
-    ...product,
-    title: product?.title || product?.name || '',
-    name: product?.name || product?.title || '',
-    base_price: Number(product?.base_price ?? product?.price ?? 0),
-    primary_image: image,
-    images: Array.isArray(product?.images) ? product.images : (image ? [image] : []),
-    category_name: product?.category_name || product?.category || '',
-    category_slug: product?.category_slug || String(product?.category || '').toLowerCase().replace(/[^a-z0-9]+/g, '-'),
-    gender: product?.gender || 'unisex',
-  };
-}
-
 function hasProductImage(product: any): boolean {
   return Boolean([product?.primary_image, product?.image_url, product?.imageUrl, product?.thumbnail_url, product?.thumbnail, ...(Array.isArray(product?.images) ? product.images : []), ...(Array.isArray(product?.variants) ? product.variants.map((variant: any) => variant?.image_url ?? variant?.imageUrl) : [])].some((image) => typeof image === 'string' && image.trim()));
 }
 
 async function fetchProductsWithFallback(url: string, signal: AbortSignal): Promise<Response> {
   let lastError: unknown;
-  // Prefer the dedicated public Worker: the legacy /api/products route can return a partial catalogue.
-  for (const endpoint of [PUBLIC_PRODUCTS_URL, url]) {
+  for (const endpoint of [url, PUBLIC_PRODUCTS_URL]) {
     try {
       const response = await fetch(endpoint, { signal, headers: { Accept: 'application/json' } });
       if (!response.ok) { lastError = new Error(`Product API returned HTTP ${response.status}`); continue; }
@@ -98,12 +82,10 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate, onBuyNow }) => {
           : Array.isArray(productsData?.data)
           ? productsData.data
           : [];
-        const validProducts = liveProducts
-          .map((product: any) => normalizeProduct(product))
-          .filter((product: any) =>
-            product && (product.title || product.name) && hasProductImage(product) &&
-            Number(product.base_price ?? product.price ?? 0) > 0
-          );
+        const validProducts = liveProducts.filter((product: any) =>
+          product && (product.title || product.name) && hasProductImage(product) &&
+          Number(product.base_price ?? product.price ?? 0) > 0
+        );
         try { localStorage.setItem('aveart:products:v1', JSON.stringify(validProducts)); } catch {}
         setProducts(validProducts);
       })
@@ -117,43 +99,15 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate, onBuyNow }) => {
     return () => { window.clearTimeout(timer); controller.abort(); };
   }, []);
 
-  const describeProduct = (product: Product) => [
-    product.category_name,
-    product.category_slug,
-    (product as any).category,
-    product.title,
-    (product as any).name,
-    ...(Array.isArray(product.tags) ? product.tags : []),
-  ].join(' ').toLowerCase();
-
-  const isShoe = (product: Product) =>
-    /\b(shoes?|footwear|sneakers?|trainers?|boots?|sandals?|heels?)\b/.test(describeProduct(product));
-
-  const isAccessory = (product: Product) =>
-    /\b(accessories|accessory|bags?|handbags?|totes?|backpacks?|wallets?|jewellery|jewelry|watches|belts|caps|hats|sunglasses|eyewear)\b/.test(describeProduct(product));
-
-  const availableProducts = products.filter((product) =>
-    hasProductImage(product) && Number(product.base_price ?? (product as any).price ?? 0) > 0
-  );
-
-  // The homepage's first eight cards follow the requested editorial sequence:
-  // 2 women's pieces, 2 men's pieces, men's shoes, women's shoes, 2 accessories.
-  const homepageFeaturedProducts = [
-    ...availableProducts.filter((product) => product.gender === 'women' && !isShoe(product) && !isAccessory(product)).slice(0, 2),
-    ...availableProducts.filter((product) => product.gender === 'men' && !isShoe(product) && !isAccessory(product)).slice(0, 2),
-    ...availableProducts.filter((product) => product.gender === 'men' && isShoe(product)).slice(0, 1),
-    ...availableProducts.filter((product) => product.gender === 'women' && isShoe(product)).slice(0, 1),
-    ...availableProducts.filter((product) => isAccessory(product)).slice(0, 2),
-  ];
-
-  const filteredProducts = activeTab === 'all'
-    ? homepageFeaturedProducts
-    : availableProducts.filter((product) => {
-        if (activeTab === 'women') return product.gender === 'women';
-        if (activeTab === 'men') return product.gender === 'men';
-        if (activeTab === 'accessories') return isAccessory(product);
-        return true;
-      });
+  const filteredProducts = products.filter((product) => hasProductImage(product)).filter((product) => {
+    if (activeTab === 'women') return product.gender === 'women';
+    if (activeTab === 'men') return product.gender === 'men';
+    if (activeTab === 'accessories') {
+      const categoryText = String(product.category_name ?? '').toLowerCase();
+      return categoryText.includes('accessor') || categoryText.includes('bag');
+    }
+    return true;
+  });
 
   const handleNewsletterSubmit = (event: React.FormEvent) => {
     event.preventDefault();
