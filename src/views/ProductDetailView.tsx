@@ -168,23 +168,25 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
   // Update selected variant when size or color changes
   const handleSizeSelect = (sz: string) => {
     setSelectedSize(sz);
-    if (product?.variants) {
-      const match = product.variants.find((v) => v.size === sz && (!selectedColor || v.color === selectedColor));
-      if (match) {
-        setSelectedVariant(match);
-        setActiveImageIndex(0);
-      }
+    if (!product?.variants) return;
+    const matchingColour = product.variants.find((v) => v.size === sz && (!selectedColor || v.color === selectedColor) && v.stock_quantity > 0);
+    const fallback = matchingColour || product.variants.find((v) => v.size === sz && v.stock_quantity > 0) || product.variants.find((v) => v.size === sz);
+    if (fallback) {
+      setSelectedVariant(fallback);
+      if (fallback.color) setSelectedColor(fallback.color);
+      setActiveImageIndex(0);
     }
   };
 
   const handleColorSelect = (colName: string) => {
     setSelectedColor(colName);
     setActiveImageIndex(0);
-    if (product?.variants) {
-      const match = product.variants.find((v) => v.color === colName && (!selectedSize || v.size === selectedSize));
-      if (match) {
-        setSelectedVariant(match);
-      }
+    if (!product?.variants) return;
+    const matchingSize = product.variants.find((v) => v.color === colName && (!selectedSize || v.size === selectedSize) && v.stock_quantity > 0);
+    const fallback = matchingSize || product.variants.find((v) => v.color === colName && v.stock_quantity > 0) || product.variants.find((v) => v.color === colName);
+    if (fallback) {
+      setSelectedVariant(fallback);
+      if (fallback.size) setSelectedSize(fallback.size);
     }
   };
 
