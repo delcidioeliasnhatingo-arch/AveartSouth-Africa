@@ -9,9 +9,9 @@ function normalizeProduct(raw: any) {
     color: v.color ?? v.colorName ?? "",
     sku: v.sku ?? product.sku ?? "",
     price_offset: Number(v.price_offset ?? (v.price != null ? Number(v.price) - basePrice : 0)),
-    unit_price: Number(v.unit_price ?? v.price ?? (basePrice + Number(v.price_offset ?? 0))),
+    unit_price: Number(v.salePrice ?? v.sale_price ?? v.unit_price ?? v.price ?? (basePrice + Number(v.price_offset ?? 0))),
     stock_quantity: Number(v.stock_quantity ?? v.stock ?? 0),
-    image_url: v.image_url ?? v.imageUrl ?? "",
+    image_url: v.image_url ?? v.imageUrl ?? product.colors?.find((color: any) => (typeof color === 'string' ? color : color.name) === (v.color ?? v.colorName))?.images?.[0] ?? "",
   }));
 
   const stock = Number(product.total_stock ?? product.stock_quantity ?? product.stock ?? product.inventory_quantity ?? 0);
