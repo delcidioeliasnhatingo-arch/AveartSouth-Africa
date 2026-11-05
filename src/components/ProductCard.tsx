@@ -173,6 +173,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect, onB
                   </div>}
                   {!selectedVariant && <p className="text-sm text-amber-700">Choose a valid in-stock size and colour combination.</p>}
                   {selectedVariant && <p className="text-xs text-slate-500">Stock for this combination: {selectedVariant.stock_quantity}</p>}
+                  {selectedVariant && <p className="text-sm font-bold text-slate-900">Price: {formatZAR(Number(selectedVariant.sale_price ?? selectedVariant.price ?? (product.base_price + Number(selectedVariant.price_offset || 0))))}</p>}
                 </>
               ) : <p className="text-sm text-slate-600">No variants for this product. Select the quantity you want.</p>}
 
