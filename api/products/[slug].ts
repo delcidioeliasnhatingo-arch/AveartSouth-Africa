@@ -30,7 +30,10 @@ function normalizeProduct(raw: any) {
     name: variant.name ?? variant.variantName ?? variant.size ?? variant.color ?? "Default",
     size: variant.size ?? "",
     color: variant.color ?? variant.colorName ?? "",
-    price_offset: Number(variant.price_offset ?? 0),
+    price: variant.price == null ? undefined : Number(variant.price),
+    sale_price: variant.salePrice == null && variant.sale_price == null ? undefined : Number(variant.salePrice ?? variant.sale_price),
+    price_offset: Number(variant.price_offset ?? (variant.price != null ? Number(variant.price) - Number(product.price ?? product.base_price ?? 0) : 0)),
+    images: Array.isArray(variant.images) ? variant.images.filter((image: any) => typeof image === 'string' && image.trim()) : [],
     stock_quantity: Number(variant.stock_quantity ?? variant.stock ?? 0),
     low_stock_threshold: Number(variant.low_stock_threshold ?? 3),
     image_url: (variant.image_url ?? variant.imageUrl ?? "").startsWith("data:image/") ? "" : (variant.image_url ?? variant.imageUrl ?? ""),
@@ -54,6 +57,7 @@ function normalizeProduct(raw: any) {
     base_price: Number(product.base_price ?? product.price ?? 0),
     primary_image: product.primary_image ?? product.imageUrl ?? product.image_url ?? (Array.isArray(product.images) ? product.images[0] : ""),
     total_stock: totalStock,
+    colors: Array.isArray(product.colors) ? product.colors.map((color: any) => typeof color === 'string' ? { name: color, hex: '#9CA3AF', images: [] } : ({ ...color, name: String(color.name || color.colorName || 'Colour'), hex: color.hex || color.colorHex || '#9CA3AF', images: Array.isArray(color.images) ? color.images.filter((image: any) => typeof image === 'string' && image.trim()) : [] })) : [],
     variants,
   };
 
@@ -85,7 +89,7 @@ export default async function handler(req: any, res: any) {
     const supabaseKey = process.env.SUPABASE_ANON_KEY || process.env.VITE_SUPABASE_ANON_KEY || "";
     if (!supabaseUrl || !supabaseKey) throw new Error("Supabase public configuration is missing.");
 
-    const columns = "id,name,slug,description,category,price,stock,sku,status,image_url,sizes,colors,variants,created_at";
+    const columns = "id,name,slug,description,category,price,stock,sku,status,image_url,images,sizes,colors,variants,created_at";
     const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(slug);
     const query = new URLSearchParams({
       select: columns,
