@@ -168,21 +168,25 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
   // Update selected variant when size or color changes
   const handleSizeSelect = (sz: string) => {
     setSelectedSize(sz);
-    if (product?.variants) {
-      const match = product.variants.find((v) => v.size === sz && (!selectedColor || v.color === selectedColor));
-      if (match) {
-        setSelectedVariant(match);
-      }
+    if (!product?.variants) return;
+    const matchingColour = product.variants.find((v) => v.size === sz && (!selectedColor || v.color === selectedColor) && v.stock_quantity > 0);
+    const fallback = matchingColour || product.variants.find((v) => v.size === sz && v.stock_quantity > 0) || product.variants.find((v) => v.size === sz);
+    if (fallback) {
+      setSelectedVariant(fallback);
+      if (fallback.color) setSelectedColor(fallback.color);
+      setActiveImageIndex(0);
     }
   };
 
   const handleColorSelect = (colName: string) => {
     setSelectedColor(colName);
-    if (product?.variants) {
-      const match = product.variants.find((v) => v.color === colName && (!selectedSize || v.size === selectedSize));
-      if (match) {
-        setSelectedVariant(match);
-      }
+    setActiveImageIndex(0);
+    if (!product?.variants) return;
+    const matchingSize = product.variants.find((v) => v.color === colName && (!selectedSize || v.size === selectedSize) && v.stock_quantity > 0);
+    const fallback = matchingSize || product.variants.find((v) => v.color === colName && v.stock_quantity > 0) || product.variants.find((v) => v.color === colName);
+    if (fallback) {
+      setSelectedVariant(fallback);
+      if (fallback.size) setSelectedSize(fallback.size);
     }
   };
 
@@ -217,23 +221,33 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
     );
   }
 
-  const currentPrice = product.base_price + (selectedVariant?.price_offset || 0);
+  const regularVariantPrice = Number(selectedVariant?.price ?? (product.base_price + (selectedVariant?.price_offset || 0)));
+  const currentPrice = Number(selectedVariant?.sale_price && selectedVariant.sale_price > 0 ? selectedVariant.sale_price : regularVariantPrice);
+  const compareAtPrice = selectedVariant?.sale_price && selectedVariant.sale_price > 0
+    ? regularVariantPrice
+    : Number(product.original_price || 0);
+  const hasDiscount = compareAtPrice > currentPrice;
   const isOutOfStock = !selectedVariant || selectedVariant.stock_quantity <= 0;
   const isLowStock = selectedVariant && selectedVariant.stock_quantity > 0 && selectedVariant.stock_quantity <= selectedVariant.low_stock_threshold;
-  const hasDiscount = product.original_price && product.original_price > product.base_price;
   const inferredAudience = inferAudience(product);
   const audienceTag = inferredAudience ? inferredAudience.toUpperCase() : '';
 
   // The gallery must contain only images attached to this product.
   // Never add a site-wide fallback photo, because it may belong to another product.
-  const galleryImages = Array.from(new Set([
+  const selectedColorGallery = product.colors?.find((color) => color.name === selectedColor)?.images || [];
+  const selectedVariantGallery = selectedVariant?.images || [];
+  const variantGallery = Array.from(new Set([
+    ...selectedColorGallery,
+    ...selectedVariantGallery,
+    selectedVariant?.image_url,
+  ].filter((image): image is string => Boolean(image))));
+  const generalGallery = Array.from(new Set([
     ...(Array.isArray((product as Product & { images?: string[] }).images)
       ? (product as Product & { images?: string[] }).images!.filter(Boolean)
       : []),
     product.primary_image,
-    selectedVariant?.image_url,
-    ...(product.variants || []).map((variant) => variant.image_url),
   ].filter((image): image is string => Boolean(image))));
+  const galleryImages = variantGallery.length > 0 ? variantGallery : generalGallery;
   const safeImageIndex = Math.min(activeImageIndex, Math.max(0, galleryImages.length - 1));
   const activeGalleryImage = galleryImages[safeImageIndex] || product.primary_image || '';
 
@@ -246,7 +260,7 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
       color: selectedColor || selectedVariant.color,
       productSlug: product.slug,
       unitPrice: currentPrice,
-      imageUrl: selectedVariant.image_url || product.primary_image,
+      imageUrl: activeGalleryImage || selectedVariant.image_url || product.primary_image,
       stockAvailable: selectedVariant.stock_quantity,
     }, { openDrawer: false });
   };
@@ -432,7 +446,7 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
                 <div className="flex items-baseline gap-2 mt-0.5">
                   {hasDiscount && (
                     <span className="font-mono tabular-nums text-lg text-slate-400 line-through">
-                      {formatZAR(product.original_price!)}
+                      {formatZAR(compareAtPrice)}
                     </span>
                   )}
                   <span className={`font-mono tabular-nums text-3xl font-black ${hasDiscount ? 'text-emerald-700' : 'text-slate-900'}`}>

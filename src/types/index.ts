@@ -3,6 +3,7 @@ export type GenderCategory = 'women' | 'men' | 'unisex';
 export interface ColorOption {
   name: string;
   hex: string;
+  images?: string[];
 }
 
 export interface Category {
@@ -25,6 +26,9 @@ export interface ProductVariant {
   color?: string;
   finish?: string;
   price_offset: number;
+  price?: number;
+  sale_price?: number;
+  images?: string[];
   stock_quantity: number;
   low_stock_threshold: number;
   image_url: string;

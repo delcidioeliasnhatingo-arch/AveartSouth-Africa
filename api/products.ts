@@ -55,7 +55,10 @@ function normalizeProduct(raw: any, includeGallery = false) {
         name: variant.name ?? variant.variantName ?? variant.size ?? variant.color ?? "Default",
         size: variant.size ?? "",
         color: variant.color ?? variant.colorName ?? "",
-        price_offset: Number(variant.price_offset ?? 0),
+        price: variant.price == null ? undefined : Number(variant.price),
+        sale_price: variant.salePrice == null && variant.sale_price == null ? undefined : Number(variant.salePrice ?? variant.sale_price),
+        price_offset: Number(variant.price_offset ?? (variant.price != null ? Number(variant.price) - Number(product.base_price ?? product.price ?? 0) : 0)),
+        images: Array.isArray(variant.images) ? variant.images.filter((image: any) => typeof image === 'string' && image.trim()) : [],
         stock_quantity: Number(variant.stock_quantity ?? variant.stock ?? 0),
         image_url: (variant.image_url ?? variant.imageUrl ?? "").startsWith("data:image/") ? "" : (variant.image_url ?? variant.imageUrl ?? ""),
       }))
@@ -88,6 +91,7 @@ function normalizeProduct(raw: any, includeGallery = false) {
     primary_image: product.primary_image ?? images[0] ?? "",
     base_price: Number(product.base_price ?? product.price ?? 0),
     total_stock: totalStock,
+    colors: Array.isArray(product.colors) ? product.colors.map((color: any) => { const name = typeof color === 'string' ? color : String(color.name || color.colorName || 'Colour'); const matching = variants.find((variant: any) => String(variant.color || variant.colorName || '').toLowerCase() === name.toLowerCase()); return typeof color === 'string' ? { name, hex: matching?.colorHex || '#9CA3AF', images: matching?.images || [] } : ({ ...color, name, hex: color.hex || color.colorHex || matching?.colorHex || '#9CA3AF', images: Array.isArray(color.images) ? color.images.filter((image: any) => typeof image === 'string' && image.trim()) : (matching?.images || []) }); }) : [],
     variants,
   };
 }

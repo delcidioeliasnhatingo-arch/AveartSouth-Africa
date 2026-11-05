@@ -55,7 +55,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect, onB
     : inStockVariants.reduce((sum, v) => sum + Number(v.stock_quantity || 0), 0);
   const isOutOfStock = totalStock <= 0;
   const isLowStock = totalStock > 0 && totalStock <= 3;
-  const hasDiscount = Boolean(product.original_price && product.original_price > product.base_price);
+  const cardPrice = inStockVariants.length
+    ? Math.min(...inStockVariants.map((variant) => Number(variant.sale_price ?? variant.price ?? (product.base_price + Number(variant.price_offset || 0)))))
+    : product.base_price;
+  const hasDiscount = Boolean(product.original_price && product.original_price > cardPrice);
 
   const sizes = Array.from(new Set(inStockVariants.map((v) => v.size).filter(Boolean))) as string[];
   const colors = Array.from(new Set(inStockVariants.map((v) => v.color).filter(Boolean))) as string[];
@@ -91,7 +94,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect, onB
       size: chosenVariant.size || '',
       color: chosenVariant.color || '',
       productSlug: product.slug,
-      unitPrice: product.base_price + Number(chosenVariant.price_offset || 0),
+      unitPrice: Number(chosenVariant.sale_price ?? chosenVariant.price ?? (product.base_price + Number(chosenVariant.price_offset || 0))),
       imageUrl: chosenVariant.image_url || product.primary_image || product.images?.[0] || '',
       stockAvailable: maxQuantity,
     }, { openDrawer: false }));
@@ -134,7 +137,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect, onB
         <div className="pt-1.5 sm:pt-3 border-t border-slate-100 flex items-center justify-between gap-1">
           <div className="flex items-baseline gap-1.5">
             {hasDiscount && <span className="font-mono tabular-nums text-[10px] sm:text-xs text-slate-400 line-through">{formatZAR(product.original_price!)}</span>}
-            <span className={'font-mono tabular-nums text-[13px] sm:text-base font-extrabold ' + (hasDiscount ? 'text-[#65775D]' : 'text-slate-900')}>{formatZAR(product.base_price)}</span>
+            <span className={'font-mono tabular-nums text-[13px] sm:text-base font-extrabold ' + (hasDiscount ? 'text-[#65775D]' : 'text-slate-900')}>{formatZAR(cardPrice)}</span>
           </div>
           <span className="text-[10px] sm:text-xs font-bold text-rose-600 group-hover:text-[#52664A] flex items-center gap-1">View <span aria-hidden="true">→</span></span>
         </div>
@@ -170,6 +173,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect, onB
                   </div>}
                   {!selectedVariant && <p className="text-sm text-amber-700">Choose a valid in-stock size and colour combination.</p>}
                   {selectedVariant && <p className="text-xs text-slate-500">Stock for this combination: {selectedVariant.stock_quantity}</p>}
+                  {selectedVariant && <p className="text-sm font-bold text-slate-900">Price: {formatZAR(Number(selectedVariant.sale_price ?? selectedVariant.price ?? (product.base_price + Number(selectedVariant.price_offset || 0))))}</p>}
                 </>
               ) : <p className="text-sm text-slate-600">No variants for this product. Select the quantity you want.</p>}
 
