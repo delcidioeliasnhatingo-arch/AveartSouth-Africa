@@ -485,7 +485,7 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
                 </div>
                 <div className="flex items-center gap-2">
                   {product.colors.map((c) => {
-                    const variantPhoto = c.images?.[0] || product.variants?.find((v) => v.color === c.name && (v.images?.[0] || v.image_url))?.images?.[0] || product.variants?.find((v) => v.color === c.name)?.image_url;
+                    const variantPhoto = c.images?.[0] || product.variants?.find((v) => v.color === c.name && (v.images?.[0] || v.image_url))?.images?.[0] || product.variants?.find((v) => v.color === c.name)?.image_url || product.primary_image || product.images?.[0];
                     return (
                       <button
                         key={c.name}
