@@ -129,7 +129,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect, onB
           <p className="hidden sm:block text-xs text-slate-500 line-clamp-1 mt-0.5 font-medium">{product.subtitle || product.material}</p>
           {product.colors && product.colors.length > 0 && (
             <div className="flex items-center gap-1 mt-1 sm:gap-1.5 sm:mt-2.5">
-              {product.colors.map((c) => <span key={c.name} title={c.name} className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 rounded-full border border-slate-300 shadow-xs inline-block" style={{ backgroundColor: c.hex }} />)}
+              {product.colors.map((c) => c.images?.[0] ? (
+                <img key={c.name} src={c.images[0]} title={c.name} alt={c.name} className="w-5 h-5 sm:w-6 sm:h-6 rounded-full border border-slate-300 shadow-xs object-cover inline-block" />
+              ) : (
+                <span key={c.name} title={c.name + ' — photo not added'} className="w-5 h-5 sm:w-6 sm:h-6 rounded-full border border-slate-200 bg-slate-100 inline-flex items-center justify-center text-[7px] text-slate-400">IMG</span>
+              ))}
               <span className="text-[10px] sm:text-[11px] text-slate-400 font-medium ml-0.5 sm:ml-1">{product.colors.length} {product.colors.length === 1 ? 'colour' : 'colours'}</span>
             </div>
           )}
