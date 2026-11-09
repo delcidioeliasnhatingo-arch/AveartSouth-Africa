@@ -498,7 +498,7 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
                         }`}
                       >
                         {variantPhoto ? (
-                          <img src={variantPhoto} alt={c.name} className="w-9 h-9 rounded-full border border-slate-300 object-cover shrink-0" />
+                          <span className="w-9 h-9 rounded-full border border-slate-300 overflow-hidden shrink-0 inline-block"><img src={variantPhoto} alt={c.name} className="w-full h-full object-cover scale-[1.8]" /></span>
                         ) : (
                           <span className="w-9 h-9 rounded-full border border-slate-200 bg-slate-100 inline-flex items-center justify-center text-[8px] text-slate-400">IMG</span>
                         )}
