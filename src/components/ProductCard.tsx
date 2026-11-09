@@ -130,7 +130,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect, onB
           {product.colors && product.colors.length > 0 && (
             <div className="flex items-center gap-1 mt-1 sm:gap-1.5 sm:mt-2.5">
               {product.colors.map((c) => (c.images?.[0] || displayImage) ? (
-                <img key={c.name} src={c.images?.[0] || displayImage} title={c.name} alt={c.name} className="w-5 h-5 sm:w-6 sm:h-6 rounded-full border border-slate-300 shadow-xs object-cover inline-block" />
+                <span key={c.name} title={c.name} className="w-5 h-5 sm:w-6 sm:h-6 rounded-full border border-slate-300 shadow-xs overflow-hidden inline-block"><img src={c.images?.[0] || displayImage} alt={c.name} className="w-full h-full object-cover scale-[1.8]" /></span>
               ) : (
                 <span key={c.name} title={c.name + ' — photo not added'} className="w-5 h-5 sm:w-6 sm:h-6 rounded-full border border-slate-200 bg-slate-100 inline-flex items-center justify-center text-[7px] text-slate-400">IMG</span>
               ))}
