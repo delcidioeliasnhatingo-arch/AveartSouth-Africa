@@ -484,24 +484,28 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
-                  {product.colors.map((c) => (
-                    <button
-                      key={c.name}
-                      type="button"
-                      onClick={() => handleColorSelect(c.name)}
-                      className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border text-xs font-bold transition-all cursor-pointer ${
-                        selectedColor === c.name
-                          ? 'border-emerald-600 bg-emerald-50 text-rose-900 ring-2 ring-[#87977D] shadow-xs'
-                          : 'border-slate-200 bg-white text-slate-700 hover:border-slate-300'
-                      }`}
-                    >
-                      <span
-                        className="w-3.5 h-3.5 rounded-full border border-slate-300"
-                        style={{ backgroundColor: c.hex }}
-                      />
-                      <span>{c.name}</span>
-                    </button>
-                  ))}
+                  {product.colors.map((c) => {
+                    const variantPhoto = c.images?.[0] || product.variants?.find((v) => v.color === c.name && (v.images?.[0] || v.image_url))?.images?.[0] || product.variants?.find((v) => v.color === c.name)?.image_url;
+                    return (
+                      <button
+                        key={c.name}
+                        type="button"
+                        onClick={() => handleColorSelect(c.name)}
+                        className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border text-xs font-bold transition-all cursor-pointer ${
+                          selectedColor === c.name
+                            ? 'border-emerald-600 bg-emerald-50 text-rose-900 ring-2 ring-[#87977D] shadow-xs'
+                            : 'border-slate-200 bg-white text-slate-700 hover:border-slate-300'
+                        }`}
+                      >
+                        {variantPhoto ? (
+                          <img src={variantPhoto} alt={c.name} className="w-9 h-9 rounded-full border border-slate-300 object-cover shrink-0" />
+                        ) : (
+                          <span className="w-9 h-9 rounded-full border border-slate-200 bg-slate-100 inline-flex items-center justify-center text-[8px] text-slate-400">IMG</span>
+                        )}
+                        <span>{c.name}</span>
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
             )}
