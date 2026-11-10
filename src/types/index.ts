@@ -32,6 +32,7 @@ export interface ProductVariant {
   stock_quantity: number;
   low_stock_threshold: number;
   image_url: string;
+  is_primary?: number | boolean;
   created_at: string;
 }
 
