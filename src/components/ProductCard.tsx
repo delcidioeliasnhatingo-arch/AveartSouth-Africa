@@ -57,8 +57,6 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect, onB
     : inStockVariants.reduce((sum, v) => sum + Number(v.stock_quantity || 0), 0);
   const isOutOfStock = totalStock <= 0;
   const isLowStock = totalStock > 0 && totalStock <= 3;
-  const primaryVariant = product.variants?.find((variant) => variant.is_primary === true || Number(variant.is_primary) === 1)
-    || product.variants?.[0];
   const cardPrice = primaryVariant
     ? Number(primaryVariant.sale_price ?? primaryVariant.price ?? (product.base_price + Number(primaryVariant.price_offset || 0)))
     : product.base_price;
