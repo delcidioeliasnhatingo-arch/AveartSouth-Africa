@@ -83,7 +83,11 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
       .then((data) => {
         setProduct(data);
         if (data.variants && data.variants.length > 0) {
-          const first = data.variants.find((variant: ProductVariant) => variant.stock_quantity > 0) || data.variants[0];
+          const primary = data.variants.find((variant: ProductVariant) => variant.is_primary === true || Number(variant.is_primary) === 1);
+          const first = (primary && primary.stock_quantity > 0 ? primary : null)
+            || data.variants.find((variant: ProductVariant) => variant.stock_quantity > 0)
+            || primary
+            || data.variants[0];
           setSelectedVariant(first);
           setSelectedSize(first.size || (data.sizes && data.sizes[0]) || '');
           setSelectedColor(first.color || (data.colors && data.colors[0]?.name) || '');
