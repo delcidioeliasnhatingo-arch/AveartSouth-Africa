@@ -45,7 +45,9 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect, onB
   const [selectedColor, setSelectedColor] = useState('');
   const [quantity, setQuantity] = useState(1);
 
-  const displayImage = product.primary_image || product.images?.[0] || product.variants?.find((v) => v.image_url)?.image_url || '';
+  const primaryVariant = product.variants?.find((variant) => variant.is_primary === true || Number(variant.is_primary) === 1)
+    || product.variants?.[0];
+  const displayImage = product.primary_image || product.images?.[0] || primaryVariant?.images?.[0] || primaryVariant?.image_url || '';
   const inferredAudience = inferAudience(product);
   const audienceTag = inferredAudience ? inferredAudience.toUpperCase() : '';
   const inStockVariants = (product.variants || []).filter((v) => Number(v.stock_quantity) > 0);
@@ -55,8 +57,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect, onB
     : inStockVariants.reduce((sum, v) => sum + Number(v.stock_quantity || 0), 0);
   const isOutOfStock = totalStock <= 0;
   const isLowStock = totalStock > 0 && totalStock <= 3;
-  const cardPrice = inStockVariants.length
-    ? Math.min(...inStockVariants.map((variant) => Number(variant.sale_price ?? variant.price ?? (product.base_price + Number(variant.price_offset || 0)))))
+  const primaryVariant = product.variants?.find((variant) => variant.is_primary === true || Number(variant.is_primary) === 1)
+    || product.variants?.[0];
+  const cardPrice = primaryVariant
+    ? Number(primaryVariant.sale_price ?? primaryVariant.price ?? (product.base_price + Number(primaryVariant.price_offset || 0)))
     : product.base_price;
   const hasDiscount = Boolean(product.original_price && product.original_price > cardPrice);
 
