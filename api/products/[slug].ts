@@ -35,8 +35,8 @@ function normalizeProduct(raw: any) {
       price: variant.sizePrices?.[size] ?? variant.price,
       salePrice: variant.sizeSalePrices?.[size] ?? variant.salePrice,
       stock: variant.sizeStocks?.[size] ?? 0,
-      images: Array.isArray(variant.images) ? variant.images : [],
-      imageUrl: variant.imageUrl ?? "",
+      images: Array.isArray(variant.images) && variant.images.length ? variant.images : ((variant.imageUrl || variant.image_url) ? [variant.imageUrl || variant.image_url] : []),
+      imageUrl: variant.imageUrl ?? variant.image_url ?? "",
     }));
   });
   const variants = expandedSourceVariants.map((variant: any) => ({
@@ -48,7 +48,7 @@ function normalizeProduct(raw: any) {
     price: variant.price == null ? undefined : Number(variant.price),
     sale_price: variant.salePrice == null && variant.sale_price == null ? undefined : Number(variant.salePrice ?? variant.sale_price),
     price_offset: Number(variant.price_offset ?? (variant.price != null ? Number(variant.price) - Number(product.price ?? product.base_price ?? 0) : 0)),
-    images: Array.isArray(variant.images) ? variant.images.filter((image: any) => typeof image === 'string' && image.trim()) : [],
+    images: Array.isArray(variant.images) && variant.images.length ? variant.images.filter((image: any) => typeof image === 'string' && image.trim()) : ((variant.image_url || variant.imageUrl) ? [variant.image_url || variant.imageUrl] : []),
     stock_quantity: Number(variant.stock_quantity ?? variant.stock ?? 0),
     low_stock_threshold: Number(variant.low_stock_threshold ?? 3),
     image_url: (variant.image_url ?? variant.imageUrl ?? "").startsWith("data:image/") ? "" : (variant.image_url ?? variant.imageUrl ?? ""),
