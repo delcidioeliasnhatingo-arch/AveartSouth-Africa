@@ -23,8 +23,23 @@ function descriptionForProduct(product: any): string {
 
 function normalizeProduct(raw: any) {
   const product = { ...raw };
-  const sourceVariants = Array.isArray(product.variants) ? product.variants : [];
-  const variants = sourceVariants.map((variant: any) => ({
+  const sourceVariants = Array.isArray(product.color_variants) ? product.color_variants : (Array.isArray(product.variants) ? product.variants : []);
+  const expandedSourceVariants = sourceVariants.flatMap((variant: any) => {
+    const sizes = Array.isArray(variant.sizes) ? variant.sizes : [];
+    if (!sizes.length) return [variant];
+    return sizes.map((size: string) => ({
+      ...variant,
+      id: variant.sizeIds?.[size] ?? `${variant.id}-${size}`,
+      sku: variant.sizeSkus?.[size] ?? variant.sku ?? "",
+      size,
+      price: variant.sizePrices?.[size] ?? variant.price,
+      salePrice: variant.sizeSalePrices?.[size] ?? variant.salePrice,
+      stock: variant.sizeStocks?.[size] ?? 0,
+      images: Array.isArray(variant.images) ? variant.images : [],
+      imageUrl: variant.imageUrl ?? "",
+    }));
+  });
+  const variants = expandedSourceVariants.map((variant: any) => ({
     ...variant,
     id: String(variant.id ?? variant.variantId ?? `${product.id}-variant`),
     name: variant.name ?? variant.variantName ?? variant.size ?? variant.color ?? "Default",
@@ -48,6 +63,7 @@ function normalizeProduct(raw: any) {
   delete cleanProduct.thumbnail_url;
   delete cleanProduct.images;
   delete cleanProduct.variants;
+  delete cleanProduct.color_variants;
   const normalized = {
     ...cleanProduct,
     title: product.title ?? product.name ?? "",
@@ -89,7 +105,7 @@ export default async function handler(req: any, res: any) {
     const supabaseKey = process.env.SUPABASE_ANON_KEY || process.env.VITE_SUPABASE_ANON_KEY || "";
     if (!supabaseUrl || !supabaseKey) throw new Error("Supabase public configuration is missing.");
 
-    const columns = "id,name,slug,description,category,price,stock,sku,status,image_url,images,sizes,colors,variants,created_at";
+    const columns = "id,name,slug,description,category,price,stock,sku,status,image_url,images,sizes,colors,variants,color_variants,created_at";
     const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(slug);
     const query = new URLSearchParams({
       select: columns,
