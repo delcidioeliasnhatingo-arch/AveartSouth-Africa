@@ -48,8 +48,23 @@ function asImageList(product: any): string[] {
 function normalizeProduct(raw: any, includeGallery = false) {
   const product = { ...raw };
   const images = asImageList(product);
-  const variants = Array.isArray(product.variants)
-    ? product.variants.map((variant: any) => ({
+  const sourceVariants = Array.isArray(product.color_variants) ? product.color_variants : (Array.isArray(product.variants) ? product.variants : []);
+  const expandedSourceVariants = sourceVariants.flatMap((variant: any) => {
+    const sizes = Array.isArray(variant.sizes) ? variant.sizes : [];
+    if (!sizes.length) return [variant];
+    return sizes.map((size: string) => ({
+      ...variant,
+      id: variant.sizeIds?.[size] ?? `${variant.id}-${size}`,
+      sku: variant.sizeSkus?.[size] ?? variant.sku ?? "",
+      size,
+      price: variant.sizePrices?.[size] ?? variant.price,
+      salePrice: variant.sizeSalePrices?.[size] ?? variant.salePrice,
+      stock: variant.sizeStocks?.[size] ?? 0,
+      images: Array.isArray(variant.images) ? variant.images : [],
+      imageUrl: variant.imageUrl ?? "",
+    }));
+  });
+  const variants = expandedSourceVariants.map((variant: any) => ({
         ...variant,
         id: String(variant.id ?? variant.variantId ?? `${product.id}-variant`),
         name: variant.name ?? variant.variantName ?? variant.size ?? variant.color ?? "Default",
@@ -61,8 +76,7 @@ function normalizeProduct(raw: any, includeGallery = false) {
         images: Array.isArray(variant.images) ? variant.images.filter((image: any) => typeof image === 'string' && image.trim()) : [],
         stock_quantity: Number(variant.stock_quantity ?? variant.stock ?? 0),
         image_url: (variant.image_url ?? variant.imageUrl ?? "").startsWith("data:image/") ? "" : (variant.image_url ?? variant.imageUrl ?? ""),
-      }))
-    : [];
+      }));
   const variantStock = variants.reduce(
     (sum: number, variant: any) => sum + Math.max(0, Number(variant.stock_quantity) || 0), 0
   );
@@ -108,7 +122,7 @@ export default async function handler(req: any, res: any) {
     // proxy path, which was timing out while serializing large base64 product images.
     // The gallery JSON is excluded to avoid sending duplicate image payloads; the primary image URL is retained.
     const query = new URLSearchParams({
-      select: "id,name,slug,description,category,gender,price,stock,sku,status,image_url,sizes,colors,variants,tags,created_at",
+      select: "id,name,slug,description,category,gender,price,stock,sku,status,image_url,sizes,colors,variants,color_variants,tags,created_at",
       status: "in.(active,ativo,published)",
       order: "created_at.desc",
     });
