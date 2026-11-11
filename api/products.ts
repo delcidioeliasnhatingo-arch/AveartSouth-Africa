@@ -76,8 +76,7 @@ function normalizeProduct(raw: any, includeGallery = false) {
         images: Array.isArray(variant.images) ? variant.images.filter((image: any) => typeof image === 'string' && image.trim()) : [],
         stock_quantity: Number(variant.stock_quantity ?? variant.stock ?? 0),
         image_url: (variant.image_url ?? variant.imageUrl ?? "").startsWith("data:image/") ? "" : (variant.image_url ?? variant.imageUrl ?? ""),
-      }))
-    : [];
+      }));
   const variantStock = variants.reduce(
     (sum: number, variant: any) => sum + Math.max(0, Number(variant.stock_quantity) || 0), 0
   );
