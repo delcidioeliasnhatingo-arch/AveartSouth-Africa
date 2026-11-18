@@ -90,6 +90,7 @@ export const VirtualFittingRoom: React.FC<VirtualFittingRoomProps> = ({
   useEffect(() => {
     if (!open || !productImage) return;
     const image = new Image();
+    image.crossOrigin = 'anonymous';
     image.onload = () => { garmentRef.current = image; setResultImage(''); };
     image.src = productImage;
     return () => { garmentRef.current = null; };
