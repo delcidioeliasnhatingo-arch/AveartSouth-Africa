@@ -52,7 +52,7 @@ export default async function handler(req: any, res: any) {
     const payload: any = await upstream.json().catch(() => ({}));
     if (!upstream.ok) { console.error('FASHN VTON service error:', upstream.status, payload?.detail || payload?.error || 'unknown'); return res.status(upstream.status === 401 ? 503 : 502).json({ error: 'The open-source fitting service could not complete this preview. Please try again.' }); }
     if (typeof payload?.image !== 'string' || !/^[A-Za-z0-9+/=]+$/.test(payload.image)) return res.status(502).json({ error: 'The fitting service returned an invalid image.' });
-    return res.status(200).json({ image: `data:image/png;base64,${payload.image}` });
+    return res.status(200).json({ image: `data:image/jpeg;base64,${payload.image}` });
   } catch (error: any) {
     console.error('AVEART open-source virtual fitting failed:', error?.message || error);
     const message = String(error?.message || '');
