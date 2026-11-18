@@ -62,16 +62,21 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect, onB
     : product.base_price;
   const hasDiscount = Boolean(product.original_price && product.original_price > cardPrice);
 
-  const sizes = Array.from(new Set(inStockVariants.map((v) => v.size).filter(Boolean))) as string[];
+  const allVariants = product.variants || [];
+  // Keep every configured size visible so sold-out sizes can be shown as unavailable.
+  const sizes = Array.from(new Set(allVariants.map((v) => v.size).filter(Boolean))) as string[];
   const colors = Array.from(new Set(inStockVariants.map((v) => v.color).filter(Boolean))) as string[];
-  // A colour is selectable/displayed only when that exact variant has its own photo.
+  // A colour is displayed only when an in-stock variant has its own photo.
   const photographedColors = colors.filter((color) => {
     const colorRecord = product.colors?.find((entry) => entry.name === color);
     const photoVariant = inStockVariants.find((variant) => variant.color === color && (variant.images?.[0] || variant.image_url));
     return Boolean(colorRecord?.images?.[0] || photoVariant?.images?.[0] || photoVariant?.image_url);
   });
-  const filteredSizes = sizes.filter((size) => !selectedColor || inStockVariants.some((v) => v.size === size && v.color === selectedColor));
+  const filteredSizes = sizes.filter((size) => !selectedColor || allVariants.some((v) => v.size === size && v.color === selectedColor));
   const filteredColors = photographedColors.filter((color) => !selectedSize || inStockVariants.some((v) => v.color === color && v.size === selectedSize));
+  const isSizeAvailable = (size: string) => inStockVariants.some((variant) =>
+    variant.size === size && (!selectedColor || variant.color === selectedColor)
+  );
   const selectedVariant = inStockVariants.find((v) =>
     (!sizes.length || v.size === selectedSize) && (!colors.length || v.color === selectedColor)
   );
@@ -195,7 +200,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect, onB
                             if (selectedSize && !validSizesForColor.includes(selectedSize) && validSizesForColor.length) setSelectedSize(validSizesForColor[0]);
                             setQuantity(1);
                           }}
-                          className={'relative !w-11 !h-11 !min-w-0 !min-h-0 !p-0 shrink-0 overflow-visible rounded-full border-2 bg-white transition-all ' + (isSelected ? 'border-black ring-2 ring-black ring-offset-2 shadow-md' : 'border-slate-300 hover:border-black')}
+                          className={'relative !w-11 !h-11 !min-w-0 !min-h-0 !p-0 !rounded-full shrink-0 overflow-visible border-2 bg-white transition-all appearance-none ' + (isSelected ? 'border-black ring-2 ring-black ring-offset-2 shadow-md' : 'border-slate-300 hover:border-black')}
                           style={{ width: 44, height: 44, aspectRatio: '1 / 1', borderRadius: '50%' }}
                         >
                           <span className="absolute inset-0 block overflow-hidden rounded-full" style={{ borderRadius: '50%', clipPath: 'circle(50%)' }}>
@@ -214,9 +219,27 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect, onB
                   </div>}
                   {sizes.length > 0 && <div>
                     <p className="mb-2 text-sm font-bold text-slate-800">Size</p>
-                    <div className="flex flex-wrap gap-2">{filteredSizes.map((size) => (
-                      <button key={size} type="button" onClick={() => { setSelectedSize(size); setQuantity(1); }} className={'min-w-[44px] rounded-lg border px-3 py-2 text-sm transition-colors ' + (selectedSize === size ? 'border-black bg-black font-bold text-white ring-2 ring-black ring-offset-1' : 'border-slate-200 bg-white text-slate-900 hover:border-black')}>{size}</button>
-                    ))}</div>
+                    <div className="flex flex-wrap gap-2">{filteredSizes.map((size) => {
+                      const available = isSizeAvailable(size);
+                      const isSelected = selectedSize === size && available;
+                      return (
+                        <button
+                          key={size}
+                          type="button"
+                          disabled={!available}
+                          aria-disabled={!available}
+                          aria-pressed={isSelected}
+                          onClick={() => { if (!available) return; setSelectedSize(size); setQuantity(1); }}
+                          className={'min-w-[44px] rounded-lg border-2 px-3 py-2 text-sm transition-colors ' + (
+                            !available
+                              ? 'cursor-not-allowed border-dashed border-black bg-white text-slate-400 opacity-70'
+                              : isSelected
+                                ? 'border-black bg-black font-bold text-white'
+                                : 'border-black bg-white text-slate-900 hover:bg-slate-100'
+                          )}
+                        >{size}</button>
+                      );
+                    })}</div>
                   </div>}
                   {!selectedVariant && <p className="text-sm text-amber-700">Choose a valid in-stock size and colour combination.</p>}
                   {selectedVariant && <p className="text-xs text-slate-500">Stock for this combination: {selectedVariant.stock_quantity}</p>}
