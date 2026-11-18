@@ -500,13 +500,14 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
                         aria-pressed={isSelected}
                         title={c.name}
                         onClick={() => handleColorSelect(c.name)}
-                        className={`w-11 h-11 rounded-full overflow-hidden border bg-white shrink-0 transition-all cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black ${
+                        className={`!w-11 !h-11 !min-w-0 !min-h-0 !p-0 rounded-full overflow-hidden border bg-white shrink-0 transition-all cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black ${
                           isSelected
                             ? 'border-black ring-2 ring-black ring-offset-2'
                             : 'border-slate-300 hover:border-black'
                         }`}
+                        style={{ width: 44, height: 44, aspectRatio: '1 / 1', borderRadius: '50%', clipPath: 'circle(50%)' }}
                       >
-                        <img src={variantPhoto} alt="" className="w-full h-full object-cover scale-[2.35]" />
+                        <img src={variantPhoto} alt="" className="block w-full h-full object-cover scale-[2.35]" style={{ width: '100%', height: '100%', borderRadius: '50%', clipPath: 'circle(50%)' }} />
                       </button>
                     );
                   })}
