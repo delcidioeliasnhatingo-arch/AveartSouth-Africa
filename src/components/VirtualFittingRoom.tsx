@@ -110,7 +110,6 @@ export const VirtualFittingRoom: React.FC<VirtualFittingRoomProps> = ({
   useEffect(() => {
     if (!open || !productImage) return;
     const image = new Image();
-    image.crossOrigin = 'anonymous';
     image.onload = () => { garmentRef.current = image; };
     image.src = productImage;
     return () => { garmentRef.current = null; };
@@ -352,7 +351,7 @@ export const VirtualFittingRoom: React.FC<VirtualFittingRoomProps> = ({
 
         {error && <div role="alert" className="mx-5 sm:mx-7 mb-5 rounded-lg bg-rose-50 border border-rose-200 px-4 py-3 text-sm text-rose-800">{error}</div>}
         <div className="border-t border-slate-200 px-5 sm:px-7 py-4 text-[11px] text-slate-500 leading-relaxed">
-          Privacy: AI Photo mode sends your selected photo and the product image to Google's AI service to create the result; AVEART does not save the uploaded photo in its product database. Live camera video and pose tracking stay on your device and are not uploaded.
+          Privacy: AI Photo mode sends your selected photo and the product image to Google's AI service to create the result under Google's applicable data terms; AVEART does not save the uploaded photo in its product database. Live camera video and pose tracking stay on your device and are not uploaded.
         </div>
       </div>
     </div>
