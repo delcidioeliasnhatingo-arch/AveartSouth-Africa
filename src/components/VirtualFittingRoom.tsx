@@ -76,6 +76,10 @@ export const VirtualFittingRoom: React.FC<VirtualFittingRoomProps> = ({
   useEffect(() => {
     if (!open) {
       stopCamera();
+      setPersonFile(null);
+      setPersonPreview('');
+      setResultImage('');
+      setError('');
       return;
     }
     return () => stopCamera();
@@ -84,7 +88,7 @@ export const VirtualFittingRoom: React.FC<VirtualFittingRoomProps> = ({
   useEffect(() => {
     if (!open || !productImage) return;
     const image = new Image();
-    image.onload = () => { garmentRef.current = image; };
+    image.onload = () => { garmentRef.current = image; setResultImage(''); };
     image.src = productImage;
     return () => { garmentRef.current = null; };
   }, [open, productImage]);
@@ -169,7 +173,8 @@ export const VirtualFittingRoom: React.FC<VirtualFittingRoomProps> = ({
               context.save();
               context.translate(shoulderX, shoulderY + torsoHeight * 0.52);
               context.rotate(-angle);
-              context.globalAlpha = 0.82;
+              context.globalAlpha = 0.9;
+              context.globalCompositeOperation = 'multiply';
               context.drawImage(garment, -garmentWidth / 2, -garmentHeight * 0.43, garmentWidth, garmentHeight);
               context.restore();
             }
