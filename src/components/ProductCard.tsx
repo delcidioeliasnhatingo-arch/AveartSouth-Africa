@@ -259,13 +259,21 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect, onB
                           aria-disabled={!available}
                           aria-pressed={isSelected}
                           onClick={() => { if (!available) return; setSelectedSize(size); setQuantity(1); }}
-                          className={'min-w-[44px] rounded-lg border px-3 py-2 text-sm transition-colors ' + (
+                          className={'!min-w-[44px] !rounded-lg !border !px-3 !py-2 !text-sm transition-colors ' + (
                             !available
-                              ? 'cursor-not-allowed border-dashed border-slate-400 bg-white text-slate-400 opacity-70'
+                              ? 'cursor-not-allowed !border-dashed !border-slate-400 !bg-white !text-slate-400 opacity-70'
                               : isSelected
-                                ? 'border-slate-500 bg-slate-100 font-bold text-slate-900'
-                                : 'border-slate-300 bg-white text-slate-900 hover:border-slate-500 hover:bg-slate-50'
+                                ? '!border-slate-500 !bg-slate-100 !font-bold !text-slate-900'
+                                : '!border-slate-300 !bg-white !text-slate-900 hover:!border-slate-500 hover:!bg-slate-50'
                           )}
+                          style={{
+                            backgroundColor: !available || !isSelected ? '#ffffff' : '#f1f5f9',
+                            color: !available ? '#94a3b8' : '#0f172a',
+                            borderColor: !available ? '#94a3b8' : isSelected ? '#64748b' : '#cbd5e1',
+                            borderStyle: available ? 'solid' : 'dashed',
+                            borderWidth: '1px',
+                            boxShadow: 'none',
+                          }}
                         >{size}</button>
                       );
                     })}</div>
