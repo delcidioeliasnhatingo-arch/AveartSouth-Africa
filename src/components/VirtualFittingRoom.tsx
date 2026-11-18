@@ -203,7 +203,7 @@ export const VirtualFittingRoom: React.FC<VirtualFittingRoomProps> = ({
       const response = await fetch('/api/virtual-try-on', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ personImage, garmentImageUrl: productImage, productName }),
+        body: JSON.stringify({ personImage, garmentImageUrl: productImage, productName, category: garmentCategory }),
       });
       const payload = await response.json();
       if (!response.ok) throw new Error(payload?.error || 'The virtual fitting could not be generated.');
@@ -327,7 +327,7 @@ export const VirtualFittingRoom: React.FC<VirtualFittingRoomProps> = ({
 
         {error && <div role="alert" className="mx-5 sm:mx-7 mb-5 rounded-lg bg-rose-50 border border-rose-200 px-4 py-3 text-sm text-rose-800">{error}</div>}
         <div className="border-t border-slate-200 px-5 sm:px-7 py-4 text-[11px] text-slate-500 leading-relaxed">
-          Privacy: AI Photo mode sends your selected photo and the product image to Google's AI service to create the result under Google's applicable data terms; AVEART does not save the uploaded photo in its product database. Live camera video and pose tracking stay on your device and are not uploaded.
+          Privacy: AI Photo mode sends your selected photo and the product image to AVEART's configured open-source fitting server for processing; AVEART does not intentionally save the uploaded photo. Live camera video and pose tracking stay on your device and are not uploaded.
         </div>
       </div>
     </div>
