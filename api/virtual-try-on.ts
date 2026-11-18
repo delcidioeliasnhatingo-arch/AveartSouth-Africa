@@ -2,6 +2,9 @@ import { GoogleGenAI } from '@google/genai';
 
 const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
 const ALLOWED_MIME_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp']);
+const recentRequests = new Map<string, { count: number; resetAt: number }>();
+const RATE_WINDOW_MS = 15 * 60 * 1000;
+const RATE_LIMIT = 10;
 
 function parseImage(value: unknown, label: string) {
   if (typeof value !== 'string') throw new Error(`${label} is missing.`);
@@ -22,6 +25,16 @@ export default async function handler(req: any, res: any) {
     res.setHeader('Allow', 'POST');
     return res.status(405).json({ error: 'Method not allowed.' });
   }
+
+  const forwardedFor = String(req.headers?.['x-forwarded-for'] || '').split(',')[0].trim();
+  const clientKey = forwardedFor || 'unknown-client';
+  const now = Date.now();
+  const rate = recentRequests.get(clientKey);
+  if (rate && rate.resetAt > now && rate.count >= RATE_LIMIT) {
+    return res.status(429).json({ error: 'You have reached the fitting preview limit. Please try again in a little while.' });
+  }
+  if (!rate || rate.resetAt <= now) recentRequests.set(clientKey, { count: 1, resetAt: now + RATE_WINDOW_MS });
+  else recentRequests.set(clientKey, { count: rate.count + 1, resetAt: rate.resetAt });
 
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) return res.status(503).json({ error: 'The AVEART AI fitting service is not configured yet. Please try again later.' });
