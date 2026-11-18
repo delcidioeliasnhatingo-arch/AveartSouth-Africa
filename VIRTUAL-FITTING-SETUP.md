@@ -3,6 +3,9 @@
 - **Live Camera:** MediaPipe Tasks Vision / Pose Landmarker runs locally in the customer's browser. Camera frames are not uploaded. The garment overlay is an approximate 2D preview, not a 3D fit simulation.
 - **AI Photo Try-On:** FASHN VTON v1.5 (Apache-2.0) runs in a separate Python service with GPU inference. The Vercel function proxies requests to this private service; Gemini is not used.
 
+## Hosting plan note
+The connected AVEART Vercel project is currently on the Hobby plan. Vercel describes Hobby as for personal, non-commercial use. Before serving the commercial AVEART storefront from Vercel in production, move to a plan that permits commercial use or move the storefront to a suitable commercial host. This fitting-room PR remains a preview and is not promoted to production.
+
 ## Deploy the inference service
 The model cannot run inside a normal Vercel serverless function. It requires a GPU-capable host and persistent model weights. The root Dockerfile builds the upstream FASHN VTON v1.5 project and downloads the weights.
 
