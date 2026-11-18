@@ -5,7 +5,7 @@ const RATE_WINDOW_MS = 15 * 60 * 1000;
 const RATE_LIMIT = 10;
 function parseImage(value: unknown, label: string) {
   if (typeof value !== 'string') throw new Error(`${label} is missing.`);
-  const match = value.match(/^data:(image\\/(?:jpeg|png|webp));base64,([A-Za-z0-9+/=]+)$/);
+  const match = value.match(/^data:(image\/(?:jpeg|png|webp));base64,([A-Za-z0-9+/=]+)$/);
   if (!match || !ALLOWED_MIME_TYPES.has(match[1])) throw new Error(`${label} must be a JPEG, PNG or WebP image.`);
   const data = match[2];
   if (Math.floor(data.length * 0.75) > MAX_IMAGE_BYTES) throw new Error(`${label} is too large.`);
