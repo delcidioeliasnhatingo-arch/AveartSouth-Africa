@@ -64,8 +64,14 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect, onB
 
   const sizes = Array.from(new Set(inStockVariants.map((v) => v.size).filter(Boolean))) as string[];
   const colors = Array.from(new Set(inStockVariants.map((v) => v.color).filter(Boolean))) as string[];
+  // A colour is selectable/displayed only when that exact variant has its own photo.
+  const photographedColors = colors.filter((color) => {
+    const colorRecord = product.colors?.find((entry) => entry.name === color);
+    const photoVariant = inStockVariants.find((variant) => variant.color === color && (variant.images?.[0] || variant.image_url));
+    return Boolean(colorRecord?.images?.[0] || photoVariant?.images?.[0] || photoVariant?.image_url);
+  });
   const filteredSizes = sizes.filter((size) => !selectedColor || inStockVariants.some((v) => v.size === size && v.color === selectedColor));
-  const filteredColors = colors.filter((color) => !selectedSize || inStockVariants.some((v) => v.color === color && v.size === selectedSize));
+  const filteredColors = photographedColors.filter((color) => !selectedSize || inStockVariants.some((v) => v.color === color && v.size === selectedSize));
   const selectedVariant = inStockVariants.find((v) =>
     (!sizes.length || v.size === selectedSize) && (!colors.length || v.color === selectedColor)
   );
@@ -132,8 +138,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect, onB
           {product.colors && product.colors.length > 0 && (
             <div className="flex items-center gap-1.5 mt-1.5 sm:gap-2 sm:mt-2.5" aria-label="Available colour variants">
               {product.colors.map((c) => {
-                const variant = product.variants?.find((v) => v.color === c.name && (v.images?.[0] || v.image_url));
-                const variantPhoto = c.images?.[0] || variant?.images?.[0] || variant?.image_url || displayImage;
+                const variant = product.variants?.find((v) => Number(v.stock_quantity) > 0 && v.color === c.name && (v.images?.[0] || v.image_url));
+                const variantPhoto = c.images?.[0] || variant?.images?.[0] || variant?.image_url;
                 return variantPhoto ? (
                   <span key={c.name} title={c.name} className="!w-6 !h-6 sm:!w-7 sm:!h-7 !min-w-0 !min-h-0 rounded-full border border-slate-300 shadow-xs overflow-hidden inline-block shrink-0 bg-white" style={{ width: 28, height: 28, aspectRatio: '1 / 1', borderRadius: '50%', clipPath: 'circle(50%)' }}>
                     <img src={variantPhoto} alt={c.name} className="block w-full h-full object-cover scale-[2.35]" style={{ width: '100%', height: '100%', borderRadius: '50%', clipPath: 'circle(50%)' }} />
@@ -173,7 +179,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect, onB
                     <div className="flex flex-wrap items-center gap-3">{filteredColors.map((color) => {
                       const colorRecord = product.colors?.find((entry) => entry.name === color);
                       const matchingVariant = inStockVariants.find((variant) => variant.color === color && (variant.images?.[0] || variant.image_url));
-                      const variantPhoto = colorRecord?.images?.[0] || matchingVariant?.images?.[0] || matchingVariant?.image_url || displayImage;
+                      const variantPhoto = colorRecord?.images?.[0] || matchingVariant?.images?.[0] || matchingVariant?.image_url;
                       const isSelected = selectedColor === color;
                       return (
                         <button
@@ -182,7 +188,12 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect, onB
                           aria-label={color}
                           title={color}
                           aria-pressed={isSelected}
-                          onClick={() => { setSelectedColor(color); setQuantity(1); }}
+                          onClick={() => {
+                            setSelectedColor(color);
+                            const validSizesForColor = inStockVariants.filter((variant) => variant.color === color).map((variant) => variant.size).filter(Boolean);
+                            if (selectedSize && !validSizesForColor.includes(selectedSize) && validSizesForColor.length) setSelectedSize(validSizesForColor[0]);
+                            setQuantity(1);
+                          }}
                           className={'!w-11 !h-11 !min-w-0 !min-h-0 !p-0 shrink-0 overflow-hidden rounded-full border bg-white transition-all ' + (isSelected ? 'border-black ring-2 ring-black ring-offset-2' : 'border-slate-300 hover:border-black')}
                           style={{ width: 44, height: 44, aspectRatio: '1 / 1', borderRadius: '50%', clipPath: 'circle(50%)' }}
                         >
