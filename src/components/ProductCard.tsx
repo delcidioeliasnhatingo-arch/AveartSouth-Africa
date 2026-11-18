@@ -85,7 +85,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect, onB
 
   const openSelector = (e: React.MouseEvent, action: 'cart' | 'buy') => {
     e.stopPropagation();
-    const first = inStockVariants[0];
+    const firstPhotographedColor = photographedColors[0];
+    const first = inStockVariants.find((variant) => firstPhotographedColor ? variant.color === firstPhotographedColor : true) || inStockVariants[0];
     setSelectedSize(first?.size || '');
     setSelectedColor(first?.color || '');
     setQuantity(1);
