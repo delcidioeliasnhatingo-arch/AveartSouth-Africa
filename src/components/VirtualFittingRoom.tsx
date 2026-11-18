@@ -137,14 +137,21 @@ export const VirtualFittingRoom: React.FC<VirtualFittingRoomProps> = ({
         const vision = await FilesetResolver.forVisionTasks(
           'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.22/wasm',
         );
-        landmarkerRef.current = await PoseLandmarker.createFromOptions(vision, {
+        const poseOptions = {
           baseOptions: {
             modelAssetPath: 'https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task',
-            delegate: 'GPU',
           },
-          runningMode: 'VIDEO',
+          runningMode: 'VIDEO' as const,
           numPoses: 1,
-        });
+        };
+        try {
+          landmarkerRef.current = await PoseLandmarker.createFromOptions(vision, {
+            ...poseOptions,
+            baseOptions: { ...poseOptions.baseOptions, delegate: 'GPU' },
+          });
+        } catch {
+          landmarkerRef.current = await PoseLandmarker.createFromOptions(vision, poseOptions);
+        }
       }
       setCameraActive(true);
       setPoseReady(true);
@@ -345,7 +352,7 @@ export const VirtualFittingRoom: React.FC<VirtualFittingRoomProps> = ({
 
         {error && <div role="alert" className="mx-5 sm:mx-7 mb-5 rounded-lg bg-rose-50 border border-rose-200 px-4 py-3 text-sm text-rose-800">{error}</div>}
         <div className="border-t border-slate-200 px-5 sm:px-7 py-4 text-[11px] text-slate-500 leading-relaxed">
-          Privacy: your uploaded photo is processed only to create the fitting result and is not saved by AVEART. Live camera video is processed on your device and is not sent to AVEART.
+          Privacy: AI Photo mode sends your selected photo and the product image to Google's AI service to create the result; AVEART does not save the uploaded photo in its product database. Live camera video and pose tracking stay on your device and are not uploaded.
         </div>
       </div>
     </div>
