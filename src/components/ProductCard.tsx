@@ -44,6 +44,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect, onB
   const [selectedSize, setSelectedSize] = useState('');
   const [selectedColor, setSelectedColor] = useState('');
   const [quantity, setQuantity] = useState(1);
+  const [selectedVariants, setSelectedVariants] = useState<Array<{ variant: NonNullable<Product['variants']>[number]; quantity: number }>>([]);
 
   const primaryVariant = product.variants?.find((variant) => variant.is_primary === true || Number(variant.is_primary) === 1)
     || product.variants?.[0];
@@ -95,23 +96,45 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect, onB
     setSelectedSize(first?.size || '');
     setSelectedColor(first?.color || '');
     setQuantity(1);
+    setSelectedVariants([]);
     setSelectionAction(action);
     setSelectorOpen(true);
   };
 
-  const confirmAdd = (e: React.MouseEvent) => {
+  const stageCurrentVariant = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (!chosenVariant || quantity < 1 || quantity > maxQuantity) return;
-    flushSync(() => addItem(chosenVariant.id, quantity, {
-      productTitle: product.title,
-      variantName: chosenVariant.name || [chosenVariant.size, chosenVariant.color].filter(Boolean).join(' / ') || 'Default',
-      size: chosenVariant.size || '',
-      color: chosenVariant.color || '',
-      productSlug: product.slug,
-      unitPrice: Number(chosenVariant.sale_price ?? chosenVariant.price ?? (product.base_price + Number(chosenVariant.price_offset || 0))),
-      imageUrl: chosenVariant.image_url || product.primary_image || product.images?.[0] || '',
-      stockAvailable: maxQuantity,
-    }, { openDrawer: false }));
+    setSelectedVariants((current) => {
+      const existing = current.find((item) => item.variant.id === chosenVariant.id);
+      if (existing) {
+        return current.map((item) => item.variant.id === chosenVariant.id
+          ? { ...item, quantity: Math.min(Number(chosenVariant.stock_quantity || 0), item.quantity + quantity) }
+          : item);
+      }
+      return [...current, { variant: chosenVariant, quantity }];
+    });
+    setQuantity(1);
+  };
+
+  const confirmAdd = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (selectedVariants.length === 0) return;
+    const validLines = selectedVariants.filter((item) =>
+      item.quantity > 0 && item.quantity <= Number(item.variant.stock_quantity || 0)
+    );
+    if (validLines.length !== selectedVariants.length) return;
+    flushSync(() => {
+      validLines.forEach(({ variant, quantity: lineQuantity }) => addItem(variant.id, lineQuantity, {
+        productTitle: product.title,
+        variantName: variant.name || [variant.size, variant.color].filter(Boolean).join(' / ') || 'Default',
+        size: variant.size || '',
+        color: variant.color || '',
+        productSlug: product.slug,
+        unitPrice: Number(variant.sale_price ?? variant.price ?? (product.base_price + Number(variant.price_offset || 0))),
+        imageUrl: variant.images?.[0] || variant.image_url || product.primary_image || product.images?.[0] || '',
+        stockAvailable: Number(variant.stock_quantity || 0),
+      }, { openDrawer: false }));
+    });
     setSelectorOpen(false);
     if (selectionAction === 'buy') onBuyNow();
   };
@@ -248,14 +271,29 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect, onB
               ) : <p className="text-sm text-slate-600">No variants for this product. Select the quantity you want.</p>}
 
               <div className="flex items-center justify-between border-t border-slate-100 pt-4">
-                <div><p className="text-sm font-bold text-slate-800">Quantity</p><p className="text-xs text-slate-500">{chosenVariant ? 'Maximum: ' + maxQuantity : 'Select an available combination'}</p></div>
+                <div><p className="text-sm font-bold text-slate-800">Quantity for this variant</p><p className="text-xs text-slate-500">{chosenVariant ? 'Maximum: ' + maxQuantity : 'Select an available combination'}</p></div>
                 <div className="flex items-center gap-3">
                   <button type="button" disabled={!chosenVariant || quantity <= 1} onClick={() => setQuantity((q) => Math.max(1, q - 1))} className="h-9 w-9 rounded-lg border border-slate-300 text-lg disabled:opacity-30">−</button>
                   <span className="min-w-6 text-center font-bold tabular-nums">{quantity}</span>
                   <button type="button" disabled={!chosenVariant || quantity >= maxQuantity} onClick={() => setQuantity((q) => Math.min(maxQuantity, q + 1))} className="h-9 w-9 rounded-lg border border-slate-300 text-lg disabled:opacity-30">+</button>
                 </div>
               </div>
-              <button type="button" disabled={!chosenVariant || quantity < 1 || quantity > maxQuantity} onClick={confirmAdd} className="w-full rounded-xl bg-[#87977D] py-3 text-sm font-extrabold uppercase tracking-wide text-white hover:bg-[#65775D] disabled:cursor-not-allowed disabled:opacity-40">{selectionAction === 'buy' ? 'Continue to Checkout' : `Add ${quantity} to Cart`}</button>
+              <button type="button" disabled={!chosenVariant || quantity < 1 || quantity > maxQuantity} onClick={stageCurrentVariant} className="w-full rounded-xl border-2 border-black bg-white py-2.5 text-sm font-bold text-black hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40">Add this variant</button>
+              {selectedVariants.length > 0 && (
+                <div className="space-y-2 rounded-lg bg-slate-50 p-3">
+                  <p className="text-sm font-bold text-slate-900">Selected variants ({selectedVariants.length})</p>
+                  {selectedVariants.map(({ variant, quantity: lineQuantity }) => (
+                    <div key={variant.id} className="flex items-center justify-between gap-3 text-sm">
+                      <div className="min-w-0">
+                        <p className="truncate font-semibold text-slate-800">{[variant.color, variant.size].filter(Boolean).join(' / ') || variant.name || 'Default'}</p>
+                        <p className="text-xs text-slate-500">{formatZAR(Number(variant.sale_price ?? variant.price ?? (product.base_price + Number(variant.price_offset || 0))))} · Qty {lineQuantity}</p>
+                      </div>
+                      <button type="button" aria-label="Remove selected variant" onClick={() => setSelectedVariants((current) => current.filter((item) => item.variant.id !== variant.id))} className="rounded-md px-2 py-1 font-bold text-slate-500 hover:bg-white hover:text-black">Remove</button>
+                    </div>
+                  ))}
+                </div>
+              )}
+              <button type="button" disabled={selectedVariants.length === 0} onClick={confirmAdd} className="w-full rounded-xl bg-black py-3 text-sm font-extrabold uppercase tracking-wide text-white hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-40">{selectionAction === 'buy' ? 'Continue to Checkout' : `Add ${selectedVariants.reduce((sum, item) => sum + item.quantity, 0)} items to Cart`}</button>
             </section>
           </div>
         )}
