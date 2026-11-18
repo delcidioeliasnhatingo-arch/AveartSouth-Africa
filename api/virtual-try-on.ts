@@ -1,6 +1,6 @@
 import { GoogleGenAI } from '@google/genai';
 
-const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
+const MAX_IMAGE_BYTES = 3 * 1024 * 1024;
 const ALLOWED_MIME_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp']);
 const recentRequests = new Map<string, { count: number; resetAt: number }>();
 const RATE_WINDOW_MS = 15 * 60 * 1000;
@@ -14,6 +14,70 @@ function parseImage(value: unknown, label: string) {
   const estimatedBytes = Math.floor(data.length * 0.75);
   if (estimatedBytes > MAX_IMAGE_BYTES) throw new Error(`${label} is too large. Please use a smaller image.`);
   return { mimeType: match[1], data };
+}
+
+const BUILT_IN_IMAGE_HOSTS = [
+  'supabase.co',
+  'supabase.in',
+  'workers.dev',
+  'r2.dev',
+  'imagedelivery.net',
+  'vercel.app',
+  'aveartgallery.store',
+  'images.unsplash.com',
+];
+
+function isAllowedImageHost(hostname: string) {
+  const host = hostname.toLowerCase();
+  const configured = String(process.env.VIRTUAL_TRYON_ALLOWED_IMAGE_HOSTS || '')
+    .split(',')
+    .map((value) => value.trim().toLowerCase())
+    .filter(Boolean);
+  return [...BUILT_IN_IMAGE_HOSTS, ...configured].some(
+    (domain) => host === domain || host.endsWith('.' + domain)
+  );
+}
+
+async function parseGarmentImage(body: any) {
+  if (typeof body?.garmentImage === 'string') {
+    return parseImage(body.garmentImage, 'The product photo');
+  }
+
+  const rawUrl = body?.garmentImageUrl;
+  if (typeof rawUrl !== 'string' || rawUrl.length > 4096) {
+    throw new Error('The product photo is missing.');
+  }
+
+  let url: URL;
+  try {
+    url = new URL(rawUrl);
+  } catch {
+    throw new Error('The product photo URL is invalid.');
+  }
+  if (url.protocol !== 'https:' || !isAllowedImageHost(url.hostname)) {
+    throw new Error('The product photo must come from an approved secure AVEART image host.');
+  }
+
+  const response = await fetch(url.toString(), {
+    headers: { Accept: 'image/jpeg,image/png,image/webp' },
+    redirect: 'follow',
+    signal: AbortSignal.timeout(15000),
+  });
+  if (!response.ok) throw new Error('The selected product photo could not be loaded.');
+  const finalUrl = new URL(response.url);
+  if (finalUrl.protocol !== 'https:' || !isAllowedImageHost(finalUrl.hostname)) {
+    throw new Error('The product photo redirected to an unapproved image host.');
+  }
+
+  const mimeType = String(response.headers.get('content-type') || '').split(';')[0].trim().toLowerCase();
+  if (!ALLOWED_MIME_TYPES.has(mimeType)) {
+    throw new Error('The product photo must be a JPEG, PNG or WebP image.');
+  }
+  const declaredSize = Number(response.headers.get('content-length') || 0);
+  if (declaredSize > MAX_IMAGE_BYTES) throw new Error('The product photo is too large.');
+  const bytes = Buffer.from(await response.arrayBuffer());
+  if (bytes.length === 0 || bytes.length > MAX_IMAGE_BYTES) throw new Error('The product photo is empty or too large.');
+  return { mimeType, data: bytes.toString('base64') };
 }
 
 export default async function handler(req: any, res: any) {
@@ -41,7 +105,7 @@ export default async function handler(req: any, res: any) {
 
   try {
     const person = parseImage(req.body?.personImage, 'Your photo');
-    const garment = parseImage(req.body?.garmentImage, 'The product photo');
+    const garment = await parseGarmentImage(req.body);
     const productName = String(req.body?.productName || 'the selected AVEART garment').slice(0, 120);
 
     const ai = new GoogleGenAI({ apiKey });
@@ -72,3 +136,12 @@ export default async function handler(req: any, res: any) {
     return res.status(502).json({ error: 'The virtual fitting could not be generated right now. Please try again.' });
   }
 }
+
+
+export const config = {
+  api: {
+    bodyParser: {
+      sizeLimit: '4mb',
+    },
+  },
+};
