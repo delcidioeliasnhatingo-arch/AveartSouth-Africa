@@ -16,6 +16,7 @@ import {
 import { Product, ProductVariant, formatZAR } from '../types/index.ts';
 import { useCart } from '../context/CartContext.tsx';
 import { ProductCard } from '../components/ProductCard.tsx';
+import { VirtualFittingRoom } from '../components/VirtualFittingRoom.tsx';
 
 interface ProductDetailViewProps {
   slug: string;
@@ -62,6 +63,7 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
+  const [fittingRoomOpen, setFittingRoomOpen] = useState(false);
   const touchStartX = useRef<number | null>(null);
 
   // Recommendations state
@@ -254,6 +256,8 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
   const galleryImages = variantGallery.length > 0 ? variantGallery : generalGallery;
   const safeImageIndex = Math.min(activeImageIndex, Math.max(0, galleryImages.length - 1));
   const activeGalleryImage = galleryImages[safeImageIndex] || product.primary_image || '';
+  const fittingCategory = String(product.category_name || product.category_slug || '').toLowerCase();
+  const supportsVirtualFitting = !/accessor|shoe|sneaker|bag|wallet|belt|sunglass|jewel|watch|cap|hat|beanie/.test(fittingCategory);
 
   const handleAddToCart = () => {
     if (!selectedVariant || isOutOfStock) return;
@@ -407,6 +411,17 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
               </div>
             ) : null}
           </div>
+          {supportsVirtualFitting && activeGalleryImage && (
+            <button
+              type="button"
+              onClick={() => setFittingRoomOpen(true)}
+              className="w-full flex items-center justify-center gap-2.5 bg-black hover:bg-slate-800 text-white rounded-xl px-5 py-4 text-xs sm:text-sm uppercase tracking-[0.12em] font-bold transition-colors"
+            >
+              <span className="text-base">✦</span>
+              <span>Try it on virtually</span>
+            </button>
+          )}
+
           {/* Fabric & Design Highlights */}
           <div className="p-6 bg-white border border-slate-200 rounded-xl space-y-3 shadow-sm">
             <div className="flex items-center gap-2 text-xs uppercase tracking-wider text-emerald-700 font-bold">
@@ -779,6 +794,16 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
         )}
 
       </section>
+
+      {supportsVirtualFitting && activeGalleryImage && (
+        <VirtualFittingRoom
+          open={fittingRoomOpen}
+          onClose={() => setFittingRoomOpen(false)}
+          productName={product.title}
+          productImage={activeGalleryImage}
+          variantLabel={[selectedColor || selectedVariant?.color, selectedSize || selectedVariant?.size].filter(Boolean).join(' · ') || 'Selected variant'}
+        />
+      )}
 
     </div>
   );
