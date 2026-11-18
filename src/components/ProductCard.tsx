@@ -195,13 +195,18 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect, onB
                             if (selectedSize && !validSizesForColor.includes(selectedSize) && validSizesForColor.length) setSelectedSize(validSizesForColor[0]);
                             setQuantity(1);
                           }}
-                          className={'!w-11 !h-11 !min-w-0 !min-h-0 !p-0 shrink-0 overflow-hidden rounded-full border bg-white transition-all ' + (isSelected ? 'border-black ring-2 ring-black ring-offset-2' : 'border-slate-300 hover:border-black')}
-                          style={{ width: 44, height: 44, aspectRatio: '1 / 1', borderRadius: '50%', clipPath: 'circle(50%)' }}
+                          className={'relative !w-11 !h-11 !min-w-0 !min-h-0 !p-0 shrink-0 overflow-visible rounded-full border-2 bg-white transition-all ' + (isSelected ? 'border-black ring-2 ring-black ring-offset-2 shadow-md' : 'border-slate-300 hover:border-black')}
+                          style={{ width: 44, height: 44, aspectRatio: '1 / 1', borderRadius: '50%' }}
                         >
-                          {variantPhoto ? (
-                            <img src={variantPhoto} alt="" className="block h-full w-full object-cover" style={{ width: '100%', height: '100%', borderRadius: '50%', clipPath: 'circle(50%)' }} />
-                          ) : (
-                            <span className="block h-full w-full rounded-full bg-slate-200" />
+                          <span className="absolute inset-0 block overflow-hidden rounded-full" style={{ borderRadius: '50%', clipPath: 'circle(50%)' }}>
+                            {variantPhoto ? (
+                              <img src={variantPhoto} alt="" className="block h-full w-full object-cover" style={{ width: '100%', height: '100%', borderRadius: '50%', clipPath: 'circle(50%)' }} />
+                            ) : (
+                              <span className="block h-full w-full rounded-full bg-slate-200" />
+                            )}
+                          </span>
+                          {isSelected && (
+                            <span className="absolute -right-1 -top-1 z-10 flex h-4 w-4 items-center justify-center rounded-full border-2 border-white bg-black text-[10px] font-bold leading-none text-white" aria-hidden="true">✓</span>
                           )}
                         </button>
                       );
@@ -210,7 +215,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect, onB
                   {sizes.length > 0 && <div>
                     <p className="mb-2 text-sm font-bold text-slate-800">Size</p>
                     <div className="flex flex-wrap gap-2">{filteredSizes.map((size) => (
-                      <button key={size} type="button" onClick={() => { setSelectedSize(size); setQuantity(1); }} className={'rounded-lg border px-3 py-2 text-sm ' + (selectedSize === size ? 'border-[#65775D] bg-[#eef2eb] font-bold text-[#52664A]' : 'border-slate-200')}>{size}</button>
+                      <button key={size} type="button" onClick={() => { setSelectedSize(size); setQuantity(1); }} className={'min-w-[44px] rounded-lg border px-3 py-2 text-sm transition-colors ' + (selectedSize === size ? 'border-black bg-black font-bold text-white ring-2 ring-black ring-offset-1' : 'border-slate-200 bg-white text-slate-900 hover:border-black')}>{size}</button>
                     ))}</div>
                   </div>}
                   {!selectedVariant && <p className="text-sm text-amber-700">Choose a valid in-stock size and colour combination.</p>}
