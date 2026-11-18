@@ -1,34 +1,35 @@
-# AVEART Virtual Fitting — open-source deployment
+# AVEART Virtual Fitting — zero-hosted-inference architecture
 
-- **Live Camera:** MediaPipe Tasks Vision / Pose Landmarker runs locally in the customer's browser. Camera frames are not uploaded. The garment overlay is an approximate 2D preview, not a 3D fit simulation.
-- **AI Photo Try-On:** FASHN VTON v1.5 (Apache-2.0) runs in a separate Python service with GPU inference. The Vercel function proxies requests to this private service; Gemini is not used.
+## What runs for free
 
-## Hosting plan note
-The connected AVEART Vercel project is currently on the Hobby plan. Vercel describes Hobby as for personal, non-commercial use. Before serving the commercial AVEART storefront from Vercel in production, move to a plan that permits commercial use or move the storefront to a suitable commercial host. This fitting-room PR remains a preview and is not promoted to production.
+- **Photo Preview:** MediaPipe Tasks Vision / Pose Landmarker detects shoulders and hips from a user-selected photo in the browser. The browser composites the selected catalogue garment over the photo using a 2D canvas. The image is not sent to AVEART servers.
+- **Live Camera:** MediaPipe Pose Landmarker tracks the user's pose in the browser and draws an approximate 2D garment overlay. Camera frames are not uploaded.
+- **No hosted AI inference:** This implementation does not call FASHN, Gemini, a paid GPU provider, or an external try-on API. It does not generate a photorealistic garment replacement. It is a lightweight visual preview only.
 
-## Deploy the inference service
-The model cannot run inside a normal Vercel serverless function. It requires a GPU-capable host and persistent model weights. The root Dockerfile builds the upstream FASHN VTON v1.5 project and downloads the weights.
+## Privacy
 
-1. Build the root Dockerfile on a CUDA-capable GPU host.
-2. Set a long random `FASHN_VTON_TOKEN` secret in the service environment.
-3. Expose port 8000 behind HTTPS; do not expose the service without bearer-token authentication.
-4. Set these Vercel server-side environment variables: `FASHN_VTON_URL` (private service base URL, no trailing slash) and `FASHN_VTON_TOKEN` (same secret).
-5. Redeploy the Vercel preview. Photo Try-On stays disabled with a clear message until both variables exist. Live Camera works independently.
+- The selected customer photo, camera frames, and generated preview remain in the browser.
+- The fitting-room code does not upload or persist customer photos.
+- MediaPipe's pinned runtime and pose model are downloaded from public CDN endpoints. These downloads are model/runtime assets, not customer photos. If the site later self-hosts these assets, keep the same pinned versions and verify their licenses.
+- Product photos must be served with CORS headers that allow the storefront origin so the browser can composite them into a canvas.
 
-## Product-photo handling
-The AVEART catalogue currently uses isolated, ghost-mannequin, or flat-lay product photography rather than customer-facing model photos. The inference service therefore sends `garment_photo_type="flat-lay"` to FASHN. The model accepts `tops`, `bottoms`, and `one-pieces`; product pages map clothing categories to these values. Accessories and footwear remain excluded.
+## Important visual limitations
 
-## Free testing option
-Hugging Face hosts a public FASHN demo and ZeroGPU can provide limited free GPU time for manual testing. This is not a dependable production backend: free-account ZeroGPU usage is quota-limited and queued, and a public Space receives the customer's photos. Do not route AVEART customer photos through a public Space without an explicit privacy review and clear customer consent. The production integration in this repository is the private, token-protected FASHN service above.
+- The overlay is approximate 2D compositing, not 3D cloth simulation or generative virtual try-on.
+- It does not understand garment segmentation, folds, body occlusion, fabric drape, or exact sizing.
+- Flat-lay catalogue images may contain background/whitespace; results depend heavily on clean, isolated product photography.
+- The preview must not be presented as a guarantee of colour, fabric, fit, or size.
+- Categories supported by the existing product-page integration are tops, bottoms, and one-pieces. Footwear and accessories are not supported.
 
-Leffa is another open-weight research option, but its supporting checkpoints and preprocessing components need a separate commercial-license audit before being added to a retail checkout flow. Non-commercial models such as IDM-VTON, CatVTON, and OOTDiffusion must not be used in AVEART's commercial storefront without separate commercial permission.
+## Hosting
 
-## Privacy and limitations
-- Customer photos are sent to AVEART's server and then to the configured GPU service. The included service processes images in memory and does not intentionally persist them.
-- Do not add image-body logging, permanent image storage, or analytics containing image data.
-- AI can still alter garment details. The result is illustrative and does not guarantee exact colour, fabric, print, or fit.
-- MediaPipe runtime/model assets are currently loaded from pinned public CDN URLs. Self-host these assets if required by deployment policy.
-- FASHN VTON upstream is Apache-2.0; verify third-party component and model-asset licenses before commercial launch.
+The fitting-room feature requires no GPU server, inference token, paid AI API, or Python service. It runs in the customer's browser. The storefront itself still needs a host. The connected Vercel Hobby plan is restricted to personal/non-commercial use; before operating AVEART commercially, deploy the storefront on a host whose free plan permits commercial use, such as a suitable Cloudflare Workers/Static Assets setup, and verify the current plan terms and limits. This PR is a preview and does not change production hosting.
 
-## Run the service
-Install the upstream FASHN VTON package, download its model weights, set `FASHN_VTON_TOKEN`, and run `uvicorn aveart_server:app --host 0.0.0.0 --port 8000`. The service exposes `GET /health` and protected `POST /v1/try-on`.
+## Validation checklist
+
+1. Test with a clear, front-facing, full-body photo.
+2. Confirm shoulders and hips are detected.
+3. Test garment image loading from the actual catalogue storage domain with CORS enabled.
+4. Test both CPU fallback and GPU delegate in supported browsers.
+5. Confirm no customer image requests are sent to AVEART endpoints in browser network inspection.
+6. Keep the feature labelled as an approximate preview, not an AI fit guarantee.
