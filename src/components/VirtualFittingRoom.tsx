@@ -10,6 +10,7 @@ interface VirtualFittingRoomProps {
   productName: string;
   productImage: string;
   variantLabel?: string;
+  garmentCategory: 'tops' | 'bottoms' | 'one-pieces';
 }
 
 const MAX_IMAGE_EDGE = 1280;
@@ -42,7 +43,7 @@ function fileToOptimizedDataUrl(file: File): Promise<string> {
 }
 
 export const VirtualFittingRoom: React.FC<VirtualFittingRoomProps> = ({
-  open, onClose, productName, productImage, variantLabel,
+  open, onClose, productName, productImage, variantLabel, garmentCategory,
 }) => {
   const [mode, setMode] = useState<Mode>('photo');
   const [personFile, setPersonFile] = useState<File | null>(null);
@@ -327,7 +328,7 @@ export const VirtualFittingRoom: React.FC<VirtualFittingRoomProps> = ({
 
         {error && <div role="alert" className="mx-5 sm:mx-7 mb-5 rounded-lg bg-rose-50 border border-rose-200 px-4 py-3 text-sm text-rose-800">{error}</div>}
         <div className="border-t border-slate-200 px-5 sm:px-7 py-4 text-[11px] text-slate-500 leading-relaxed">
-          Privacy: AI Photo mode sends your selected photo and the product image to AVEART's configured open-source fitting server for processing; AVEART does not intentionally save the uploaded photo. Live camera video and pose tracking stay on your device and are not uploaded.
+          Privacy: AI Photo mode sends your selected photo and the product image to AVEART's configured open-source fitting server for processing. Images are processed in memory and are not intentionally saved. Live camera video and pose tracking stay on your device and are not uploaded.
         </div>
       </div>
     </div>
