@@ -154,7 +154,8 @@ export const VirtualTryOnModal: React.FC<VirtualTryOnModalProps> = ({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           personImage,
-          garmentImageUrl: productImage,
+          garmentImage: productImage.startsWith('data:image/') ? productImage : undefined,
+          garmentImageUrl: productImage.startsWith('data:image/') ? undefined : productImage,
           productName: productTitle,
         }),
       });
