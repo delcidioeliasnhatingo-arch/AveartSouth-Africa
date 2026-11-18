@@ -43,7 +43,7 @@ export default async function handler(req: any, res: any) {
   if (!rate || rate.resetAt <= now) recentRequests.set(clientKey, { count: 1, resetAt: now + RATE_WINDOW_MS });
   else recentRequests.set(clientKey, { count: rate.count + 1, resetAt: rate.resetAt });
   if (recentRequests.size > 5000) for (const [key, entry] of recentRequests) { if (entry.resetAt <= now) recentRequests.delete(key); if (recentRequests.size <= 4000) break; }
-  const serviceUrl = String(process.env.FASHN_VTON_URL || '').replace(/\\/$/, ''), serviceToken = process.env.FASHN_VTON_TOKEN;
+  const serviceUrl = String(process.env.FASHN_VTON_URL || '').replace(/\/$/, ''), serviceToken = process.env.FASHN_VTON_TOKEN;
   if (!serviceUrl || !serviceToken) return res.status(503).json({ error: 'The open-source AI fitting service is not connected yet. Live Camera remains available.' });
   try {
     const person = parseImage(req.body?.personImage, 'Your photo'), garment = await parseGarmentImage(req.body);
