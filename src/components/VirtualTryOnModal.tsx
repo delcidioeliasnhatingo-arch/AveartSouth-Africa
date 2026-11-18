@@ -34,9 +34,6 @@ async function compressImage(file: File): Promise<string> {
   }
 }
 
-function wait(ms: number) {
-  return new Promise((resolve) => window.setTimeout(resolve, ms));
-}
 
 export const VirtualTryOnModal: React.FC<VirtualTryOnModalProps> = ({
   open,
@@ -152,34 +149,21 @@ export const VirtualTryOnModal: React.FC<VirtualTryOnModalProps> = ({
     setIsGenerating(true);
     setProgress('Preparing your photo…');
     try {
-      const createResponse = await fetch('/api/virtual-try-on', {
+      const response = await fetch('/api/virtual-try-on', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'create', personImage, productImage }),
+        body: JSON.stringify({
+          personImage,
+          garmentImageUrl: productImage,
+          productName: productTitle,
+        }),
       });
-      const created = await createResponse.json();
-      if (!createResponse.ok || !created.id) {
-        throw new Error(created.error || 'The virtual fitting service is not ready yet.');
+      const payload = await response.json();
+      if (!response.ok || !payload.image) {
+        throw new Error(payload.error || 'The virtual fitting service is not ready yet.');
       }
-
-      setProgress('The AI is fitting the selected piece…');
-      for (let attempt = 0; attempt < 40; attempt += 1) {
-        await wait(2000);
-        const statusResponse = await fetch('/api/virtual-try-on?id=' + encodeURIComponent(created.id));
-        const status = await statusResponse.json();
-        if (!statusResponse.ok) throw new Error(status.error || 'Could not check the fitting result.');
-        if (status.status === 'completed' && Array.isArray(status.output) && status.output[0]) {
-          const output = String(status.output[0]);
-          setResultImage(output.startsWith('data:image/') ? output : 'data:image/jpeg;base64,' + output);
-          setProgress('');
-          return;
-        }
-        if (status.status === 'failed') {
-          throw new Error(status.error?.message || 'The AI could not complete this fitting. Try another photo.');
-        }
-        setProgress(status.status === 'in_queue' ? 'Waiting for the fitting service…' : 'The AI is fitting the selected piece…');
-      }
-      throw new Error('This fitting is taking longer than expected. Please try again in a moment.');
+      setResultImage(payload.image);
+      setProgress('');
     } catch (generationError: any) {
       setError(generationError?.message || 'The virtual fitting could not be completed.');
       setProgress('');
@@ -239,7 +223,7 @@ export const VirtualTryOnModal: React.FC<VirtualTryOnModalProps> = ({
                 {personImage ? (
                   <div className="relative overflow-hidden rounded-xl bg-white">
                     <img src={personImage} alt="Captured camera photo" className="mx-auto max-h-[48vh] w-full object-contain" />
-                    <button type="button" onClick={() => { setPersonImage(''); setResultImage(''); startCamera(); }} className="absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full bg-white px-4 py-2 text-xs font-bold text-black shadow-lg">Retake photo</button>
+                    <button type="button" onClick={() => { setPersonImage(''); setResultImage(''); window.setTimeout(() => startCamera(), 120); }} className="absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full bg-white px-4 py-2 text-xs font-bold text-black shadow-lg">Retake photo</button>
                   </div>
                 ) : (
                   <div className="relative flex min-h-[300px] items-center justify-center overflow-hidden rounded-xl bg-black">
@@ -313,7 +297,7 @@ export const VirtualTryOnModal: React.FC<VirtualTryOnModalProps> = ({
             </div>
 
             <div className="rounded-xl bg-slate-50 p-3 text-[10px] leading-5 text-slate-500">
-              <strong className="text-slate-700">Privacy:</strong> Your photo is processed for this fitting only. AVEART does not save it to your account. It is sent securely to our AI fitting provider and is not used by FASHN to train models unless separately opted in.
+              <strong className="text-slate-700">Privacy:</strong> Your photo is sent to Google's AI service to create this fitting. AVEART does not save it to your customer account. Close this window to clear the photo and result from this fitting session.
             </div>
           </div>
         </div>
