@@ -170,9 +170,30 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect, onB
                 <>
                   {colors.length > 0 && <div>
                     <p className="mb-2 text-sm font-bold text-slate-800">Colour</p>
-                    <div className="flex flex-wrap gap-2">{filteredColors.map((color) => (
-                      <button key={color} type="button" onClick={() => { setSelectedColor(color); setQuantity(1); }} className={'rounded-lg border px-3 py-2 text-sm ' + (selectedColor === color ? 'border-[#65775D] bg-[#eef2eb] font-bold text-[#52664A]' : 'border-slate-200')}>{color}</button>
-                    ))}</div>
+                    <div className="flex flex-wrap gap-2">{filteredColors.map((color) => {
+                      const colorRecord = product.colors?.find((entry) => entry.name === color);
+                      const matchingVariant = inStockVariants.find((variant) => variant.color === color && (variant.images?.[0] || variant.image_url));
+                      const variantPhoto = colorRecord?.images?.[0] || matchingVariant?.images?.[0] || matchingVariant?.image_url || '';
+                      const isSelected = selectedColor === color;
+                      return (
+                        <button
+                          key={color}
+                          type="button"
+                          aria-pressed={isSelected}
+                          onClick={() => { setSelectedColor(color); setQuantity(1); }}
+                          className={'inline-flex items-center gap-2 rounded-lg border px-3 py-2 text-sm transition-colors ' + (isSelected ? 'border-black bg-slate-50 font-bold text-slate-900 ring-1 ring-black' : 'border-slate-200 bg-white hover:border-slate-400')}
+                        >
+                          <span className="!w-8 !h-8 !min-w-0 !min-h-0 shrink-0 overflow-hidden rounded-full border border-slate-300 bg-slate-100" style={{ width: 32, height: 32, aspectRatio: '1 / 1', borderRadius: '50%', clipPath: 'circle(50%)' }}>
+                            {variantPhoto ? (
+                              <img src={variantPhoto} alt="" className="block h-full w-full object-cover" style={{ width: '100%', height: '100%', borderRadius: '50%', clipPath: 'circle(50%)' }} />
+                            ) : (
+                              <span className="block h-full w-full rounded-full bg-slate-200" />
+                            )}
+                          </span>
+                          <span>{color}</span>
+                        </button>
+                      );
+                    })}</div>
                   </div>}
                   {sizes.length > 0 && <div>
                     <p className="mb-2 text-sm font-bold text-slate-800">Size</p>
