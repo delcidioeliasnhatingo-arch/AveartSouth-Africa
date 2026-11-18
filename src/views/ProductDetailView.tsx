@@ -802,6 +802,7 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
           productName={product.title}
           productImage={activeGalleryImage}
           variantLabel={[selectedColor || selectedVariant?.color, selectedSize || selectedVariant?.size].filter(Boolean).join(' · ') || 'Selected variant'}
+                  garmentCategory={/dress|jumpsuit|romper|one.?piece/.test(fittingCategory) ? 'one-pieces' : /trouser|pant|jean|skirt|short/.test(fittingCategory) ? 'bottoms' : 'tops'}
         />
       )}
 
