@@ -60,6 +60,7 @@ export const VirtualFittingRoom: React.FC<VirtualFittingRoomProps> = ({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const landmarkerRef = useRef<PoseLandmarker | null>(null);
+  const photoLandmarkerRef = useRef<PoseLandmarker | null>(null);
   const frameRef = useRef<number | null>(null);
   const garmentRef = useRef<HTMLImageElement | null>(null);
   const lastVideoTimeRef = useRef(-1);
@@ -195,23 +196,74 @@ export const VirtualFittingRoom: React.FC<VirtualFittingRoomProps> = ({
   };
 
   const generateTryOn = async () => {
-    if (!personFile || !productImage) return;
+    if (!personFile || !personPreview || !productImage) return;
     setGenerating(true);
     setError('');
     setResultImage('');
     try {
-      const personImage = await fileToOptimizedDataUrl(personFile);
-      const response = await fetch('/api/virtual-try-on', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ personImage, garmentImageUrl: productImage, productName, category: garmentCategory }),
-      });
-      const payload = await response.json();
-      if (!response.ok) throw new Error(payload?.error || 'The virtual fitting could not be generated.');
-      if (!payload?.image) throw new Error('The AI did not return a fitting image. Please try again.');
-      setResultImage(payload.image);
+      if (!photoLandmarkerRef.current) {
+        const vision = await FilesetResolver.forVisionTasks('https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.22/wasm');
+        const options = {
+          baseOptions: { modelAssetPath: 'https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task' },
+          runningMode: 'IMAGE' as const,
+          numPoses: 1,
+        };
+        try {
+          photoLandmarkerRef.current = await PoseLandmarker.createFromOptions(vision, {
+            ...options,
+            baseOptions: { ...options.baseOptions, delegate: 'GPU' },
+          });
+        } catch {
+          photoLandmarkerRef.current = await PoseLandmarker.createFromOptions(vision, options);
+        }
+      }
+      const person = new Image();
+      person.src = personPreview;
+      await person.decode();
+      const landmarks = photoLandmarkerRef.current.detect(person).landmarks?.[0];
+      if (!landmarks || landmarks.length <= 24) {
+        throw new Error('We could not detect your shoulders and hips. Please use a clear, front-facing full-body photo.');
+      }
+      const garment = garmentRef.current;
+      if (!garment || !garment.complete) throw new Error('The product photo is still loading. Please try again.');
+      const canvas = document.createElement('canvas');
+      canvas.width = person.naturalWidth;
+      canvas.height = person.naturalHeight;
+      const context = canvas.getContext('2d');
+      if (!context) throw new Error('Your browser could not prepare the fitting preview.');
+      context.drawImage(person, 0, 0);
+      const leftShoulder = landmarks[11];
+      const rightShoulder = landmarks[12];
+      const leftHip = landmarks[23];
+      const rightHip = landmarks[24];
+      const centerX = ((leftShoulder.x + rightShoulder.x) / 2) * canvas.width;
+      const shoulderY = ((leftShoulder.y + rightShoulder.y) / 2) * canvas.height;
+      const hipY = ((leftHip.y + rightHip.y) / 2) * canvas.height;
+      const shoulderWidth = Math.abs(leftShoulder.x - rightShoulder.x) * canvas.width;
+      const torsoHeight = Math.max(80, hipY - shoulderY);
+      const angle = Math.atan2(rightShoulder.y - leftShoulder.y, rightShoulder.x - leftShoulder.x);
+      let garmentWidth = shoulderWidth * 2.15;
+      let garmentHeight = torsoHeight * 1.55;
+      let centerY = shoulderY + torsoHeight * 0.52;
+      if (garmentCategory === 'bottoms') {
+        garmentWidth = shoulderWidth * 1.8;
+        garmentHeight = torsoHeight * 1.75;
+        centerY = hipY + torsoHeight * 0.72;
+      } else if (garmentCategory === 'one-pieces') {
+        garmentWidth = shoulderWidth * 2.1;
+        garmentHeight = torsoHeight * 2.15;
+        centerY = shoulderY + torsoHeight * 0.95;
+      }
+      context.save();
+      context.translate(centerX, centerY);
+      context.rotate(-angle);
+      context.globalAlpha = 0.88;
+      context.globalCompositeOperation = 'multiply';
+      context.drawImage(garment, -garmentWidth / 2, -garmentHeight * 0.43, garmentWidth, garmentHeight);
+      context.restore();
+      setResultImage(canvas.toDataURL('image/jpeg', 0.88));
     } catch (err: any) {
-      setError(err?.message || 'Something went wrong while creating your fitting.');
+      setError(err?.message || 'The on-device fitting preview could not be created. Please try another photo.');
     } finally {
       setGenerating(false);
     }
@@ -240,7 +292,7 @@ export const VirtualFittingRoom: React.FC<VirtualFittingRoomProps> = ({
             </div>
             <div className="inline-flex p-1 rounded-full bg-slate-100 border border-slate-200 self-start">
               <button type="button" onClick={() => { setMode('photo'); stopCamera(); setError(''); }} className={`px-4 py-2 rounded-full text-xs font-bold transition ${mode === 'photo' ? 'bg-black text-white' : 'text-slate-600 hover:text-black'}`}>
-                <span className="inline-flex items-center gap-2"><Sparkles className="w-3.5 h-3.5" /> AI Photo</span>
+                <span className="inline-flex items-center gap-2"><Sparkles className="w-3.5 h-3.5" /> Photo Preview</span>
               </button>
               <button type="button" onClick={() => { setMode('live'); setError(''); }} className={`px-4 py-2 rounded-full text-xs font-bold transition ${mode === 'live' ? 'bg-black text-white' : 'text-slate-600 hover:text-black'}`}>
                 <span className="inline-flex items-center gap-2"><Camera className="w-3.5 h-3.5" /> Live Camera</span>
@@ -276,7 +328,7 @@ export const VirtualFittingRoom: React.FC<VirtualFittingRoomProps> = ({
             </div>
             <div className="space-y-3">
               <div className="aspect-[3/4] bg-slate-100 border border-slate-200 rounded-xl overflow-hidden grid place-items-center">
-                {resultImage ? <img src={resultImage} alt="AI virtual fitting result" className="w-full h-full object-contain" /> : (
+                {resultImage ? <img src={resultImage} alt="On-device virtual fitting preview" className="w-full h-full object-contain" /> : (
                   <div className="text-center px-8 space-y-3 text-slate-500">
                     <Sparkles className="w-8 h-8 mx-auto" />
                     <p className="text-sm font-semibold text-slate-700">Your fitting preview</p>
@@ -285,9 +337,9 @@ export const VirtualFittingRoom: React.FC<VirtualFittingRoomProps> = ({
                 )}
               </div>
               <button type="button" onClick={generateTryOn} disabled={!personFile || generating} className="w-full flex items-center justify-center gap-2 bg-black text-white rounded-xl px-5 py-3.5 text-sm font-bold disabled:opacity-40 hover:bg-slate-800 transition">
-                {generating ? <><LoaderCircle className="w-4 h-4 animate-spin" /> Creating your preview…</> : <><Sparkles className="w-4 h-4" /> Generate virtual fitting</>}
+                {generating ? <><LoaderCircle className="w-4 h-4 animate-spin" /> Creating your preview…</> : <><Sparkles className="w-4 h-4" /> Create photo preview</>}
               </button>
-              <p className="text-[11px] leading-relaxed text-slate-500">AI previews are visual simulations and do not guarantee garment fit, fabric feel or exact sizing.</p>
+              <p className="text-[11px] leading-relaxed text-slate-500">This is an approximate 2D overlay processed on your device. It is not an AI-generated garment replacement and does not guarantee exact colour, fabric, size or fit.</p>
             </div>
           </div>
         ) : (
@@ -320,7 +372,7 @@ export const VirtualFittingRoom: React.FC<VirtualFittingRoomProps> = ({
                 <p className="text-xs text-slate-500">The live overlay follows your shoulder and torso position. It is an approximate preview, not a size or fit measurement.</p>
               </div>
               <button type="button" onClick={() => { stopCamera(); setMode('photo'); }} className="w-full flex items-center justify-center gap-2 border border-slate-300 rounded-xl px-4 py-3 text-sm font-semibold hover:bg-slate-50">
-                <RefreshCw className="w-4 h-4" /> Switch to AI photo fitting
+                <RefreshCw className="w-4 h-4" /> Switch to photo preview
               </button>
             </div>
           </div>
@@ -328,7 +380,7 @@ export const VirtualFittingRoom: React.FC<VirtualFittingRoomProps> = ({
 
         {error && <div role="alert" className="mx-5 sm:mx-7 mb-5 rounded-lg bg-rose-50 border border-rose-200 px-4 py-3 text-sm text-rose-800">{error}</div>}
         <div className="border-t border-slate-200 px-5 sm:px-7 py-4 text-[11px] text-slate-500 leading-relaxed">
-          Privacy: AI Photo mode sends your selected photo and the product image to AVEART's configured open-source fitting server for processing. Images are processed in memory and are not intentionally saved. Live camera video and pose tracking stay on your device and are not uploaded.
+          Privacy: Photo Preview and Live Camera process your images and camera frames locally in your browser. They are not uploaded to AVEART servers by the fitting-room feature.
         </div>
       </div>
     </div>
