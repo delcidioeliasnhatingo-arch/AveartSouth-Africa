@@ -12,8 +12,13 @@ The model cannot run inside a normal Vercel serverless function. It requires a G
 4. Set these Vercel server-side environment variables: `FASHN_VTON_URL` (private service base URL, no trailing slash) and `FASHN_VTON_TOKEN` (same secret).
 5. Redeploy the Vercel preview. Photo Try-On stays disabled with a clear message until both variables exist. Live Camera works independently.
 
-## Categories
-The model accepts `tops`, `bottoms`, and `one-pieces`. Product pages map clothing categories to these values. Accessories and footwear remain excluded.
+## Product-photo handling
+The AVEART catalogue currently uses isolated, ghost-mannequin, or flat-lay product photography rather than customer-facing model photos. The inference service therefore sends `garment_photo_type="flat-lay"` to FASHN. The model accepts `tops`, `bottoms`, and `one-pieces`; product pages map clothing categories to these values. Accessories and footwear remain excluded.
+
+## Free testing option
+Hugging Face hosts a public FASHN demo and ZeroGPU can provide limited free GPU time for manual testing. This is not a dependable production backend: free-account ZeroGPU usage is quota-limited and queued, and a public Space receives the customer's photos. Do not route AVEART customer photos through a public Space without an explicit privacy review and clear customer consent. The production integration in this repository is the private, token-protected FASHN service above.
+
+Leffa is another open-weight research option, but its supporting checkpoints and preprocessing components need a separate commercial-license audit before being added to a retail checkout flow. Non-commercial models such as IDM-VTON, CatVTON, and OOTDiffusion must not be used in AVEART's commercial storefront without separate commercial permission.
 
 ## Privacy and limitations
 - Customer photos are sent to AVEART's server and then to the configured GPU service. The included service processes images in memory and does not intentionally persist them.
