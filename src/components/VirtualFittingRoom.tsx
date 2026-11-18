@@ -41,32 +41,6 @@ function fileToOptimizedDataUrl(file: File): Promise<string> {
   });
 }
 
-function remoteImageToDataUrl(url: string): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const image = new Image();
-    image.crossOrigin = 'anonymous';
-    image.onload = () => {
-      const scale = Math.min(1, MAX_IMAGE_EDGE / Math.max(image.naturalWidth, image.naturalHeight));
-      const canvas = document.createElement('canvas');
-      canvas.width = Math.max(1, Math.round(image.naturalWidth * scale));
-      canvas.height = Math.max(1, Math.round(image.naturalHeight * scale));
-      const context = canvas.getContext('2d');
-      if (!context) {
-        reject(new Error('Your browser could not prepare the product image.'));
-        return;
-      }
-      context.drawImage(image, 0, 0, canvas.width, canvas.height);
-      try {
-        resolve(canvas.toDataURL('image/jpeg', 0.9));
-      } catch {
-        reject(new Error('This product image cannot be securely read by the browser. Please try another product photo.'));
-      }
-    };
-    image.onerror = () => reject(new Error('The product image could not be loaded for the fitting room.'));
-    image.src = url;
-  });
-}
-
 export const VirtualFittingRoom: React.FC<VirtualFittingRoomProps> = ({
   open, onClose, productName, productImage, variantLabel,
 }) => {
@@ -220,14 +194,11 @@ export const VirtualFittingRoom: React.FC<VirtualFittingRoomProps> = ({
     setError('');
     setResultImage('');
     try {
-      const [personImage, garmentImage] = await Promise.all([
-        fileToOptimizedDataUrl(personFile),
-        remoteImageToDataUrl(productImage),
-      ]);
+      const personImage = await fileToOptimizedDataUrl(personFile);
       const response = await fetch('/api/virtual-try-on', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ personImage, garmentImage, productName }),
+        body: JSON.stringify({ personImage, garmentImageUrl: productImage, productName }),
       });
       const payload = await response.json();
       if (!response.ok) throw new Error(payload?.error || 'The virtual fitting could not be generated.');
