@@ -74,7 +74,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect, onB
     return Boolean(colorRecord?.images?.[0] || photoVariant?.images?.[0] || photoVariant?.image_url);
   });
   const filteredSizes = sizes.filter((size) => !selectedColor || allVariants.some((v) => v.size === size && v.color === selectedColor));
-  const filteredColors = photographedColors.filter((color) => !selectedSize || inStockVariants.some((v) => v.color === color && v.size === selectedSize));
+  // Keep all photographed colours available so customers can stage different colour/size combinations in one order.
+  const filteredColors = photographedColors;
   const isSizeAvailable = (size: string) => inStockVariants.some((variant) =>
     variant.size === size && (!selectedColor || variant.color === selectedColor)
   );
