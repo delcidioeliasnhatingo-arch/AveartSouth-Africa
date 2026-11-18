@@ -479,34 +479,34 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
               </div>
             </div>
 
-            {/* Colour Selector */}
+            {/* Circular Colour Variant Swatches */}
             {product.colors && product.colors.length > 0 && (
               <div className="space-y-2 pt-2">
-                <div className="flex justify-between items-center text-xs">
-                  <span className="uppercase tracking-wider font-bold text-slate-700">
-                    Colour: <strong className="text-slate-900 capitalize font-bold">{selectedColor || product.colors[0].name}</strong>
-                  </span>
+                <div className="flex items-center gap-2 text-xs">
+                  <span className="uppercase tracking-wider font-bold text-slate-700">Colour</span>
+                  <strong className="text-slate-900 capitalize font-bold">{selectedColor || product.colors[0].name}</strong>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex flex-wrap items-center gap-2.5" aria-label="Choose a colour variant">
                   {product.colors.map((c) => {
-                    const variantPhoto = c.images?.[0] || product.variants?.find((v) => v.color === c.name && (v.images?.[0] || v.image_url))?.images?.[0] || product.variants?.find((v) => v.color === c.name)?.image_url || product.primary_image || product.images?.[0];
+                    const matchingVariant = product.variants?.find((v) => v.color === c.name && (v.images?.[0] || v.image_url));
+                    const variantPhoto = c.images?.[0] || matchingVariant?.images?.[0] || matchingVariant?.image_url || product.primary_image || product.images?.[0];
+                    if (!variantPhoto) return null;
+                    const isSelected = selectedColor === c.name;
                     return (
                       <button
                         key={c.name}
                         type="button"
+                        aria-label={c.name}
+                        aria-pressed={isSelected}
+                        title={c.name}
                         onClick={() => handleColorSelect(c.name)}
-                        className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border text-xs font-bold transition-all cursor-pointer ${
-                          selectedColor === c.name
-                            ? 'border-emerald-600 bg-emerald-50 text-rose-900 ring-2 ring-[#87977D] shadow-xs'
-                            : 'border-slate-200 bg-white text-slate-700 hover:border-slate-300'
+                        className={`w-11 h-11 rounded-full overflow-hidden border bg-white shrink-0 transition-all cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black ${
+                          isSelected
+                            ? 'border-black ring-2 ring-black ring-offset-2'
+                            : 'border-slate-300 hover:border-black'
                         }`}
                       >
-                        {variantPhoto ? (
-                          <span className="w-9 h-9 rounded-full border border-slate-300 overflow-hidden shrink-0 inline-block"><img src={variantPhoto} alt={c.name} className="w-full h-full object-cover scale-[1.8]" /></span>
-                        ) : (
-                          <span className="w-9 h-9 rounded-full border border-slate-200 bg-slate-100 inline-flex items-center justify-center text-[8px] text-slate-400">IMG</span>
-                        )}
-                        <span>{c.name}</span>
+                        <img src={variantPhoto} alt="" className="w-full h-full object-cover scale-[2.35]" />
                       </button>
                     );
                   })}
