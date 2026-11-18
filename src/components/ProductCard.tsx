@@ -130,13 +130,16 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect, onB
           <h3 className="text-[13px] sm:text-base font-bold text-slate-900 group-hover:text-emerald-700 transition-colors mt-0.5 sm:mt-1 leading-snug line-clamp-2 sm:line-clamp-1">{product.title}</h3>
           <p className="hidden sm:block text-xs text-slate-500 line-clamp-1 mt-0.5 font-medium">{product.subtitle || product.material}</p>
           {product.colors && product.colors.length > 0 && (
-            <div className="flex items-center gap-1 mt-1 sm:gap-1.5 sm:mt-2.5">
-              {product.colors.map((c) => (c.images?.[0] || displayImage) ? (
-                <span key={c.name} title={c.name} className="w-5 h-5 sm:w-6 sm:h-6 rounded-full border border-slate-300 shadow-xs overflow-hidden inline-block"><img src={c.images?.[0] || displayImage} alt={c.name} className="w-full h-full object-cover scale-[1.8]" /></span>
-              ) : (
-                <span key={c.name} title={c.name + ' — photo not added'} className="w-5 h-5 sm:w-6 sm:h-6 rounded-full border border-slate-200 bg-slate-100 inline-flex items-center justify-center text-[7px] text-slate-400">IMG</span>
-              ))}
-              <span className="text-[10px] sm:text-[11px] text-slate-400 font-medium ml-0.5 sm:ml-1">{product.colors.length} {product.colors.length === 1 ? 'colour' : 'colours'}</span>
+            <div className="flex items-center gap-1.5 mt-1.5 sm:gap-2 sm:mt-2.5" aria-label="Available colour variants">
+              {product.colors.map((c) => {
+                const variant = product.variants?.find((v) => v.color === c.name && (v.images?.[0] || v.image_url));
+                const variantPhoto = c.images?.[0] || variant?.images?.[0] || variant?.image_url || displayImage;
+                return variantPhoto ? (
+                  <span key={c.name} title={c.name} className="w-6 h-6 sm:w-7 sm:h-7 rounded-full border border-slate-300 shadow-xs overflow-hidden inline-block shrink-0 bg-white">
+                    <img src={variantPhoto} alt={c.name} className="w-full h-full object-cover scale-[2.35]" />
+                  </span>
+                ) : null;
+              })}
             </div>
           )}
         </div>
