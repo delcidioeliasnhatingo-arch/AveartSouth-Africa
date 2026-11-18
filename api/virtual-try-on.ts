@@ -19,10 +19,8 @@ function parseImage(value: unknown, label: string) {
 const BUILT_IN_IMAGE_HOSTS = [
   'supabase.co',
   'supabase.in',
-  'workers.dev',
   'r2.dev',
   'imagedelivery.net',
-  'vercel.app',
   'aveartgallery.store',
   'images.unsplash.com',
 ];
@@ -58,15 +56,28 @@ async function parseGarmentImage(body: any) {
     throw new Error('The product photo must come from an approved secure AVEART image host.');
   }
 
-  const response = await fetch(url.toString(), {
-    headers: { Accept: 'image/jpeg,image/png,image/webp' },
-    redirect: 'follow',
-    signal: AbortSignal.timeout(15000),
-  });
-  if (!response.ok) throw new Error('The selected product photo could not be loaded.');
-  const finalUrl = new URL(response.url);
-  if (finalUrl.protocol !== 'https:' || !isAllowedImageHost(finalUrl.hostname)) {
-    throw new Error('The product photo redirected to an unapproved image host.');
+  let currentUrl = url;
+  let response: Response | null = null;
+  for (let redirectCount = 0; redirectCount <= 3; redirectCount += 1) {
+    response = await fetch(currentUrl.toString(), {
+      headers: { Accept: 'image/jpeg,image/png,image/webp' },
+      redirect: 'manual',
+      signal: AbortSignal.timeout(15000),
+    });
+    if (![301, 302, 303, 307, 308].includes(response.status)) break;
+    const location = response.headers.get('location');
+    if (!location || redirectCount === 3) {
+      throw new Error('The product photo redirected too many times.');
+    }
+    const nextUrl = new URL(location, currentUrl);
+    if (nextUrl.protocol !== 'https:' || !isAllowedImageHost(nextUrl.hostname)) {
+      throw new Error('The product photo redirected to an unapproved image host.');
+    }
+    currentUrl = nextUrl;
+  }
+  if (!response || !response.ok) throw new Error('The selected product photo could not be loaded.');
+  if (currentUrl.protocol !== 'https:' || !isAllowedImageHost(currentUrl.hostname)) {
+    throw new Error('The product photo must come from an approved secure AVEART image host.');
   }
 
   const mimeType = String(response.headers.get('content-type') || '').split(';')[0].trim().toLowerCase();
@@ -99,6 +110,12 @@ export default async function handler(req: any, res: any) {
   }
   if (!rate || rate.resetAt <= now) recentRequests.set(clientKey, { count: 1, resetAt: now + RATE_WINDOW_MS });
   else recentRequests.set(clientKey, { count: rate.count + 1, resetAt: rate.resetAt });
+  if (recentRequests.size > 5000) {
+    for (const [key, entry] of recentRequests) {
+      if (entry.resetAt <= now) recentRequests.delete(key);
+      if (recentRequests.size <= 4000) break;
+    }
+  }
 
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) return res.status(503).json({ error: 'The AVEART AI fitting service is not configured yet. Please try again later.' });
@@ -141,7 +158,7 @@ export default async function handler(req: any, res: any) {
 export const config = {
   api: {
     bodyParser: {
-      sizeLimit: '4mb',
+      sizeLimit: '6mb',
     },
   },
 };
