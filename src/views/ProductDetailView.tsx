@@ -16,6 +16,8 @@ import {
 import { Product, ProductVariant, formatZAR } from '../types/index.ts';
 import { useCart } from '../context/CartContext.tsx';
 import { ProductCard } from '../components/ProductCard.tsx';
+import { VirtualTryOnModal } from '../components/VirtualTryOnModal.tsx';
+import { Sparkles } from 'lucide-react';
 import { VirtualFittingRoom } from '../components/VirtualFittingRoom.tsx';
 
 interface ProductDetailViewProps {
@@ -65,6 +67,7 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [fittingRoomOpen, setFittingRoomOpen] = useState(false);
   const touchStartX = useRef<number | null>(null);
+  const [isTryOnOpen, setIsTryOnOpen] = useState(false);
 
   // Recommendations state
   const [recommendationType, setRecommendationType] = useState<'also_like' | 'similar' | 'complete_look' | 'recent'>('also_like');
@@ -566,6 +569,23 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
               </div>
             )}
 
+            {/* AVEART Virtual Fitting Room */}
+            {activeGalleryImage && (
+              <div className="border-y border-slate-200 py-4">
+                <button
+                  type="button"
+                  onClick={() => setIsTryOnOpen(true)}
+                  className="flex w-full items-center justify-center gap-2 border border-black bg-white px-5 py-3.5 text-xs font-bold uppercase tracking-[0.14em] text-black transition-colors hover:bg-black hover:text-white"
+                >
+                  <Sparkles className="h-4 w-4" />
+                  Try this piece on
+                </button>
+                <p className="mt-2 text-center text-[10px] leading-5 text-slate-500">
+                  Upload a photo or use your camera to preview this selected colour with AI.
+                </p>
+              </div>
+            )}
+
             {/* Quantity Stepper & Add to Bag CTA */}
             <div className="space-y-3 pt-2">
               <div className="flex items-center gap-3">
@@ -805,6 +825,14 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
         />
       )}
 
+      <VirtualTryOnModal
+        open={isTryOnOpen}
+        onClose={() => setIsTryOnOpen(false)}
+        productTitle={product.title}
+        productImage={activeGalleryImage || selectedVariant?.images?.[0] || selectedVariant?.image_url || product.primary_image || ''}
+        selectedColor={selectedColor || selectedVariant?.color || ''}
+        selectedSize={selectedSize || selectedVariant?.size || ''}
+      />
     </div>
   );
 };
