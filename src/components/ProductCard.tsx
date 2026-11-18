@@ -106,9 +106,14 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect, onB
     e.stopPropagation();
     if (!chosenVariant || quantity < 1 || quantity > maxQuantity) return;
     setSelectedVariants((current) => {
-      const existing = current.find((item) => item.variant.id === chosenVariant.id);
+      // Identify a purchasable combination by variant ID plus its attributes,
+      // so the same colour can be added in multiple different sizes.
+      const combinationKey = (variant: NonNullable<Product['variants']>[number]) =>
+        [variant.id, variant.color || '', variant.size || ''].join('::');
+      const chosenKey = combinationKey(chosenVariant);
+      const existing = current.find((item) => combinationKey(item.variant) === chosenKey);
       if (existing) {
-        return current.map((item) => item.variant.id === chosenVariant.id
+        return current.map((item) => combinationKey(item.variant) === chosenKey
           ? { ...item, quantity: Math.min(Number(chosenVariant.stock_quantity || 0), item.quantity + quantity) }
           : item);
       }
@@ -224,7 +229,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect, onB
                             if (selectedSize && !validSizesForColor.includes(selectedSize) && validSizesForColor.length) setSelectedSize(validSizesForColor[0]);
                             setQuantity(1);
                           }}
-                          className={'relative !w-11 !h-11 !min-w-0 !min-h-0 !p-0 !rounded-full shrink-0 overflow-visible border-2 bg-white transition-all appearance-none ' + (isSelected ? 'border-black ring-2 ring-black ring-offset-2 shadow-md' : 'border-slate-300 hover:border-black')}
+                          className="relative !w-11 !h-11 !min-w-0 !min-h-0 !p-0 !rounded-full shrink-0 overflow-visible border-0 bg-transparent shadow-none transition-transform hover:scale-105 appearance-none"
                           style={{ width: 44, height: 44, aspectRatio: '1 / 1', borderRadius: '50%' }}
                         >
                           <span className="absolute inset-0 block overflow-hidden rounded-full" style={{ borderRadius: '50%', clipPath: 'circle(50%)' }}>
@@ -254,12 +259,12 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect, onB
                           aria-disabled={!available}
                           aria-pressed={isSelected}
                           onClick={() => { if (!available) return; setSelectedSize(size); setQuantity(1); }}
-                          className={'min-w-[44px] rounded-lg border-2 px-3 py-2 text-sm transition-colors ' + (
+                          className={'min-w-[44px] rounded-lg border px-3 py-2 text-sm transition-colors ' + (
                             !available
-                              ? 'cursor-not-allowed border-dashed border-black bg-white text-slate-400 opacity-70'
+                              ? 'cursor-not-allowed border-dashed border-slate-400 bg-white text-slate-400 opacity-70'
                               : isSelected
-                                ? 'border-black bg-black font-bold text-white'
-                                : 'border-black bg-white text-slate-900 hover:bg-slate-100'
+                                ? 'border-slate-500 bg-slate-100 font-bold text-slate-900'
+                                : 'border-slate-300 bg-white text-slate-900 hover:border-slate-500 hover:bg-slate-50'
                           )}
                         >{size}</button>
                       );
