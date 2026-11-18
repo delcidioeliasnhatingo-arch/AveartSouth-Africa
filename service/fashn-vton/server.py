@@ -45,9 +45,9 @@ async def try_on(payload: TryOnRequest, authorization: str | None = Header(defau
     person, garment = decode_image(payload.person_image), decode_image(payload.garment_image)
     try:
         pipeline = await run_in_threadpool(get_pipeline)
-        result = await run_in_threadpool(lambda: pipeline(person_image=person, garment_image=garment, category=payload.category))
+        result = await run_in_threadpool(lambda: pipeline(person_image=person, garment_image=garment, category=payload.category, garment_photo_type="flat-lay", num_samples=1, num_timesteps=30))
         if not result.images: raise RuntimeError("No image returned.")
-        output = io.BytesIO(); result.images[0].convert("RGB").save(output, format="JPEG", quality=88, optimize=True)
+        output = io.BytesIO(); result.images[0].convert("RGB").save(output, format="JPEG", quality=82, optimize=True)
         return {"image": base64.b64encode(output.getvalue()).decode("ascii")}
     except Exception as exc:
         raise HTTPException(status_code=500, detail="Model inference failed.") from exc
