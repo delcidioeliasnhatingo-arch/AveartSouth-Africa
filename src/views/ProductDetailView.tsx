@@ -12,12 +12,12 @@ import {
   Share2,
   ChevronLeft,
   ChevronRight,
+  Sparkles,
 } from 'lucide-react';
 import { Product, ProductVariant, formatZAR } from '../types/index.ts';
 import { useCart } from '../context/CartContext.tsx';
 import { ProductCard } from '../components/ProductCard.tsx';
 import { VirtualTryOnModal } from '../components/VirtualTryOnModal.tsx';
-import { Sparkles } from 'lucide-react';
 import { VirtualFittingRoom } from '../components/VirtualFittingRoom.tsx';
 
 interface ProductDetailViewProps {
