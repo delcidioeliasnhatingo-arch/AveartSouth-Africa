@@ -176,7 +176,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect, onB
                 const variant = product.variants?.find((v) => Number(v.stock_quantity) > 0 && v.color === c.name && (v.images?.[0] || v.image_url));
                 const variantPhoto = c.images?.[0] || variant?.images?.[0] || variant?.image_url;
                 return variantPhoto ? (
-                  <span key={c.name} title={c.name} className="!w-6 !h-6 sm:!w-7 sm:!h-7 !min-w-0 !min-h-0 rounded-full border border-slate-300 shadow-xs overflow-hidden inline-block shrink-0 bg-white" style={{ width: 28, height: 28, aspectRatio: '1 / 1', borderRadius: '50%', clipPath: 'circle(50%)' }}>
+                  <span key={c.name} title={c.name} className="!w-6 !h-6 sm:!w-7 sm:!h-7 !min-w-0 !min-h-0 rounded-full overflow-hidden inline-block shrink-0 bg-white" style={{ width: 28, height: 28, aspectRatio: '1 / 1', borderRadius: '50%', clipPath: 'circle(50%)' }}>
                     <img src={variantPhoto} alt={c.name} className="block w-full h-full object-cover scale-[2.35]" style={{ width: '100%', height: '100%', borderRadius: '50%', clipPath: 'circle(50%)' }} />
                   </span>
                 ) : null;
