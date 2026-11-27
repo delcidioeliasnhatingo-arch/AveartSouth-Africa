@@ -15,7 +15,7 @@ function inferAudience(product: any): 'women' | 'men' | 'unisex' | '' {
   const images = [
     product.primary_image, product.image_url, product.imageUrl,
     ...(Array.isArray(product.images) ? product.images : []),
-    ...(Array.isArray(product.variants) ? product.variants.map((v: any) => v.image_url) : []),
+    ...(Array.isArray(product.variants) ? product.variants.flatMap((v: any) => [v?.images?.[0], v?.image_url]) : []),
   ].filter(Boolean).join(' ');
   const evidence = [
     product.title, product.name, product.subtitle, product.category_name,
@@ -48,7 +48,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect, onB
 
   const primaryVariant = product.variants?.find((variant) => variant.is_primary === true || Number(variant.is_primary) === 1)
     || product.variants?.[0];
-  const displayImage = product.primary_image || product.images?.[0] || primaryVariant?.images?.[0] || primaryVariant?.image_url || '';
+  const firstVariantWithImage = product.variants?.find((variant) => variant.images?.[0] || variant.image_url);
+  const displayImage = product.primary_image || product.images?.[0] || primaryVariant?.images?.[0] || primaryVariant?.image_url || firstVariantWithImage?.images?.[0] || firstVariantWithImage?.image_url || '';
   const inferredAudience = inferAudience(product);
   const audienceTag = inferredAudience ? inferredAudience.toUpperCase() : '';
   const inStockVariants = (product.variants || []).filter((v) => Number(v.stock_quantity) > 0);
@@ -85,7 +86,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect, onB
   const defaultVariant = {
     id: product.id, product_id: product.id, sku: product.id, name: 'Default',
     size: '', color: '', price_offset: 0, stock_quantity: totalStock,
-    low_stock_threshold: 3, image_url: product.primary_image || product.images?.[0] || '', created_at: '',
+    low_stock_threshold: 3, image_url: displayImage, created_at: '',
   } as NonNullable<Product['variants']>[number];
   const chosenVariant = hasVariantAttributes ? selectedVariant : defaultVariant;
   const maxQuantity = Number(chosenVariant?.stock_quantity || 0);
@@ -137,7 +138,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onSelect, onB
         color: variant.color || '',
         productSlug: product.slug,
         unitPrice: Number(variant.sale_price ?? variant.price ?? (product.base_price + Number(variant.price_offset || 0))),
-        imageUrl: variant.images?.[0] || variant.image_url || product.primary_image || product.images?.[0] || '',
+        imageUrl: variant.images?.[0] || variant.image_url || product.primary_image || product.images?.[0] || firstVariantWithImage?.images?.[0] || firstVariantWithImage?.image_url || '',
         stockAvailable: Number(variant.stock_quantity || 0),
       }, { openDrawer: false }));
     });
