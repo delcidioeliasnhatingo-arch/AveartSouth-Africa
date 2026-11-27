@@ -51,8 +51,6 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate, onBuyNow }) => {
     catch { return true; }
   });
   const [activeTab, setActiveTab] = useState<'all' | 'women' | 'men' | 'accessories'>('all');
-  const [newsletterEmail, setNewsletterEmail] = useState('');
-  const [newsletterSubscribed, setNewsletterSubscribed] = useState(false);
   const [activeHeroSlide, setActiveHeroSlide] = useState(0);
 
   const heroSlides = [
@@ -115,13 +113,6 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate, onBuyNow }) => {
   const collectionCards = AVEART_COLLECTIONS
     .map((collection) => ({ collection, items: getCollectionProducts(products, collection.slug) }))
     .filter(({ items }) => items.length > 0);
-
-  const handleNewsletterSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
-    if (!newsletterEmail.trim()) return;
-    setNewsletterSubscribed(true);
-    setNewsletterEmail('');
-  };
 
   return (
     <div className="aveart-reference-home">
@@ -265,22 +256,13 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate, onBuyNow }) => {
         </section>
       )}
 
-      {/* 7. NEWSLETTER */}
+      {/* 7. EDITORIAL CTA — no pretend newsletter subscription until a mailing service is connected */}
       <section className="aveart-reference-newsletter">
         <div className="aveart-newsletter-inner">
-          <p className="aveart-eyebrow">The AVEART letter</p>
-          <h2>A little more style in your inbox.</h2>
-          <p>Be first to discover new arrivals, styling notes and special edits.</p>
-          {newsletterSubscribed ? (
-            <p className="aveart-newsletter-success" role="status">Thank you for joining the AVEART list.</p>
-          ) : (
-            <form className="aveart-newsletter-form" onSubmit={handleNewsletterSubmit}>
-              <label className="sr-only" htmlFor="aveart-newsletter-email">Email address</label>
-              <input id="aveart-newsletter-email" type="email" required value={newsletterEmail} onChange={(event) => setNewsletterEmail(event.target.value)} placeholder="Your email address" />
-              <button type="submit">SIGN ME UP →</button>
-            </form>
-          )}
-          
+          <p className="aveart-eyebrow">The AVEART edit</p>
+          <h2>A little more style in every day.</h2>
+          <p>Explore the latest additions and find pieces that fit your own way of dressing.</p>
+          <button className="aveart-primary-button" onClick={() => onNavigate('catalog_new')}>Explore New Arrivals <ArrowRight size={15} /></button>
         </div>
       </section>
 
