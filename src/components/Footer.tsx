@@ -37,9 +37,8 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => (
       <div className="aveart-footer-column">
         <h3>Shop</h3>
         <button onClick={() => onNavigate('catalog')}>Shop all</button>
-        <button onClick={() => onNavigate('catalog_gender', 'women')}>Women</button>
-        <button onClick={() => onNavigate('catalog_gender', 'men')}>Men</button>
-        <button onClick={() => onNavigate('catalog_gender', 'accessories')}>Accessories</button>
+        <button onClick={() => openCollection(onNavigate, 'everyday-essentials')}>Everyday Essentials</button>
+        <button onClick={() => openCollection(onNavigate, 'street-style')}>Street Style</button>
         <button onClick={() => onNavigate('catalog_sale')}>Sale</button>
         <button onClick={() => onNavigate('account')}>My account</button>
       </div>
