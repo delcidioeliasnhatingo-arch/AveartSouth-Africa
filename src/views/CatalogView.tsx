@@ -169,7 +169,7 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
     selectedGender !== 'all' ||
     selectedCategory !== 'all' ||
     selectedCollection !== '' ||
-    searchQuery.trim() !== '';
+    searchQuery.trim() !== '' ||
     inStockOnly ||
     onlySale ||
     priceRange !== 'all';
