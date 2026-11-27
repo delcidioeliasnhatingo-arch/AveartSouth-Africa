@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { ArrowRight, Truck, ShieldCheck, Heart } from 'lucide-react';
 import { Product } from '../types/index.ts';
 import { ProductCard } from '../components/ProductCard.tsx';
+import { AVEART_COLLECTIONS, getCollectionProducts, productImage } from '../collections.ts';
 import heroImage from '../assets/images/Editorial streetwear com duplas e sombras diagonais.png';
 import womenImage from '../assets/images/fashion_women_silk_midi_dress_1792263530827.jpg';
 import neutralEditorialImage from '../assets/images/Retrato urbano em tons neutros.png';
@@ -99,15 +100,21 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate, onBuyNow }) => {
     return () => { window.clearTimeout(timer); controller.abort(); };
   }, []);
 
-  const filteredProducts = products.filter((product) => hasProductImage(product)).filter((product) => {
+  const bestSellerProducts = getCollectionProducts(products, 'best-sellers');
+  const filteredProducts = bestSellerProducts.filter((product) => {
     if (activeTab === 'women') return product.gender === 'women';
     if (activeTab === 'men') return product.gender === 'men';
     if (activeTab === 'accessories') {
       const categoryText = String(product.category_name ?? '').toLowerCase();
-      return categoryText.includes('accessor') || categoryText.includes('bag');
+      const tags = Array.isArray(product.tags) ? product.tags.join(' ').toLowerCase() : '';
+      return /accessor|bag|cap|belt/.test(categoryText + ' ' + tags);
     }
     return true;
   });
+  const newArrivalProducts = getCollectionProducts(products, 'new-arrivals').slice(0, 8);
+  const collectionCards = AVEART_COLLECTIONS
+    .map((collection) => ({ collection, items: getCollectionProducts(products, collection.slug) }))
+    .filter(({ items }) => items.length > 0);
 
   const handleNewsletterSubmit = (event: React.FormEvent) => {
     event.preventDefault();
@@ -135,7 +142,8 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate, onBuyNow }) => {
         </div>
       </section>
 
-      {/* 3. BEST SELLERS — live products remain connected to the existing API */}
+      {/* 3. BEST SELLERS — only products explicitly marked as featured or supported by sales data */}
+      {(loading || filteredProducts.length > 0) && (
       <section className="aveart-reference-section" id="best-sellers">
         <div className="aveart-section-heading">
           <div>
@@ -172,6 +180,25 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate, onBuyNow }) => {
           </div>
         )}
       </section>
+      )}
+
+      {newArrivalProducts.length > 0 && (
+        <section className="aveart-reference-section" id="new-arrivals">
+          <div className="aveart-section-heading">
+            <div>
+              <p className="aveart-eyebrow">Recently added</p>
+              <h2>New Arrivals</h2>
+              <p className="aveart-section-intro">Fresh additions to the AVEART collection.</p>
+            </div>
+            <button className="aveart-text-link" onClick={() => onNavigate('catalog_new')}>Shop new arrivals ↗</button>
+          </div>
+          <div className="aveart-product-grid">
+            {newArrivalProducts.map((product) => (
+              <ProductCard key={product.id} product={product} onSelect={(slug) => onNavigate('product', slug)} onBuyNow={onBuyNow} />
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* 4. EDITORIAL SPLIT */}
       <section className="aveart-reference-editorial">
@@ -213,7 +240,32 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate, onBuyNow }) => {
         </div>
       </section>
 
-      {/* 6. NEWSLETTER */}
+      {/* 6. SHOP BY COLLECTION — only show collections that contain published products with photos */}
+      {collectionCards.length > 0 && (
+        <section className="aveart-reference-section aveart-collection-section" id="collections">
+          <div className="aveart-section-heading centered">
+            <div>
+              <p className="aveart-eyebrow">Explore the edit</p>
+              <h2>Shop by collection</h2>
+            </div>
+          </div>
+          <div className="aveart-collection-grid">
+            {collectionCards.map(({ collection, items }) => (
+              <button key={collection.slug} type="button" className="aveart-collection-card" onClick={() => onNavigate('catalog_collection', collection.slug)}>
+                <img src={productImage(items[0])} alt={collection.title} loading="lazy" decoding="async" />
+                <span className="aveart-collection-shade" />
+                <span className="aveart-collection-copy">
+                  <small>{collection.eyebrow}</small>
+                  <strong>{collection.title}</strong>
+                  <span>Explore collection ↗</span>
+                </span>
+              </button>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* 7. NEWSLETTER */}
       <section className="aveart-reference-newsletter">
         <div className="aveart-newsletter-inner">
           <p className="aveart-eyebrow">The AVEART letter</p>
@@ -232,8 +284,8 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate, onBuyNow }) => {
         </div>
       </section>
 
-      {/* 7. SHOPPING ASSURANCE — placed directly above the footer */}
-      {/* 2. BENEFITS STRIP */}
+      {/* 8. SHOPPING ASSURANCE — placed directly above the footer */}
+      {/* BENEFITS STRIP */}
       <section className="aveart-reference-benefits" aria-label="Shopping benefits">
         <div className="aveart-benefit">
           <Truck size={23} strokeWidth={1.6} />
