@@ -5,6 +5,10 @@ interface FooterProps {
   onNavigate: (view: string, param?: string) => void;
 }
 
+const openCollection = (onNavigate: FooterProps['onNavigate'], slug: string) => {
+  onNavigate(slug === 'new-arrivals' ? 'catalog_new' : 'catalog_collection', slug);
+};
+
 export const Footer: React.FC<FooterProps> = ({ onNavigate }) => (
   <footer id="aveart-footer" className="aveart-reference-footer">
     <div className="aveart-footer-main">
@@ -13,38 +17,53 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => (
           <Logo className="aveart-footer-logo" />
           <span>AVEART</span>
         </button>
-        <p>STYLE EDITION<br />Modern, sophisticated and made for everyday expression.</p>
+        <span className="aveart-footer-tagline">STYLE EDITION</span>
+        <p>Contemporary fashion, everyday pieces and personal style.</p>
       </div>
+
       <div className="aveart-footer-column">
-        <h3>Explore</h3>
-        <button onClick={() => onNavigate('catalog')}>New arrivals</button>
-        <button onClick={() => onNavigate('catalog')}>Best sellers</button>
+        <h3>Collections</h3>
+        <button onClick={() => openCollection(onNavigate, 'new-arrivals')}>New Arrivals</button>
+        <button onClick={() => openCollection(onNavigate, 'best-sellers')}>Best Sellers</button>
+        <button onClick={() => openCollection(onNavigate, 'everyday-essentials')}>Everyday Essentials</button>
+        <button onClick={() => openCollection(onNavigate, 'street-style')}>Street Style</button>
+        <button onClick={() => openCollection(onNavigate, 'sets-coords')}>Sets &amp; Co-ords</button>
+        <button onClick={() => openCollection(onNavigate, 'sneakers-shoes')}>Sneakers &amp; Shoes</button>
+        <button onClick={() => openCollection(onNavigate, 'bags-accessories')}>Bags &amp; Accessories</button>
+        <button onClick={() => openCollection(onNavigate, 'activewear')}>Activewear</button>
+        <button onClick={() => openCollection(onNavigate, 'special-offers')}>Special Offers</button>
+      </div>
+
+      <div className="aveart-footer-column">
+        <h3>Shop</h3>
+        <button onClick={() => onNavigate('catalog')}>Shop all</button>
         <button onClick={() => onNavigate('catalog_gender', 'women')}>Women</button>
         <button onClick={() => onNavigate('catalog_gender', 'men')}>Men</button>
+        <button onClick={() => onNavigate('catalog_gender', 'accessories')}>Accessories</button>
+        <button onClick={() => onNavigate('catalog_sale')}>Sale</button>
+        <button onClick={() => onNavigate('account')}>My account</button>
       </div>
+
       <div className="aveart-footer-column">
         <h3>Customer care</h3>
         <button onClick={() => onNavigate('policy', 'shipping')}>Shipping &amp; delivery</button>
-        <button onClick={() => onNavigate('policy', 'returns')}>Returns</button>
+        <button onClick={() => onNavigate('policy', 'returns')}>Returns &amp; refunds</button>
         <button onClick={() => onNavigate('policy', 'size-guide')}>Size guide</button>
         <button onClick={() => onNavigate('policy', 'contact')}>Contact us</button>
+        <button onClick={() => onNavigate('track')}>Track an order</button>
       </div>
+
       <div className="aveart-footer-column">
-        <h3>Policies</h3>
+        <h3>Information</h3>
+        <button onClick={() => onNavigate('atelier')}>About AVEART</button>
         <button onClick={() => onNavigate('policy', 'privacy')}>Privacy policy</button>
         <button onClick={() => onNavigate('policy', 'cookies')}>Cookie policy</button>
         <button onClick={() => onNavigate('policy', 'terms')}>Terms of service</button>
       </div>
-      <div className="aveart-footer-column aveart-footer-newsletter">
-        <h3>Follow along</h3>
-        <button onClick={() => onNavigate('atelier')}>Instagram ↗</button>
-        <button onClick={() => onNavigate('atelier')}>TikTok ↗</button>
-        <button onClick={() => onNavigate('atelier')}>Pinterest ↗</button>
-      </div>
     </div>
     <div className="aveart-footer-bottom">
       <span>© 2026 AVEART. All rights reserved.</span>
-      <span>Designed with intention · Style Edition</span>
+      <span>STYLE EDITION · Modern, sophisticated, minimalist.</span>
     </div>
   </footer>
 );
