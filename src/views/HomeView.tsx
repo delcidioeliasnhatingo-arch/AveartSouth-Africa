@@ -120,7 +120,6 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate, onBuyNow }) => {
     .filter(({ items }) => items.length > 0)
     .slice(0, 3);
 
-  const heroImage = heroProduct ? productImage(heroProduct) : '';
   const editorialImage = editorialProduct ? productImage(editorialProduct) : '';
 
   return (
