@@ -67,7 +67,7 @@ export default function App() {
             )}
 
             {currentView === 'catalog_new' && (
-              <CatalogView onSelectProduct={handleSelectProduct} onBuyNow={() => setCurrentView('checkout')} />
+              <CatalogView initialCollection="new-arrivals" onSelectProduct={handleSelectProduct} onBuyNow={() => setCurrentView('checkout')} />
             )}
 
             {currentView === 'catalog_gender' && (
@@ -80,6 +80,10 @@ export default function App() {
 
             {currentView === 'catalog_category' && (
               <CatalogView initialCategory={viewParam} onSelectProduct={handleSelectProduct} onBuyNow={() => setCurrentView('checkout')} />
+            )}
+
+            {currentView === 'catalog_collection' && (
+              <CatalogView initialCollection={viewParam} onSelectProduct={handleSelectProduct} onBuyNow={() => setCurrentView('checkout')} />
             )}
 
             {currentView === 'product' && viewParam && (
