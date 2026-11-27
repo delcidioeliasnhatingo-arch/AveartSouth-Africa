@@ -1037,3 +1037,34 @@ body { background: #ffffff; color: #171717; }
   }
   .aveart-reveal { opacity: 1 !important; }
 }
+
+
+/* Small indicators for the two original AVEART campaign images */
+.aveart-home-hero-dots {
+  position: absolute;
+  z-index: 5;
+  left: 22px;
+  bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.aveart-home-hero-dots span {
+  display: block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgb(255 255 255 / .55);
+  transition: width .25s ease, background-color .25s ease;
+}
+.aveart-home-hero-dots span.active {
+  width: 19px;
+  border-radius: 8px;
+  background: #fff;
+}
+@media (max-width: 760px) {
+  .aveart-home-hero-dots { left: 18px; bottom: 17px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .aveart-home-hero-dots span { transition: none; }
+}
