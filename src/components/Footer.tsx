@@ -1,4 +1,5 @@
 import React from 'react';
+import { AVEART_COLLECTIONS } from '../collections.ts';
 import { Logo } from './Logo.tsx';
 
 interface FooterProps {
@@ -18,28 +19,21 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => (
           <span>AVEART</span>
         </button>
         <span className="aveart-footer-tagline">STYLE EDITION</span>
-        <p>Contemporary fashion, everyday pieces and personal style.</p>
+        <p>Everyday fashion and easy-to-wear pieces. Style, your way.</p>
       </div>
 
       <div className="aveart-footer-column">
         <h3>Collections</h3>
-        <button onClick={() => openCollection(onNavigate, 'new-arrivals')}>New Arrivals</button>
-        <button onClick={() => openCollection(onNavigate, 'best-sellers')}>Best Sellers</button>
-        <button onClick={() => openCollection(onNavigate, 'everyday-essentials')}>Everyday Essentials</button>
-        <button onClick={() => openCollection(onNavigate, 'street-style')}>Street Style</button>
-        <button onClick={() => openCollection(onNavigate, 'sets-coords')}>Sets &amp; Co-ords</button>
-        <button onClick={() => openCollection(onNavigate, 'sneakers-shoes')}>Sneakers &amp; Shoes</button>
-        <button onClick={() => openCollection(onNavigate, 'bags-accessories')}>Bags &amp; Accessories</button>
-        <button onClick={() => openCollection(onNavigate, 'activewear')}>Activewear</button>
-        <button onClick={() => openCollection(onNavigate, 'special-offers')}>Special Offers</button>
+        {AVEART_COLLECTIONS.map((collection) => (
+          <button key={collection.slug} onClick={() => openCollection(onNavigate, collection.slug)}>{collection.title}</button>
+        ))}
       </div>
 
       <div className="aveart-footer-column">
         <h3>Shop</h3>
         <button onClick={() => onNavigate('catalog')}>Shop all</button>
-        <button onClick={() => openCollection(onNavigate, 'everyday-essentials')}>Everyday Essentials</button>
-        <button onClick={() => openCollection(onNavigate, 'street-style')}>Street Style</button>
-        <button onClick={() => onNavigate('catalog_sale')}>Sale</button>
+        <button onClick={() => onNavigate('catalog_new')}>New arrivals</button>
+        <button onClick={() => onNavigate('catalog_gender', 'unisex')}>Unisex</button>
         <button onClick={() => onNavigate('account')}>My account</button>
       </div>
 
@@ -62,7 +56,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => (
     </div>
     <div className="aveart-footer-bottom">
       <span>© 2026 AVEART. All rights reserved.</span>
-      <span>STYLE EDITION · Modern, sophisticated, minimalist.</span>
+      <span>STYLE EDITION</span>
     </div>
   </footer>
 );
