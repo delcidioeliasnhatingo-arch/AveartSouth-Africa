@@ -11,7 +11,7 @@ function hasProductImage(product: any): boolean {
     product?.primary_image, product?.image_url, product?.imageUrl,
     product?.thumbnail_url, product?.thumbnail,
     ...(Array.isArray(product?.images) ? product.images : []),
-    ...(Array.isArray(product?.variants) ? product.variants.map((variant: any) => variant?.image_url ?? variant?.imageUrl) : []),
+    ...(Array.isArray(product?.variants) ? product.variants.flatMap((variant: any) => [variant?.images?.[0], variant?.image_url, variant?.imageUrl]) : []),
   ].some((image) => typeof image === 'string' && image.trim()));
 }
 
