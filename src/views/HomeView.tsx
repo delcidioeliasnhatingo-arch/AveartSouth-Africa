@@ -3,8 +3,15 @@ import { ArrowRight, Truck, ShieldCheck, Heart } from 'lucide-react';
 import { Product } from '../types/index.ts';
 import { ProductCard } from '../components/ProductCard.tsx';
 import { AVEART_COLLECTIONS, getCollectionProducts, isVisibleStoreProduct, productImage } from '../collections.ts';
+import heroStreetwearImage from '../assets/images/Editorial streetwear com duplas e sombras diagonais.png';
+import heroNeutralImage from '../assets/images/Retrato urbano em tons neutros.png';
 
 const PUBLIC_PRODUCTS_URL = 'https://aveart-products-public.delcidioeliasnhatingo.workers.dev/api/products';
+
+const heroCampaignSlides = [
+  { image: heroStreetwearImage, alt: 'AVEART urban streetwear campaign' },
+  { image: heroNeutralImage, alt: 'AVEART fashion campaign in neutral tones' },
+];
 
 function hasProductImage(product: any): boolean {
   return Boolean([
@@ -46,6 +53,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate, onBuyNow }) => {
       return Array.isArray(parsed) ? parsed.filter((product: any) => hasProductImage(product) && isVisibleStoreProduct(product)) : [];
     } catch { return []; }
   });
+  const [activeHeroSlide, setActiveHeroSlide] = useState(0);
   const [loading, setLoading] = useState(() => {
     try { return !Array.isArray(JSON.parse(localStorage.getItem('aveart:products:v1') || 'null')); }
     catch { return true; }
@@ -129,11 +137,19 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate, onBuyNow }) => {
         </div>
         <div className="aveart-home-hero-visual">
           <span className="aveart-home-hero-word" aria-hidden="true">STYLE</span>
-          {heroImage ? (
-            <img src={heroImage} alt={heroProduct?.title || 'Featured AVEART piece'} decoding="async" fetchPriority="high" />
-          ) : (
-            <div className="aveart-home-hero-placeholder" aria-hidden="true"><span>AVEART</span></div>
-          )}
+          <img
+            key={heroCampaignSlides[activeHeroSlide].image}
+            className="aveart-home-hero-slide"
+            src={heroCampaignSlides[activeHeroSlide].image}
+            alt={heroCampaignSlides[activeHeroSlide].alt}
+            decoding="async"
+            fetchPriority="high"
+          />
+          <div className="aveart-home-hero-dots" aria-label={`Campaign image ${activeHeroSlide + 1} of ${heroCampaignSlides.length}`}>
+            {heroCampaignSlides.map((slide, index) => (
+              <span key={slide.alt} className={index === activeHeroSlide ? 'active' : ''} />
+            ))}
+          </div>
           <span className="aveart-home-hero-caption">THE EVERYDAY EDIT · AVEART</span>
         </div>
         <span className="aveart-home-hero-index">01 / NEW SEASON</span>
