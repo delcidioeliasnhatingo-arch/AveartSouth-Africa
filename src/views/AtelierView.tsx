@@ -1,111 +1,59 @@
 import React from 'react';
 import portraitImage from '../assets/images/Retrato urbano em tons neutros.png';
-import { Award, Compass, ShieldCheck, MapPin, ArrowRight, Scissors, Feather, Heart } from 'lucide-react';
+import { ArrowRight, Shirt, Footprints, ShoppingBag } from 'lucide-react';
 
 interface AtelierViewProps {
   onNavigateCatalog: () => void;
 }
 
-export const AtelierView: React.FC<AtelierViewProps> = ({ onNavigateCatalog }) => {
-  return (
-    <div className="max-w-6xl mx-auto px-6 py-12 space-y-16">
-      
-      {/* Editorial Header */}
-      <div className="max-w-3xl space-y-4">
-        <span className="text-xs uppercase tracking-wider text-[#65775D] font-extrabold flex items-center gap-1.5">
-          <span>Our Story & Craft</span>
-        </span>
-        <h1 className="text-4xl sm:text-5xl text-slate-900 font-black leading-tight [text-wrap:balance]">
-          Thoughtfully tailored fashion made for real life.
+export const AtelierView: React.FC<AtelierViewProps> = ({ onNavigateCatalog }) => (
+  <div className="max-w-6xl mx-auto px-6 py-12 md:py-16 space-y-14">
+    <section className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-14 items-center">
+      <div className="space-y-5">
+        <p className="text-[10px] uppercase tracking-[0.22em] font-bold text-neutral-500">AVEART · STYLE EDITION</p>
+        <h1 className="text-4xl sm:text-5xl text-neutral-950 font-medium leading-[1.05] tracking-tight">
+          Style, your way.
         </h1>
-        <p className="text-base text-slate-600 leading-relaxed font-medium">
-          AVEART is a contemporary South African fashion studio headquartered in Cape Town. We create enduring wardrobe staples for women and men, prioritizing breathable natural fibers, honest pricing, and timeless comfort.
+        <p className="text-sm sm:text-base text-neutral-600 leading-8">
+          AVEART is a contemporary fashion store bringing together clothing, footwear and accessories for different moments and personal styles.
         </p>
-      </div>
-
-      {/* Showcase Image */}
-      <div className="relative aspect-[16/9] rounded-3xl overflow-hidden shadow-xl border border-slate-200">
-        <img
-          src={portraitImage}
-          alt="AVEART Cape Town fashion studio design workbench"
-          className="w-full h-full object-cover"
-        />
-        <div className="absolute bottom-5 left-5 right-5 bg-white/95 backdrop-blur-md p-4 rounded-2xl border border-slate-200 flex items-center justify-between shadow-lg">
-          <div>
-            <span className="text-xs uppercase font-extrabold text-[#65775D] tracking-wider">Cape Town Design Studio</span>
-            <p className="text-sm font-bold text-slate-900">Tailoring & Pattern Cutting Workshop · Kloof Street</p>
-          </div>
-          <button
-            onClick={onNavigateCatalog}
-            className="bg-[#87977D] hover:bg-[#65775D] text-white text-xs font-bold px-4 py-2 rounded-xl transition-colors shadow-sm cursor-pointer"
-          >
-            Shop Collection →
-          </button>
-        </div>
-      </div>
-
-      {/* 3 Foundational Pillars */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pt-2">
-        <div className="bg-white border border-slate-200 p-6 rounded-2xl shadow-sm space-y-3">
-          <div className="w-10 h-10 rounded-xl bg-rose-50 text-[#65775D] flex items-center justify-center">
-            <Feather className="w-5 h-5" />
-          </div>
-          <h3 className="text-lg font-bold text-slate-900">
-            01. Pure Natural Fibers
-          </h3>
-          <p className="text-xs text-slate-600 leading-relaxed font-medium">
-            We prioritize breathable European flax linen, GOTS-certified organic cotton, and responsibly sourced mulberry silks that wear softer with every wash.
-          </p>
-        </div>
-
-        <div className="bg-white border border-slate-200 p-6 rounded-2xl shadow-sm space-y-3">
-          <div className="w-10 h-10 rounded-xl bg-rose-50 text-[#65775D] flex items-center justify-center">
-            <Scissors className="w-5 h-5" />
-          </div>
-          <h3 className="text-lg font-bold text-slate-900">
-            02. Thoughtful Tailoring
-          </h3>
-          <p className="text-xs text-slate-600 leading-relaxed font-medium">
-            Each silhouette is pattern-cut to flatter South African everyday lifestyles—designed with relaxed drape, reinforced french seams, and practical pockets.
-          </p>
-        </div>
-
-        <div className="bg-white border border-slate-200 p-6 rounded-2xl shadow-sm space-y-3">
-          <div className="w-10 h-10 rounded-xl bg-rose-50 text-[#65775D] flex items-center justify-center">
-            <Heart className="w-5 h-5" />
-          </div>
-          <h3 className="text-lg font-bold text-slate-900">
-            03. Accessible Retail
-          </h3>
-          <p className="text-xs text-slate-600 leading-relaxed font-medium">
-            By designing and fulfilling directly without distributor markups, we deliver luxury-grade fashion at honest South African prices.
-          </p>
-        </div>
-      </div>
-
-      {/* Studio Visitation */}
-      <div className="bg-gradient-to-br from-rose-50 via-white to-amber-50 border border-rose-100 p-8 md:p-12 rounded-3xl flex flex-col md:flex-row md:items-center justify-between gap-8 shadow-sm">
-        <div className="space-y-3 max-w-xl">
-          <div className="flex items-center gap-1.5 text-xs text-[#65775D] font-extrabold uppercase tracking-wider">
-            <MapPin className="w-4 h-4" />
-            <span>Cape Town Flagship</span>
-          </div>
-          <h2 className="text-2xl md:text-3xl font-black text-slate-900">
-            Visit Our Kloof Street Fitting Studio
-          </h2>
-          <p className="text-xs text-slate-600 leading-relaxed font-medium">
-            Try on our current seasonal collection, get personal sizing advice, or pick up your online order in person at 14 Kloof Street, Tamboerskloof, Cape Town.
-          </p>
-        </div>
-
-        <button
-          onClick={onNavigateCatalog}
-          className="bg-[#87977D] hover:bg-[#65775D] text-white px-8 py-3.5 text-xs uppercase tracking-wider font-bold rounded-xl transition-all shadow-md hover:shadow-lg whitespace-nowrap self-start md:self-auto cursor-pointer"
-        >
-          Explore Collection →
+        <p className="text-sm text-neutral-600 leading-8">
+          Our point of view is modern, sophisticated, minimalist and fashion-forward. We believe getting dressed should feel straightforward: find the pieces you like, make them your own and wear them your way.
+        </p>
+        <button onClick={onNavigateCatalog} className="inline-flex items-center gap-3 bg-black px-6 py-3.5 text-[10px] font-bold uppercase tracking-[0.14em] text-white transition-colors hover:bg-neutral-700">
+          Explore the collection <ArrowRight size={15} />
         </button>
       </div>
+      <div className="relative aspect-[4/5] overflow-hidden bg-neutral-100">
+        <img src={portraitImage} alt="AVEART Style Edition fashion editorial" className="h-full w-full object-cover" loading="lazy" decoding="async" />
+      </div>
+    </section>
 
-    </div>
-  );
-};
+    <section className="border-y border-neutral-200 py-10 md:py-12">
+      <div className="max-w-2xl mx-auto text-center">
+        <p className="text-[10px] uppercase tracking-[0.22em] font-bold text-neutral-500">Our point of view</p>
+        <h2 className="mt-3 text-3xl md:text-4xl font-medium tracking-tight text-neutral-950">Modern. Sophisticated. Minimal.</h2>
+        <p className="mt-4 text-sm leading-7 text-neutral-600">
+          A flexible approach to fashion, with clothing, footwear and accessories brought together in one place.
+        </p>
+      </div>
+      <div className="mt-9 grid grid-cols-1 sm:grid-cols-3 gap-7">
+        <div className="space-y-3 text-center">
+          <Shirt className="mx-auto h-6 w-6 text-neutral-800" strokeWidth={1.4} />
+          <h3 className="text-sm font-semibold text-neutral-950">Clothing</h3>
+          <p className="text-xs leading-6 text-neutral-600">Everyday pieces, coordinated looks and styles for different occasions.</p>
+        </div>
+        <div className="space-y-3 text-center">
+          <Footprints className="mx-auto h-6 w-6 text-neutral-800" strokeWidth={1.4} />
+          <h3 className="text-sm font-semibold text-neutral-950">Footwear</h3>
+          <p className="text-xs leading-6 text-neutral-600">Shoes and sneakers to complete your everyday rotation.</p>
+        </div>
+        <div className="space-y-3 text-center">
+          <ShoppingBag className="mx-auto h-6 w-6 text-neutral-800" strokeWidth={1.4} />
+          <h3 className="text-sm font-semibold text-neutral-950">Accessories</h3>
+          <p className="text-xs leading-6 text-neutral-600">Finishing touches that bring an outfit together.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+);
