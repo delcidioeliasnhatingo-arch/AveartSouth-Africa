@@ -64,7 +64,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate }) => {
                 </div>
               )}
             </div>
-            <button onClick={() => onNavigate('catalog_sale')} className="hover:text-black transition-colors cursor-pointer">Sale</button>
+            <button onClick={() => onNavigate('catalog_gender', 'unisex')} className="hover:text-black transition-colors cursor-pointer">Unisex</button>
             <button onClick={() => onNavigate('atelier')} className={`hover:text-black transition-colors cursor-pointer ${currentView === 'atelier' ? 'text-black' : ''}`}>Our Story</button>
             <button onClick={() => document.getElementById('aveart-footer')?.scrollIntoView({ behavior: 'smooth' })} className="hover:text-black transition-colors cursor-pointer">Contact</button>
           </nav>
@@ -125,7 +125,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate }) => {
           <button type="button" onClick={() => onNavigate('catalog')}>Shop</button>
           <button type="button" onClick={() => onNavigate('catalog_new')}>New</button>
           <button type="button" onClick={() => setIsCollectionsOpen((open) => !open)}>Collections</button>
-          <button type="button" onClick={() => onNavigate('catalog_sale')}>Sale</button>
+          <button type="button" onClick={() => onNavigate('catalog_gender', 'unisex')}>Unisex</button>
         </div>
       </header>
 
