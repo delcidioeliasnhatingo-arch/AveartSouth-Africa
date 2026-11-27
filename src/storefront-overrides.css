@@ -187,3 +187,7 @@ body { background: #ffffff; color: #171717; }
   .aveart-reference-footer .aveart-footer-main { grid-template-columns: 1fr; gap: 27px; }
   .aveart-reference-footer .aveart-footer-bottom { width: calc(100% - 32px); }
 }
+
+/* Keep product colour thumbnails circular and borderless. */
+.aveart-reference-product-card .rounded-full { border-radius: 50% !important; }
+.aveart-reference-product-card span[style*="clip-path: circle"] { border: 0 !important; box-shadow: none !important; }
