@@ -81,10 +81,12 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate, onBuyNow }) => {
     .map((collection) => ({ collection, items: getCollectionProducts(visibleProducts, collection.slug) }))
     .filter(({ items }) => items.length > 0)
     .slice(0, 4);
+  const newArrivalProducts = getCollectionProducts(visibleProducts, 'new-arrivals').slice(0, 4);
+  const newArrivalIds = new Set(newArrivalProducts.map((product) => product.id));
   const selectedProducts = [...visibleProducts]
+    .filter((product) => !newArrivalIds.has(product.id))
     .sort((a, b) => Date.parse(String((b as any).created_at || '')) - Date.parse(String((a as any).created_at || '')))
     .slice(0, 8);
-  const newArrivalProducts = getCollectionProducts(visibleProducts, 'new-arrivals').slice(0, 4);
 
   return (
     <div className="aveart-home-v2">
@@ -121,6 +123,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate, onBuyNow }) => {
         </section>
       )}
 
+      {(loading || selectedProducts.length > 0 || visibleProducts.length === 0) && (
       <section className="aveart-home-section" id="aveart-home-products">
         <div className="aveart-home-section-heading">
           <div><p className="aveart-home-kicker">Explore AVEART</p><h2>Shop the collection</h2></div>
@@ -143,6 +146,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate, onBuyNow }) => {
           </div>
         )}
       </section>
+      )}
 
       {newArrivalProducts.length > 0 && (
         <section className="aveart-home-section aveart-home-new-in">
