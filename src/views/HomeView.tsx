@@ -204,33 +204,6 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate, onBuyNow }) => {
         </div>
       </section>
 
-      {/* 5. SHOP BY CATEGORY */}
-      <section className="aveart-reference-section aveart-category-section">
-        <div className="aveart-section-heading centered">
-          <div>
-            <p className="aveart-eyebrow">Find your fit</p>
-            <h2>Shop by category</h2>
-          </div>
-        </div>
-        <div className="aveart-category-grid">
-          <button className="aveart-category-card" onClick={() => onNavigate('catalog_gender', 'women')}>
-            <img src={womenImage} alt="Women's fashion" loading="lazy" decoding="async" />
-            <span className="aveart-category-overlay" />
-            <span className="aveart-category-copy"><strong>Women</strong><span>↗</span></span>
-          </button>
-          <button className="aveart-category-card" onClick={() => onNavigate('catalog_gender', 'men')}>
-            <img src={menImage} alt="Men's fashion" loading="lazy" decoding="async" />
-            <span className="aveart-category-overlay" />
-            <span className="aveart-category-copy"><strong>Men</strong><span>↗</span></span>
-          </button>
-          <button className="aveart-category-card" onClick={() => onNavigate('catalog_gender', 'accessories')}>
-            <img src={accessoriesImage} alt="Bags and accessories" loading="lazy" decoding="async" />
-            <span className="aveart-category-overlay" />
-            <span className="aveart-category-copy"><strong>Accessories</strong><span>↗</span></span>
-          </button>
-        </div>
-      </section>
-
       {/* 6. SHOP BY COLLECTION — only show collections that contain published products with photos */}
       {collectionCards.length > 0 && (
         <section className="aveart-reference-section aveart-collection-section" id="collections">
