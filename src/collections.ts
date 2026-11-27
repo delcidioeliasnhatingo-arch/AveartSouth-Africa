@@ -92,7 +92,9 @@ export function getCollectionProducts(products: Product[], slug: string): Produc
   const visible = products.filter(isVisibleStoreProduct);
   switch (slug) {
     case 'new-arrivals':
-      return [...visible].sort((a, b) => Date.parse(String(b.created_at || '')) - Date.parse(String(a.created_at || '')));
+      return [...visible]
+        .sort((a, b) => Date.parse(String(b.created_at || '')) - Date.parse(String(a.created_at || '')))
+        .slice(0, 12);
     case 'best-sellers': {
       const counts = visible.map(salesCount);
       if (counts.some((value) => value !== null)) {
