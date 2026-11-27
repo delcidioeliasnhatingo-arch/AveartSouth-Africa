@@ -102,7 +102,7 @@ export function getCollectionProducts(products: Product[], slug: string): Produc
       return visible.filter(isFeatured);
     }
     case 'everyday-essentials':
-      return visible.filter((product) => matchesKeywords(product, /\b(basic|essential|everyday|daily|casual|cotton|t shirt|tee|polo|shirt|jeans|denim|trouser)\b/));
+      return visible.filter((product) => matchesKeywords(product, /\b(basic|essential|everyday|daily|casual|cotton|t shirt|tee|polo|shirt|jeans|denim|trousers?)\b/));
     case 'street-style':
       return visible.filter((product) => matchesKeywords(product, /\b(street|streetwear|graphic|oversized|skate|urban|jersey|track|cargo)\b/));
     case 'tees-shirts':
