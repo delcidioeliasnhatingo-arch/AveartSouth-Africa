@@ -628,7 +628,7 @@ html, body, main, [role="main"] { background-color: #FFFFFF; }
 }
 .aveart-reference-product-card button:first-child:hover { background: #F5F5F5 !important; }
 .aveart-reference-product-page .bg-emerald-600,
-.aveart-reference-product-page .bg-\\[\\#87977D\\] { background-color: #000000 !important; }
+.aveart-reference-product-page [class~="bg-[#87977D]"] { background-color: #000000 !important; }
 .aveart-reference-product-page .border-emerald-600 { border-color: #000000 !important; }
 input:focus, select:focus, textarea:focus {
   outline-color: #DADADA !important;
