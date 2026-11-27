@@ -145,7 +145,7 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
     priceRange !== 'all';
 
   const activeCollection = AVEART_COLLECTIONS.find((collection) => collection.slug === selectedCollection);
-  const normalizeTag = (value: unknown) => String(value ?? '').trim().toLowerCase().replace(/[_\\s]+/g, '-');
+  const normalizeTag = (value: unknown) => String(value ?? '').trim().toLowerCase().replace(/[_ ]+/g, '-');
   const availableTags = Array.from(new Set(products.flatMap((product) => (Array.isArray((product as any).tags) ? (product as any).tags : [])
     .map(normalizeTag)
     .filter((tag: string) => tag && tag !== 'aveart' && !/^ave-[0-9]+$/.test(tag))
