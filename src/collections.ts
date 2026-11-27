@@ -8,15 +8,12 @@ export interface StoreCollection {
 }
 
 export const AVEART_COLLECTIONS: StoreCollection[] = [
-  { slug: 'new-arrivals', title: 'New Arrivals', eyebrow: 'Just added', description: 'The latest pieces added to the AVEART collection.' },
-  { slug: 'best-sellers', title: 'Best Sellers', eyebrow: 'The favourites', description: 'Popular and featured pieces selected from the store.' },
-  { slug: 'everyday-essentials', title: 'Everyday Essentials', eyebrow: 'Made for every day', description: 'Easy pieces for everyday outfits and regular rotation.' },
+  { slug: 'new-arrivals', title: 'New Arrivals', eyebrow: 'Just added', description: 'The latest published pieces added to the AVEART collection.' },
+  { slug: 'everyday-essentials', title: 'Everyday Essentials', eyebrow: 'Made for every day', description: 'Easy clothing pieces for everyday outfits and regular rotation.' },
   { slug: 'street-style', title: 'Street Style', eyebrow: 'Off-duty style', description: 'Relaxed, graphic and urban-inspired pieces.' },
-  { slug: 'sets-coords', title: 'Sets & Co-ords', eyebrow: 'A matching moment', description: 'Co-ordinated pieces and matching sets.' },
-  { slug: 'sneakers-shoes', title: 'Sneakers & Shoes', eyebrow: 'Step out', description: 'Footwear for everyday wear and different occasions.' },
-  { slug: 'bags-accessories', title: 'Bags & Accessories', eyebrow: 'The finishing touch', description: 'Bags and accessories to complete an outfit.' },
-  { slug: 'activewear', title: 'Activewear', eyebrow: 'Move comfortably', description: 'Sport, training and movement-ready clothing.' },
-  { slug: 'special-offers', title: 'Special Offers', eyebrow: 'Worth a closer look', description: 'Items currently marked with a genuine promotional price.' },
+  { slug: 'tees-shirts', title: 'Tees & Shirts', eyebrow: 'Everyday tops', description: 'T-shirts, polos and shirts from the current collection.' },
+  { slug: 'denim-trousers', title: 'Denim & Trousers', eyebrow: 'The daily rotation', description: 'Jeans, trousers and casual pants from the current collection.' },
+  { slug: 'jerseys-sportswear', title: 'Jerseys & Sportswear', eyebrow: 'Team-inspired', description: 'Football jerseys and sports-inspired pieces.' },
 ];
 
 const normalise = (value: unknown): string =>
@@ -105,19 +102,15 @@ export function getCollectionProducts(products: Product[], slug: string): Produc
       return visible.filter(isFeatured);
     }
     case 'everyday-essentials':
-      return visible.filter((product) => matchesKeywords(product, /\b(basic|essential|everyday|daily|casual|cotton|t shirt|tee|polo|shirt|jeans|denim|trouser|legging|hoodie|sweatshirt)\b/));
+      return visible.filter((product) => matchesKeywords(product, /\b(basic|essential|everyday|daily|casual|cotton|t shirt|tee|polo|shirt|jeans|denim|trouser)\b/));
     case 'street-style':
       return visible.filter((product) => matchesKeywords(product, /\b(street|streetwear|graphic|oversized|skate|urban|jersey|track|cargo)\b/));
-    case 'sets-coords':
-      return visible.filter((product) => matchesKeywords(product, /\b(set|sets|co ord|co ords|coord|matching|two piece|2 piece|tracksuit|twin set)\b/));
-    case 'sneakers-shoes':
-      return visible.filter((product) => matchesKeywords(product, /\b(sneaker|trainer|shoe|shoes|boot|boots|sandal|sandals|loafer|flat|heel|footwear)\b/));
-    case 'bags-accessories':
-      return visible.filter((product) => matchesKeywords(product, /\b(accessor|bag|handbag|tote|backpack|purse|wallet|cap|hat|belt|scarf|jewell?ery|sunglasses)\b/));
-    case 'activewear':
-      return visible.filter((product) => matchesKeywords(product, /\b(activewear|sportswear|sport|training|gym|fitness|yoga|running|workout|athletic)\b/));
-    case 'special-offers':
-      return visible.filter(hasSalePrice);
+    case 'tees-shirts':
+      return visible.filter((product) => matchesKeywords(product, /\b(t shirt|tee|polo|shirt)\b/));
+    case 'denim-trousers':
+      return visible.filter((product) => matchesKeywords(product, /\b(jeans|denim|trouser|pants|cargo)\b/));
+    case 'jerseys-sportswear':
+      return visible.filter((product) => matchesKeywords(product, /\b(jersey|football|sportswear|teamwear)\b/));
     default:
       return visible;
   }
