@@ -75,42 +75,113 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate, onBuyNow }) => {
     return () => { window.clearTimeout(timer); controller.abort(); };
   }, []);
 
+  useEffect(() => {
+    const revealItems = Array.from(document.querySelectorAll<HTMLElement>('.aveart-reveal:not(.is-visible)'));
+    if (!('IntersectionObserver' in window)) {
+      revealItems.forEach((item) => item.classList.add('is-visible'));
+      return;
+    }
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -28px 0px' });
+    revealItems.forEach((item) => observer.observe(item));
+    return () => observer.disconnect();
+  }, [loading, products.length]);
+
   const visibleProducts = products.filter(isVisibleStoreProduct);
+  const newArrivalPool = getCollectionProducts(visibleProducts, 'new-arrivals');
+  const heroProduct = newArrivalPool[0] || visibleProducts[0];
+  const newArrivalProducts = newArrivalPool
+    .filter((product) => product.id !== heroProduct?.id)
+    .slice(0, 3);
+  const excludedIds = new Set([heroProduct?.id, ...newArrivalProducts.map((product) => product.id)].filter(Boolean));
+  const editorialProduct = visibleProducts.find((product) => !excludedIds.has(product.id));
+  if (editorialProduct) excludedIds.add(editorialProduct.id);
+  const shopMoreProducts = visibleProducts
+    .filter((product) => !excludedIds.has(product.id))
+    .slice(0, 4);
+
   const collectionCards = AVEART_COLLECTIONS
     .filter((collection) => collection.slug !== 'new-arrivals')
     .map((collection) => ({ collection, items: getCollectionProducts(visibleProducts, collection.slug) }))
     .filter(({ items }) => items.length > 0)
-    .slice(0, 4);
-  const newArrivalProducts = getCollectionProducts(visibleProducts, 'new-arrivals').slice(0, 4);
-  const newArrivalIds = new Set(newArrivalProducts.map((product) => product.id));
-  const selectedProducts = [...visibleProducts]
-    .filter((product) => !newArrivalIds.has(product.id))
-    .sort((a, b) => Date.parse(String((b as any).created_at || '')) - Date.parse(String((a as any).created_at || '')))
-    .slice(0, 8);
+    .slice(0, 3);
+
+  const heroImage = heroProduct ? productImage(heroProduct) : '';
+  const editorialImage = editorialProduct ? productImage(editorialProduct) : '';
 
   return (
     <div className="aveart-home-v2">
-      <section className="aveart-home-hero" aria-labelledby="aveart-home-title">
+      <section className="aveart-home-hero aveart-reveal" aria-labelledby="aveart-home-title">
         <div className="aveart-home-hero-copy">
           <p className="aveart-home-kicker">AVEART · STYLE EDITION</p>
-          <h1 id="aveart-home-title">Style, your way.</h1>
-          <p className="aveart-home-intro">Discover easy-to-wear pieces and everyday styles selected for your own way of dressing.</p>
+          <h1 id="aveart-home-title">Style,<br /><span>your way.</span></h1>
+          <p className="aveart-home-intro">Everyday pieces. A fresh point of view. Find the styles that feel like you.</p>
           <div className="aveart-home-actions">
-            <button className="aveart-home-button" onClick={() => onNavigate('catalog')}>Shop all <ArrowRight size={15} /></button>
+            <button className="aveart-home-button" onClick={() => onNavigate('catalog')}>Shop now <ArrowRight size={15} /></button>
             <button className="aveart-home-text-button" onClick={() => document.getElementById('aveart-home-collections')?.scrollIntoView({ behavior: 'smooth' })}>Explore collections</button>
           </div>
         </div>
-        <div className="aveart-home-hero-note" aria-hidden="true">
-          <span>MODERN</span><span>EVERYDAY</span><span>YOUR STYLE</span>
-          <strong>AVEART</strong>
+        <div className="aveart-home-hero-visual">
+          <span className="aveart-home-hero-word" aria-hidden="true">STYLE</span>
+          {heroImage ? (
+            <img src={heroImage} alt={heroProduct?.title || 'Featured AVEART piece'} decoding="async" fetchPriority="high" />
+          ) : (
+            <div className="aveart-home-hero-placeholder" aria-hidden="true"><span>AVEART</span></div>
+          )}
+          <span className="aveart-home-hero-caption">THE EVERYDAY EDIT · AVEART</span>
         </div>
+        <span className="aveart-home-hero-index">01 / NEW SEASON</span>
+      </section>
+
+      {editorialProduct && editorialImage && (
+        <section className="aveart-home-editorial aveart-reveal">
+          <div className="aveart-home-editorial-image">
+            <img src={editorialImage} alt={editorialProduct.title} loading="lazy" decoding="async" />
+            <span>AVEART / STYLE EDITION</span>
+          </div>
+          <div className="aveart-home-editorial-copy">
+            <p className="aveart-home-kicker">A DIFFERENT POINT OF VIEW</p>
+            <h2>Wear the moment.<br />Make it yours.</h2>
+            <p>Easy-to-wear pieces and everyday styles, selected to fit your own way of dressing.</p>
+            <button className="aveart-home-link" onClick={() => onNavigate('catalog')}>Explore the collection <ArrowRight size={14} /></button>
+          </div>
+        </section>
+      )}
+
+      <section className="aveart-home-section aveart-home-new-in aveart-reveal" id="aveart-home-new">
+        <div className="aveart-home-section-heading">
+          <div><p className="aveart-home-kicker">JUST ADDED</p><h2>New arrivals</h2></div>
+          <button className="aveart-home-link" onClick={() => onNavigate('catalog_new')}>View all <ArrowRight size={14} /></button>
+        </div>
+        {loading ? (
+          <div className="aveart-home-product-grid aveart-home-product-grid-three">
+            {[1, 2, 3].map((item) => <div key={item} className="aveart-home-skeleton" />)}
+          </div>
+        ) : newArrivalProducts.length > 0 ? (
+          <div className="aveart-home-product-grid aveart-home-product-grid-three">
+            {newArrivalProducts.map((product) => (
+              <ProductCard key={product.id} product={product} onSelect={(slug) => onNavigate('product', slug)} onBuyNow={onBuyNow} />
+            ))}
+          </div>
+        ) : (
+          <div className="aveart-home-empty">
+            <p>Explore the latest pieces in the AVEART collection.</p>
+            <button className="aveart-home-button" onClick={() => onNavigate('catalog')}>Visit the shop <ArrowRight size={14} /></button>
+          </div>
+        )}
       </section>
 
       {collectionCards.length > 0 && (
-        <section className="aveart-home-section" id="aveart-home-collections">
+        <section className="aveart-home-section aveart-reveal" id="aveart-home-collections">
           <div className="aveart-home-section-heading">
-            <div><p className="aveart-home-kicker">Find your style</p><h2>Shop by collection</h2></div>
-            <button className="aveart-home-link" onClick={() => onNavigate('catalog')}>View all collections <ArrowRight size={14} /></button>
+            <div><p className="aveart-home-kicker">FIND YOUR STYLE</p><h2>Shop by collection</h2></div>
+            <button className="aveart-home-link" onClick={() => onNavigate('catalog')}>View all <ArrowRight size={14} /></button>
           </div>
           <div className="aveart-home-collections">
             {collectionCards.map(({ collection, items }) => (
@@ -123,39 +194,14 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate, onBuyNow }) => {
         </section>
       )}
 
-      {(loading || selectedProducts.length > 0 || visibleProducts.length === 0) && (
-      <section className="aveart-home-section" id="aveart-home-products">
-        <div className="aveart-home-section-heading">
-          <div><p className="aveart-home-kicker">Explore AVEART</p><h2>Shop the collection</h2></div>
-          <button className="aveart-home-link" onClick={() => onNavigate('catalog')}>Shop all products <ArrowRight size={14} /></button>
-        </div>
-        {loading ? (
-          <div className="aveart-home-product-grid">
-            {[1, 2, 3, 4].map((item) => <div key={item} className="aveart-home-skeleton" />)}
-          </div>
-        ) : selectedProducts.length > 0 ? (
-          <div className="aveart-home-product-grid">
-            {selectedProducts.map((product) => (
-              <ProductCard key={product.id} product={product} onSelect={(slug) => onNavigate('product', slug)} onBuyNow={onBuyNow} />
-            ))}
-          </div>
-        ) : (
-          <div className="aveart-home-empty">
-            <p>New pieces are being added to the collection.</p>
-            <button className="aveart-home-button" onClick={() => onNavigate('catalog')}>Visit the shop <ArrowRight size={14} /></button>
-          </div>
-        )}
-      </section>
-      )}
-
-      {newArrivalProducts.length > 0 && (
-        <section className="aveart-home-section aveart-home-new-in">
+      {shopMoreProducts.length > 0 && (
+        <section className="aveart-home-section aveart-home-more aveart-reveal">
           <div className="aveart-home-section-heading">
-            <div><p className="aveart-home-kicker">Just added</p><h2>New arrivals</h2></div>
-            <button className="aveart-home-link" onClick={() => onNavigate('catalog_new')}>See what's new <ArrowRight size={14} /></button>
+            <div><p className="aveart-home-kicker">MORE TO EXPLORE</p><h2>Find your next favourite</h2></div>
+            <button className="aveart-home-link" onClick={() => onNavigate('catalog')}>Shop all products <ArrowRight size={14} /></button>
           </div>
           <div className="aveart-home-product-grid">
-            {newArrivalProducts.map((product) => (
+            {shopMoreProducts.map((product) => (
               <ProductCard key={product.id} product={product} onSelect={(slug) => onNavigate('product', slug)} onBuyNow={onBuyNow} />
             ))}
           </div>
