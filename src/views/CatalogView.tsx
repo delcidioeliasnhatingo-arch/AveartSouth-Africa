@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Filter, SlidersHorizontal, RotateCcw, Search } from 'lucide-react';
 import { Product, Category, formatZAR } from '../types/index.ts';
 import { ProductCard } from '../components/ProductCard.tsx';
+import { AVEART_COLLECTIONS, getCollectionProducts } from '../collections.ts';
 
 const PUBLIC_PRODUCTS_URL = 'https://aveart-products-public.delcidioeliasnhatingo.workers.dev/api/products';
 
@@ -32,6 +33,7 @@ interface CatalogViewProps {
   initialGender?: 'women' | 'men' | 'accessories' | 'all';
   initialSearch?: string;
   initialSale?: boolean;
+  initialCollection?: string;
   onSelectProduct: (slug: string) => void;
   onBuyNow: () => void;
 }
@@ -41,6 +43,7 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
   initialGender,
   initialSearch,
   initialSale,
+  initialCollection,
   onSelectProduct,
   onBuyNow,
 }) => {
@@ -58,6 +61,7 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
   // Filters state
   const [selectedGender, setSelectedGender] = useState<string>(initialGender || 'all');
   const [selectedCategory, setSelectedCategory] = useState<string>(initialCategory || 'all');
+  const [selectedCollection, setSelectedCollection] = useState<string>(initialCollection || '');
   const [searchQuery, setSearchQuery] = useState<string>(initialSearch || '');
   const [inStockOnly, setInStockOnly] = useState<boolean>(false);
   const [onlySale, setOnlySale] = useState<boolean>(initialSale || false);
@@ -76,7 +80,13 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
     if (initialCategory) setSelectedCategory(initialCategory);
     if (initialSearch) setSearchQuery(initialSearch);
     if (initialSale) setOnlySale(true);
-  }, [initialGender, initialCategory, initialSearch, initialSale]);
+    setSelectedCollection(initialCollection || '');
+    if (initialCollection) {
+      setSelectedGender('all');
+      setSelectedCategory('all');
+      setOnlySale(false);
+    }
+  }, [initialGender, initialCategory, initialSearch, initialSale, initialCollection]);
 
   useEffect(() => {
     setLoading(true);
@@ -147,6 +157,7 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
   const resetFilters = () => {
     setSelectedGender('all');
     setSelectedCategory('all');
+    setSelectedCollection('');
     setSearchQuery('');
     setInStockOnly(false);
     setOnlySale(false);
@@ -157,10 +168,14 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
   const hasActiveFilters =
     selectedGender !== 'all' ||
     selectedCategory !== 'all' ||
-    searchQuery.trim() !== '' ||
+    selectedCollection !== '' ||
+    searchQuery.trim() !== '';
     inStockOnly ||
     onlySale ||
     priceRange !== 'all';
+
+  const activeCollection = AVEART_COLLECTIONS.find((collection) => collection.slug === selectedCollection);
+  const visibleProducts = activeCollection ? getCollectionProducts(products, selectedCollection) : products;
 
   return (
     <div className="aveart-reference-catalog w-full max-w-[1920px] mx-auto px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20 py-8 space-y-8">
@@ -172,7 +187,7 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
             <span>Fashion Catalog · South Africa (ZAR)</span>
           </span>
           <h1 className="text-3xl sm:text-4xl text-slate-900 font-bold mt-1 tracking-tight">
-            {selectedGender === 'women'
+            {activeCollection?.title || (selectedGender === 'women'
               ? "Women's Collection"
               : selectedGender === 'men'
               ? "Men's Collection"
@@ -180,10 +195,10 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
               ? "Bags & Accessories"
               : onlySale
               ? "Seasonal Sale Promotions"
-              : "All Fashion Categories"}
+              : "All Fashion Categories")}
           </h1>
           <p className="text-sm text-slate-500 mt-1 max-w-xl font-medium">
-            Contemporary silhouettes made for comfort and personal style. All prices in South African Rand (ZAR), VAT included.
+            {activeCollection?.description || 'Contemporary styles selected for comfort and personal style. All prices are shown in South African Rand (ZAR).'}
           </p>
         </div>
 
@@ -191,7 +206,7 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
         <div className="text-xs text-slate-500 font-medium flex items-center gap-2">
           <span>Showing</span>
           <span className="font-mono tabular-nums font-black text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-lg border border-rose-100">
-            {products.length} products
+            {visibleProducts.length} products
           </span>
         </div>
       </div>
@@ -349,7 +364,7 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
             <div key={i} className="aspect-[3/4] bg-white border border-slate-200 rounded-lg animate-pulse" />
           ))}
         </div>
-      ) : products.length === 0 ? (
+      ) : visibleProducts.length === 0 ? (
         <div className="bg-white border border-slate-200 rounded-lg p-12 text-center space-y-4 shadow-sm">
           <SlidersHorizontal className="w-10 h-10 text-slate-300 mx-auto" />
           <h3 className="text-xl font-bold text-slate-900">
@@ -367,7 +382,7 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
         </div>
       ) : (
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {products.map((product) => (
+          {visibleProducts.map((product) => (
             <ProductCard
               key={product.id}
               product={product}
