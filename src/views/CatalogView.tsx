@@ -65,6 +65,8 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
   const [selectedGender, setSelectedGender] = useState<string>(initialGender || 'all');
   const [selectedCategory, setSelectedCategory] = useState<string>(initialCategory || 'all');
   const [selectedCollection, setSelectedCollection] = useState<string>(initialCollection || '');
+  const [selectedTag, setSelectedTag] = useState<string>('');
+
   const [searchQuery, setSearchQuery] = useState<string>(initialSearch || '');
   const [inStockOnly, setInStockOnly] = useState<boolean>(false);
   const [onlySale, setOnlySale] = useState<boolean>(initialSale || false);
@@ -124,6 +126,7 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
     setSelectedGender('all');
     setSelectedCategory('all');
     setSelectedCollection('');
+    setSelectedTag('');
     setSearchQuery('');
     setInStockOnly(false);
     setOnlySale(false);
@@ -135,12 +138,18 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
     selectedGender !== 'all' ||
     selectedCategory !== 'all' ||
     selectedCollection !== '' ||
+    selectedTag !== '' ||
     searchQuery.trim() !== '' ||
     inStockOnly ||
     onlySale ||
     priceRange !== 'all';
 
   const activeCollection = AVEART_COLLECTIONS.find((collection) => collection.slug === selectedCollection);
+  const normalizeTag = (value: unknown) => String(value ?? '').trim().toLowerCase().replace(/[_\\s]+/g, '-');
+  const availableTags = Array.from(new Set(products.flatMap((product) => (Array.isArray((product as any).tags) ? (product as any).tags : [])
+    .map(normalizeTag)
+    .filter((tag: string) => tag && tag !== 'aveart' && !/^ave-[0-9]+$/.test(tag))
+  ))).sort((a, b) => a.localeCompare(b));
   const filteredProducts = products.filter((product) => {
     const item = product as any;
     const values = [
@@ -150,6 +159,7 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
       ...(Array.isArray(item.variants) ? item.variants.flatMap((variant: any) => [variant?.size, variant?.color, variant?.name]) : []),
     ].filter(Boolean).join(' ').toLowerCase();
 
+    if (selectedTag && !(Array.isArray(item.tags) ? item.tags : []).some((tag: unknown) => normalizeTag(tag) === selectedTag)) return false;
     if (selectedGender !== 'all' && String(item.gender || '').toLowerCase() !== selectedGender) return false;
     if (selectedCategory !== 'all') {
       const categoryValues = [item.category_id, item.category_slug, item.category_name, item.category]
@@ -243,6 +253,19 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
               className="w-full bg-slate-50 border border-slate-200 rounded-lg pl-10 pr-3 py-2 text-xs font-medium text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-[#87977D] focus:bg-white"
             />
           </div>
+
+          {/* Public style filters are generated from the tags saved on products in the admin. */}
+          {availableTags.length > 0 && (
+            <select
+              aria-label="Filter by style tag"
+              value={selectedTag}
+              onChange={(e) => setSelectedTag(e.target.value)}
+              className="bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs font-bold text-slate-700 focus:outline-none focus:ring-1 focus:ring-black cursor-pointer"
+            >
+              <option value="">All Styles / Tags</option>
+              {availableTags.map((tag) => <option key={tag} value={tag}>{tag.replace(/-/g, ' ')}</option>)}
+            </select>
+          )}
 
           {/* Price Range Dropdown in ZAR */}
           <select
