@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Filter, SlidersHorizontal, RotateCcw, Search } from 'lucide-react';
-import { Product, Category, formatZAR } from '../types/index.ts';
+import { SlidersHorizontal, RotateCcw, Search } from 'lucide-react';
+import { Product, formatZAR } from '../types/index.ts';
 import { ProductCard } from '../components/ProductCard.tsx';
 import { AVEART_COLLECTIONS, getCollectionProducts } from '../collections.ts';
 
@@ -30,7 +30,7 @@ async function fetchProductsWithFallback(url: string, signal: AbortSignal): Prom
 
 interface CatalogViewProps {
   initialCategory?: string;
-  initialGender?: 'women' | 'men' | 'accessories' | 'all';
+  initialGender?: 'women' | 'men' | 'unisex' | 'accessories' | 'all';
   initialSearch?: string;
   initialSale?: boolean;
   initialCollection?: string;
@@ -47,12 +47,11 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
   onSelectProduct,
   onBuyNow,
 }) => {
-  const initialProductsKey = 'aveart:catalog:v1:' + (typeof window !== 'undefined' ? window.location.search : '');
+  const initialProductsKey = 'aveart:catalog:v2:all';
   const [products, setProducts] = useState<Product[]>(() => {
     try { const value = localStorage.getItem(initialProductsKey); const parsed = value ? JSON.parse(value) : []; return Array.isArray(parsed) ? parsed.filter((product: any) => hasProductImage(product)) : []; }
     catch { return []; }
   });
-  const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(() => {
     try { return !Array.isArray(JSON.parse(localStorage.getItem(initialProductsKey) || 'null')); }
     catch { return true; }
@@ -69,13 +68,6 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
   const [priceRange, setPriceRange] = useState<string>('all');
 
   useEffect(() => {
-    fetch('/api/categories')
-      .then((r) => r.json())
-      .then((data) => setCategories(data))
-      .catch((err) => console.error('Error fetching categories:', err));
-  }, []);
-
-  useEffect(() => {
     if (initialGender) setSelectedGender(initialGender);
     if (initialCategory) setSelectedCategory(initialCategory);
     if (initialSearch) setSearchQuery(initialSearch);
@@ -89,53 +81,20 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
   }, [initialGender, initialCategory, initialSearch, initialSale, initialCollection]);
 
   useEffect(() => {
-    setLoading(true);
-
-    const params = new URLSearchParams();
-    if (selectedGender && selectedGender !== 'all') {
-      if (selectedGender === 'accessories') {
-        params.append('category', 'accessories');
-      } else {
-        params.append('gender', selectedGender);
-      }
-    }
-    if (selectedCategory && selectedCategory !== 'all') {
-      params.append('category', selectedCategory);
-    }
-    if (searchQuery.trim()) {
-      params.append('search', searchQuery.trim());
-    }
-    if (inStockOnly) {
-      params.append('inStockOnly', 'true');
-    }
-    if (onlySale) {
-      params.append('onSale', 'true');
-    }
-    if (sortOption) {
-      params.append('sort', sortOption);
-    }
-
-    if (priceRange === 'under1000') {
-      params.append('maxPrice', '1000');
-    } else if (priceRange === '1000to2500') {
-      params.append('minPrice', '1000');
-      params.append('maxPrice', '2500');
-    } else if (priceRange === 'above2500') {
-      params.append('minPrice', '2500');
-    }
-
-    const requestUrl = `/api/products?${params.toString()}`;
-    const cacheKey = 'aveart:catalog:v1:' + requestUrl;
-    try {
-      const cached = localStorage.getItem(cacheKey);
-      const parsed = cached ? JSON.parse(cached) : null;
-      if (Array.isArray(parsed)) { setProducts(parsed.filter((product: any) => hasProductImage(product))); setLoading(false); }
-    } catch {}
     const controller = new AbortController();
-    fetchProductsWithFallback(requestUrl, controller.signal)
-      .then((r) => {
-        if (!r.ok) throw new Error(`Product catalogue returned HTTP ${r.status}`);
-        return r.json();
+    try {
+      const cached = localStorage.getItem(initialProductsKey);
+      const parsed = cached ? JSON.parse(cached) : null;
+      if (Array.isArray(parsed)) {
+        setProducts(parsed.filter((product: any) => hasProductImage(product)));
+        setLoading(false);
+      }
+    } catch {}
+
+    fetchProductsWithFallback('/api/products', controller.signal)
+      .then((response) => {
+        if (!response.ok) throw new Error(`Product catalogue returned HTTP ${response.status}`);
+        return response.json();
       })
       .then((data) => {
         const liveProducts = Array.isArray(data)
@@ -146,13 +105,16 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
           ? data.data
           : [];
         const productsWithImages = liveProducts.filter((product: any) => hasProductImage(product));
-        try { localStorage.setItem(cacheKey, JSON.stringify(productsWithImages)); } catch {}
+        try { localStorage.setItem(initialProductsKey, JSON.stringify(productsWithImages)); } catch {}
         setProducts(productsWithImages);
       })
-      .catch((err) => { if (err?.name !== 'AbortError') console.error('Failed to load products:', err); })
-      .finally(() => { setLoading(false); });
-    return () => { controller.abort(); };
-  }, [selectedGender, selectedCategory, searchQuery, inStockOnly, onlySale, sortOption, priceRange]);
+      .catch((error) => {
+        if (error?.name !== 'AbortError') console.error('Failed to load products:', error);
+      })
+      .finally(() => setLoading(false));
+
+    return () => controller.abort();
+  }, []);
 
   const resetFilters = () => {
     setSelectedGender('all');
@@ -175,7 +137,44 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
     priceRange !== 'all';
 
   const activeCollection = AVEART_COLLECTIONS.find((collection) => collection.slug === selectedCollection);
-  const visibleProducts = activeCollection ? getCollectionProducts(products, selectedCollection) : products;
+  const filteredProducts = products.filter((product) => {
+    const item = product as any;
+    const values = [
+      item.title, item.name, item.subtitle, item.description,
+      item.category_name, item.category_slug, item.category,
+      ...(Array.isArray(item.tags) ? item.tags : [item.tags]),
+      ...(Array.isArray(item.variants) ? item.variants.flatMap((variant: any) => [variant?.size, variant?.color, variant?.name]) : []),
+    ].filter(Boolean).join(' ').toLowerCase();
+
+    if (selectedGender !== 'all' && String(item.gender || '').toLowerCase() !== selectedGender) return false;
+    if (selectedCategory !== 'all') {
+      const categoryValues = [item.category_id, item.category_slug, item.category_name, item.category]
+        .filter(Boolean).map((value) => String(value).toLowerCase());
+      const expected = selectedCategory.toLowerCase();
+      if (!categoryValues.some((value) => value === expected || value.includes(expected))) return false;
+    }
+    if (searchQuery.trim() && !values.includes(searchQuery.trim().toLowerCase())) return false;
+
+    const variants = Array.isArray(item.variants) ? item.variants : [];
+    const stock = Number(item.total_stock ?? item.stock ?? variants.reduce((total: number, variant: any) => total + Number(variant?.stock_quantity || variant?.stock || 0), 0));
+    if (inStockOnly && stock <= 0) return false;
+
+    const price = Number(item.min_price ?? item.base_price ?? item.price ?? 0);
+    const original = Number(item.original_price || 0);
+    const hasDiscount = Boolean(item.is_on_sale || original > price || variants.some((variant: any) => Number(variant?.sale_price || 0) > 0 && Number(variant?.price || 0) > Number(variant?.sale_price || 0)));
+    if (onlySale && !hasDiscount) return false;
+    if (priceRange === 'under1000' && price >= 1000) return false;
+    if (priceRange === '1000to2500' && (price < 1000 || price > 2500)) return false;
+    if (priceRange === 'above2500' && price <= 2500) return false;
+    return true;
+  }).sort((a, b) => {
+    const priceA = Number((a as any).min_price ?? a.base_price ?? 0);
+    const priceB = Number((b as any).min_price ?? b.base_price ?? 0);
+    if (sortOption === 'price_asc') return priceA - priceB;
+    if (sortOption === 'price_desc') return priceB - priceA;
+    return Date.parse(String(b.created_at || '')) - Date.parse(String(a.created_at || ''));
+  });
+  const visibleProducts = activeCollection ? getCollectionProducts(filteredProducts, selectedCollection) : filteredProducts;
 
   return (
     <div className="aveart-reference-catalog w-full max-w-[1920px] mx-auto px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20 py-8 space-y-8">
@@ -187,15 +186,11 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
             <span>Fashion Catalog · South Africa (ZAR)</span>
           </span>
           <h1 className="text-3xl sm:text-4xl text-slate-900 font-bold mt-1 tracking-tight">
-            {activeCollection?.title || (selectedGender === 'women'
-              ? "Women's Collection"
-              : selectedGender === 'men'
-              ? "Men's Collection"
-              : selectedGender === 'accessories'
-              ? "Bags & Accessories"
+            {activeCollection?.title || (selectedGender === 'unisex'
+              ? "Unisex Collection"
               : onlySale
               ? "Seasonal Sale Promotions"
-              : "All Fashion Categories")}
+              : "All Products")}
           </h1>
           <p className="text-sm text-slate-500 mt-1 max-w-xl font-medium">
             {activeCollection?.description || 'Contemporary styles selected for comfort and personal style. All prices are shown in South African Rand (ZAR).'}
@@ -211,80 +206,21 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
         </div>
       </div>
 
-      {/* Primary Gender & Department Segmented Tabs */}
+      {/* Audience filter reflects the currently published catalogue */}
       <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
         <button
-          onClick={() => {
-            setSelectedGender('all');
-            setSelectedCategory('all');
-            setOnlySale(false);
-          }}
-          className={`px-4 py-2.5 text-xs font-bold transition-all whitespace-nowrap cursor-pointer rounded-lg ${
-            selectedGender === 'all' && !onlySale
-              ? 'bg-[#87977D] text-white shadow-sm'
-              : 'bg-white border border-slate-200 text-slate-700 hover:border-emerald-300'
-          }`}
+          type="button"
+          onClick={() => { setSelectedGender('all'); setSelectedCategory('all'); setOnlySale(false); }}
+          className={`px-4 py-2.5 text-xs font-bold transition-all whitespace-nowrap cursor-pointer rounded-lg ${selectedGender === 'all' && !onlySale ? 'bg-black text-white shadow-sm' : 'bg-white border border-slate-200 text-slate-700 hover:border-black'}`}
         >
-          All Departments
+          All Products
         </button>
-
         <button
-          onClick={() => {
-            setSelectedGender('women');
-            setSelectedCategory('all');
-            setOnlySale(false);
-          }}
-          className={`px-4 py-2.5 text-xs font-bold transition-all whitespace-nowrap cursor-pointer rounded-lg ${
-            selectedGender === 'women' && !onlySale
-              ? 'bg-[#87977D] text-white shadow-sm'
-              : 'bg-white border border-slate-200 text-slate-700 hover:border-emerald-300'
-          }`}
+          type="button"
+          onClick={() => { setSelectedGender('unisex'); setSelectedCategory('all'); setOnlySale(false); }}
+          className={`px-4 py-2.5 text-xs font-bold transition-all whitespace-nowrap cursor-pointer rounded-lg ${selectedGender === 'unisex' && !onlySale ? 'bg-black text-white shadow-sm' : 'bg-white border border-slate-200 text-slate-700 hover:border-black'}`}
         >
-          Women
-        </button>
-
-        <button
-          onClick={() => {
-            setSelectedGender('men');
-            setSelectedCategory('all');
-            setOnlySale(false);
-          }}
-          className={`px-4 py-2.5 text-xs font-bold transition-all whitespace-nowrap cursor-pointer rounded-lg ${
-            selectedGender === 'men' && !onlySale
-              ? 'bg-[#87977D] text-white shadow-sm'
-              : 'bg-white border border-slate-200 text-slate-700 hover:border-emerald-300'
-          }`}
-        >
-          Men
-        </button>
-
-        <button
-          onClick={() => {
-            setSelectedGender('accessories');
-            setSelectedCategory('all');
-            setOnlySale(false);
-          }}
-          className={`px-4 py-2.5 text-xs font-bold transition-all whitespace-nowrap cursor-pointer rounded-lg ${
-            selectedGender === 'accessories' && !onlySale
-              ? 'bg-[#87977D] text-white shadow-sm'
-              : 'bg-white border border-slate-200 text-slate-700 hover:border-emerald-300'
-          }`}
-        >
-          Accessories
-        </button>
-
-        <button
-          onClick={() => {
-            setOnlySale(true);
-            setSelectedGender('all');
-          }}
-          className={`px-4 py-2.5 text-xs font-black transition-all whitespace-nowrap cursor-pointer rounded-lg ${
-            onlySale
-              ? 'bg-[#87977D] text-white shadow-sm'
-              : 'bg-[#f0f3ed] text-[#52664A] border border-[#dce4d7] hover:bg-[#e5ece1]'
-          }`}
-        >
-          SALE %
+          Unisex
         </button>
       </div>
 
