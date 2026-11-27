@@ -1,5 +1,4 @@
 @import "tailwindcss";
-@import "./storefront-overrides.css";
 
 @theme {
   --font-sans: Arial, Helvetica, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -40,7 +39,7 @@ button { transition: background-color .18s ease, color .18s ease, border-color .
 
 /* AVEART storefront: clean, accessible retail styling */
 .bg-rose-500, .bg-rose-600 { background-color: var(--aveart-sage) !important; }
-.hover\\:bg-rose-600:hover, .hover\\:bg-rose-500:hover { background-color: var(--aveart-sage-dark) !important; }
+[class~="hover:bg-rose-600"]:hover, [class~="hover:bg-rose-500"]:hover { background-color: var(--aveart-sage-dark) !important; }
 .text-rose-600, .text-rose-500, .text-rose-400, .text-rose-300 { color: var(--aveart-sage-dark) !important; }
 .border-rose-500, .border-rose-400, .border-rose-300 { border-color: var(--aveart-sage) !important; }
 .bg-rose-50, .bg-rose-100 { background-color: #F0F3ED !important; }
@@ -529,8 +528,8 @@ main, [role="main"] { background-color: var(--aveart-cream); }
 .aveart-reference-footer .aveart-footer-column > button:hover,
 .aveart-reference-footer .aveart-footer-form button:hover { color: var(--aveart-sage-dark) !important; }
 .aveart-reference-product-page .bg-emerald-600,
-.aveart-reference-product-page .bg-\\[\\#87977D\\] { background-color: var(--aveart-sage-dark) !important; }
-.aveart-reference-product-page .hover\\:bg-emerald-700:hover { background-color: var(--aveart-ink) !important; }
+ .aveart-reference-product-page [class~="bg-[#87977D]"] { background-color: var(--aveart-sage-dark) !important; }
+.aveart-reference-product-page [class~="hover:bg-emerald-700"]:hover { background-color: var(--aveart-ink) !important; }
 .aveart-reference-product-page .border-emerald-600 { border-color: var(--aveart-sage-dark) !important; }
 .aveart-reference-product-page .text-emerald-600,
 .aveart-reference-product-page .text-rose-700 { color: var(--aveart-sage-dark) !important; }
