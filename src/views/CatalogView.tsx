@@ -2,12 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { SlidersHorizontal, RotateCcw, Search } from 'lucide-react';
 import { Product, formatZAR } from '../types/index.ts';
 import { ProductCard } from '../components/ProductCard.tsx';
-import { AVEART_COLLECTIONS, getCollectionProducts } from '../collections.ts';
+import { AVEART_COLLECTIONS, getCollectionProducts, isVisibleStoreProduct } from '../collections.ts';
 
 const PUBLIC_PRODUCTS_URL = 'https://aveart-products-public.delcidioeliasnhatingo.workers.dev/api/products';
 
 function hasProductImage(product: any): boolean {
-  return Boolean([product?.primary_image, product?.image_url, product?.imageUrl, product?.thumbnail_url, product?.thumbnail, ...(Array.isArray(product?.images) ? product.images : []), ...(Array.isArray(product?.variants) ? product.variants.map((variant: any) => variant?.image_url ?? variant?.imageUrl) : [])].some((image) => typeof image === 'string' && image.trim()));
+  return Boolean([
+    product?.primary_image, product?.image_url, product?.imageUrl, product?.thumbnail_url, product?.thumbnail,
+    ...(Array.isArray(product?.images) ? product.images : []),
+    ...(Array.isArray(product?.variants) ? product.variants.flatMap((variant: any) => [variant?.images?.[0], variant?.image_url, variant?.imageUrl]) : []),
+  ].some((image) => typeof image === 'string' && image.trim()));
 }
 
 async function fetchProductsWithFallback(url: string, signal: AbortSignal): Promise<Response> {
@@ -49,7 +53,7 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
 }) => {
   const initialProductsKey = 'aveart:catalog:v2:all';
   const [products, setProducts] = useState<Product[]>(() => {
-    try { const value = localStorage.getItem(initialProductsKey); const parsed = value ? JSON.parse(value) : []; return Array.isArray(parsed) ? parsed.filter((product: any) => hasProductImage(product)) : []; }
+    try { const value = localStorage.getItem(initialProductsKey); const parsed = value ? JSON.parse(value) : []; return Array.isArray(parsed) ? parsed.filter((product: any) => hasProductImage(product) && isVisibleStoreProduct(product)) : []; }
     catch { return []; }
   });
   const [loading, setLoading] = useState(() => {
@@ -104,7 +108,7 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
           : Array.isArray(data?.data)
           ? data.data
           : [];
-        const productsWithImages = liveProducts.filter((product: any) => hasProductImage(product));
+        const productsWithImages = liveProducts.filter((product: any) => hasProductImage(product) && isVisibleStoreProduct(product));
         try { localStorage.setItem(initialProductsKey, JSON.stringify(productsWithImages)); } catch {}
         setProducts(productsWithImages);
       })
