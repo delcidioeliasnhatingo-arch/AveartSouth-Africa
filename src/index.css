@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "./storefront-overrides.css";
 
 @theme {
   --font-sans: Arial, Helvetica, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
