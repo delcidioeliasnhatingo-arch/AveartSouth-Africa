@@ -331,9 +331,9 @@ body { background: #ffffff; color: #171717; }
 }
 .aveart-mobile-nav { display: none; }
 .aveart-mobile-collections {
+  display: none;
   position: relative;
   z-index: 35;
-  display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 2px;
   padding: 10px 16px;
@@ -654,6 +654,7 @@ body { background: #ffffff; color: #171717; }
   .aveart-wordmark > span { font-size: 16px; }
   .aveart-main-nav { display: none; }
   .aveart-header-actions { gap: 4px; }
+  .aveart-mobile-collections { display: grid; }
   .aveart-mobile-nav {
     display: flex;
     align-items: center;
